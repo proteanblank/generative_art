@@ -14,10 +14,6 @@ import helper
 # Global variables
 ##########################################################################
 
-random_seed = int(random(0, 10000))
-#random_seed = 7900
-random_seed = helper.get_seed(random_seed)
-helper.set_seed(random_seed)
 
 # Get time
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -80,6 +76,12 @@ def setup():
 ##########################################################################
 
 def draw():
+    
+    random_seed = int(random(0, 10000))
+    #random_seed = 7900
+    random_seed = helper.get_seed(random_seed)
+    helper.set_seed(random_seed)
+    
     step = 20
     # if frameCount == step*2:
     #     exit()
@@ -138,21 +140,7 @@ def draw():
     l_eye = get_16_points(head[1][0]-w_eyes/2, head[1][1], h_eyes, w_eyes)
     r_eye = get_16_points(head[3][0]-w_eyes/2, head[3][1], h_eyes, w_eyes)
 
-    
-    ##########################################################################
-    # Antennae
-    ##########################################################################
-    
-    # beginShape()
-    # cvp(*head[2])
-    # cvp(*head[7]) if pointed else cvp(*head[6])
-    # cvp(*head[10])
-    # cvp(*head[13]) if pointed else cvp(*head[14])
-    # cvp(*head[2])
-    # cvp(*head[7]) if pointed else cvp(*head[6])
-    # cvp(*head[10])
-    # endShape() 
-    
+
     ##########################################################################
     # Neck
     ##########################################################################
@@ -268,7 +256,6 @@ def draw():
     cvp(*head[10])
     endShape()
     popStyle()
-    
     
     ##########################################################################
     # Legs
@@ -477,6 +464,50 @@ def draw():
     popMatrix()
 
 
+    
+    ##########################################################################
+    # Antennae
+    ##########################################################################
+    x1, y1 = [head[10][0]-random(0, w_head*0.5), head[10][1]-random(0, h_head*0.5)]
+    x2, y2 = [x1+random(-w_head, w_head), y1+random(-w_head, w_head)]
+    x3, y3 = [x2+random(-w_head, w_head), y2+random(-w_head, w_head)]
+    x4, y4 = [x3+random(-w_head, w_head), y3+random(-w_head, w_head)]
+    x5, y5 = [x4+random(-w_head, w_head), y4+random(-w_head, w_head)]
+
+
+    curveTightness(random(-0.9, 0.9))
+    
+    pushStyle()
+    noFill()
+    strokeWeight(3)
+    beginShape()
+    #cvp(x5, y5)
+    cvp(x4, y4)
+    cvp(x1, y1)
+    cvp(x2, y2)
+    cvp(x3, y3)
+    cvp(x4, y4)
+    #cvp(x5, y5)
+    cvp(x1, y1)
+    endShape()
+    
+    pushMatrix()
+    scale(-1.0, 1.0)
+    beginShape()
+    #cvp(x5, y5)
+    cvp(x4, y4)
+    cvp(x1, y1)
+    cvp(x2, y2)
+    cvp(x3, y3)
+    cvp(x4, y4)
+    #cvp(x5, y5)
+    cvp(x1, y1)
+    endShape()
+    popStyle()
+    popMatrix()
+    
+    curveTightness(0)
+    
 
 
     helper.save_frame_timestamp('buggies', timestamp, random_seed)
