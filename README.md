@@ -1,3 +1,12 @@
+## Creatures (Work in Progress)
+
+
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/butterballs/images/layout_test.png" alt="butterflies" width="90%"></p>
+
+Working on some pieces for an upcoming group art show. The theme is "creatures".
+
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/buggies/images/test_layout_strip.png" alt="beetles" width="90%"></p>
+
 ## Reach
 
 
