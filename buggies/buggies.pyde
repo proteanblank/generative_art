@@ -29,7 +29,30 @@ frame_rate = 1
 w = 1000  # width
 h = 1000  # height
 
+##########################################################################
+# Knobs to turn
+##########################################################################
 
+# Bug Green Orange
+pal = {0: [[26, 79, 78],  # orange    
+           [107, 52, 31], # green
+           [74, 62, 51],  # weirdgreen
+           [197, 37, 38], # grayblue
+           [39, 52, 87]],  # yellow
+        # Bug Green Brown
+        1: [[44, 53, 38], # brownish  
+            [79, 40, 65], # lightgreen
+            [83, 66, 38], # green
+            [43, 42, 84], # tan
+            [38, 65, 70], # tanbrown
+            [78, 69, 19]], # darkgreen
+        # Bug Red Orange
+        2: [[14, 79, 93], # orange
+            [5, 100, 55], # red
+            [359, 100, 35], # darkred
+            [37, 38, 87]], #tan
+}
+            
 ##########################################################################
 # setup()
 # function gets run once at start of program
@@ -82,6 +105,10 @@ def draw():
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)
     
+    
+    palette = pal[int(random(0,len(pal)))]        
+    palette_bg_idx = int(random(0, len(palette)))
+    
     step = 20
     # if frameCount == step*2:
     #     exit()
@@ -98,9 +125,9 @@ def draw():
     translate(width / 2, height / 2)
 
     # Full bug
-    w_bug = random(300, 600)
+    w_bug = random(200, 500)
     # Calculate based on ratio (w_bug*random_multiplier)
-    h_bug = random(500, 800)
+    h_bug = random(300, 600)
     x_0 = 0 - w_bug / 2
     y_0 = 0 - h_bug / 2
 
@@ -109,7 +136,7 @@ def draw():
     x_head = x_0+w_bug*(1-w_head_offset)/2
     y_head = y_0
     w_head = w_bug*w_head_offset
-    h_head = random(h_bug * 0.1, h_bug * 0.2)
+    h_head = random(0, h_bug * 0.2)
 
     # Pronotum
     w_pron_offset = 0.9
@@ -164,7 +191,7 @@ def draw():
     m.endDraw()
     m.popMatrix()
     
-    pattern = get_pattern('dots', 0.3)
+    pattern = get_pattern('bg', 0.3, palette, palette_bg_idx)
     pattern.mask(m)
     image(pattern, -width/2, -height/2)
     
@@ -185,36 +212,35 @@ def draw():
     ##########################################################################
     # Eyes
     ##########################################################################
-    l_eye[8][0] -= 10
-    l_eye[8][1] -= 10
-    r_eye[12][0] += 10
-    r_eye[12][1] -= 10
+    # l_eye[8][0] -= 10
+    # l_eye[8][1] -= 10
+    # r_eye[12][0] += 10
+    # r_eye[12][1] -= 10
     
-    pushStyle()
-    fill(0, 0, 90)
-    curveTightness(-0.5)
-    beginShape()
-    cvp(*l_eye[15])
-    cvp(*l_eye[4])
-    cvp(*l_eye[8])
-    cvp(*l_eye[13])
-    cvp(*l_eye[15])
-    cvp(*l_eye[4])
-    cvp(*l_eye[8])
-    endShape()
+    # pushStyle()
+    # fill(0, 0, 90)
+    # curveTightness(-0.5)
+    # beginShape()
+    # cvp(*l_eye[15])
+    # cvp(*l_eye[4])
+    # cvp(*l_eye[8])
+    # cvp(*l_eye[13])
+    # cvp(*l_eye[15])
+    # cvp(*l_eye[4])
+    # cvp(*l_eye[8])
+    # endShape()
     
-    beginShape()
-    cvp(*r_eye[0])
-    cvp(*r_eye[5])
-    cvp(*r_eye[7])
-    cvp(*r_eye[12])
-    cvp(*r_eye[0])
-    cvp(*r_eye[5])
-    cvp(*r_eye[7])
-    endShape()
+    # beginShape()
+    # cvp(*r_eye[0])
+    # cvp(*r_eye[5])
+    # cvp(*r_eye[7])
+    # cvp(*r_eye[12])
+    # cvp(*r_eye[0])
+    # cvp(*r_eye[5])
+    # cvp(*r_eye[7])
+    # endShape()
     
-    popStyle()
-    curveTightness(0)
+    # popStyle()
 
 
     ##########################################################################
@@ -222,6 +248,8 @@ def draw():
     ##########################################################################
     # Pokey head or a round head
     pointed = True
+    
+    curveTightness(0)
     
     m = createGraphics(width, height)
     m.beginDraw()
@@ -239,7 +267,7 @@ def draw():
     m.endDraw()
     m.popMatrix()
     
-    pattern = get_pattern('dots', 0.5)
+    pattern = get_pattern('bg', 0.45, palette, palette_bg_idx)
     pattern.mask(m)
     image(pattern, -width/2, -height/2)
     
@@ -287,7 +315,8 @@ def draw():
     dn_angle_c = random(75, 115)
     
     
-    
+    pushStyle()
+    fill(0, 0, random(10, 30))
     draw_leg(pron[14][0], pron[14][1], arm_length_a, up_angle_a, 50, arm_length_b, up_angle_b, 5, arm_length_c, up_angle_c, 5)
     draw_leg(elyt[15][0], elyt[15][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
     draw_leg(elyt[14][0], elyt[14][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
@@ -297,7 +326,7 @@ def draw():
     draw_leg(elyt[15][0], elyt[15][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
     draw_leg(elyt[14][0], elyt[14][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
     popMatrix()
-    
+    popStyle()
     
     ##########################################################################
     # Elytron
@@ -320,7 +349,7 @@ def draw():
     m.endDraw()
     m.popMatrix()
 
-    pattern = get_pattern('dots', 0.3)
+    pattern = get_pattern('bg', 0.3, palette, palette_bg_idx)
     pattern.mask(m)
     image(pattern, -width/2, -height/2)
     
@@ -372,7 +401,7 @@ def draw():
     m.endDraw()
     m.popMatrix()
 
-    pattern = get_pattern('dots', 0.5)
+    pattern = get_pattern('bg', 0.5, palette, palette_bg_idx)
     pattern.mask(m)
     image(pattern, -width/2, -height/2)
     
@@ -429,7 +458,7 @@ def draw():
 #     endShape()
 #     popMatrix()
     
-    pattern = get_pattern('dots')
+    pattern = get_pattern('dots', 1, palette, palette_bg_idx)
         
     # Left wing (to be mirrored)
     m = createGraphics(width, height)
@@ -468,39 +497,39 @@ def draw():
     ##########################################################################
     # Antennae
     ##########################################################################
-    x1, y1 = [head[10][0]-random(0, w_head*0.5), head[10][1]-random(0, h_head*0.5)]
-    x2, y2 = [x1+random(-w_head, w_head), y1+random(-w_head, w_head)]
-    x3, y3 = [x2+random(-w_head, w_head), y2+random(-w_head, w_head)]
-    x4, y4 = [x3+random(-w_head, w_head), y3+random(-w_head, w_head)]
-    x5, y5 = [x4+random(-w_head, w_head), y4+random(-w_head, w_head)]
-
+    x1, y1 = [head[10][0]-random(w_head*0.2, w_head*0.5), head[10][1]-random(h_head*0.2, h_head*0.5)]
+    x2, y2 = [x1-random(0, w_head), y1+random(h_head*0.1, h_head)]
+    x3, y3 = [x2+random(-w_head*0.5, w_head*0.5), y2+random(-h_head*0.5, h_head*0.5)]
+    x4, y4 = [x3+random(-w_head*0.5, w_head*0.5), y3+random(-h_head*0.5, h_head*0.5)]
+    
+    x5, y5 = [x4+random(-w_head*0.5, w_head*0.5), y4+random(-h_head*0.5, h_head*0.5)]
 
     curveTightness(random(-0.9, 0.9))
     
     pushStyle()
     noFill()
     strokeWeight(3)
+    ellipse(x1, y1, 3, 3)
     beginShape()
-    #cvp(x5, y5)
-    cvp(x4, y4)
+    cvp(x5, y5)
     cvp(x1, y1)
     cvp(x2, y2)
     cvp(x3, y3)
     cvp(x4, y4)
-    #cvp(x5, y5)
+    cvp(x5, y5)
     cvp(x1, y1)
     endShape()
     
     pushMatrix()
     scale(-1.0, 1.0)
+    ellipse(x1, y1, 3, 3)
     beginShape()
-    #cvp(x5, y5)
-    cvp(x4, y4)
+    cvp(x5, y5)
     cvp(x1, y1)
     cvp(x2, y2)
     cvp(x3, y3)
     cvp(x4, y4)
-    #cvp(x5, y5)
+    cvp(x5, y5)
     cvp(x1, y1)
     endShape()
     popStyle()
@@ -508,7 +537,7 @@ def draw():
     
     curveTightness(0)
     
-
+    
 
     helper.save_frame_timestamp('buggies', timestamp, random_seed)
 
@@ -571,6 +600,7 @@ def draw_leg(x, y, length_a=100, angle_a=165, span_a=50, length_b=200, angle_b=1
     endShape()
     
     beginShape()
+    curveTightness(0.8)
     cvp(bx1, by1) if upper_leg else  cvp(bx3, by3)
     cvp(bx2, by2)
     cvp(bx3, by3) if upper_leg else  cvp(bx1, by1)
@@ -580,6 +610,7 @@ def draw_leg(x, y, length_a=100, angle_a=165, span_a=50, length_b=200, angle_b=1
     cvp(bx1, by1) if upper_leg else  cvp(bx3, by3)
     cvp(bx2, by2)
     cvp(bx3, by3) if upper_leg else  cvp(bx1, by1)
+    curveTightness(0)
     endShape()
     
     beginShape()
@@ -595,22 +626,31 @@ def draw_leg(x, y, length_a=100, angle_a=165, span_a=50, length_b=200, angle_b=1
     endShape()
 
 
-def get_pattern(pattern_style, lightness_offset=1):
-
+def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
+    bg_color = palette[palette_bg_idx]
+    
     if pattern_style == 'dots':
         pattern = createGraphics(width, height)
         pattern.beginDraw()
         pattern.pushMatrix()
-        pattern.background(color(0, 13, 74*lightness_offset)) # mauve
+        pattern.background(color(bg_color[0], bg_color[1], bg_color[2]*lightness_offset)) # mauve
         #pattern.translate(width/2, height/2)
         pattern.noStroke()
-        pattern.fill(color(150, 22, 56*lightness_offset)) # green
         for i in range(40):
-            r = random(5, 80)
+            fg_color = palette[int(random(0, len(palette)))]
+            pattern.fill(color(fg_color[0], fg_color[1], fg_color[2]*lightness_offset))
+            r = random(5, 200)
             x = random(0, width)
             y = random(0, height)
-            print(x, y, r)
             pattern.ellipse(x, y, r, r*random(1.2, 3))
+        pattern.endDraw()
+        pattern.popMatrix
+        
+    elif pattern_style == 'bg':
+        pattern = createGraphics(width, height)
+        pattern.beginDraw()
+        pattern.pushMatrix()
+        pattern.background(color(bg_color[0], bg_color[1], bg_color[2]*lightness_offset)) # mauve
         pattern.endDraw()
         pattern.popMatrix
         
