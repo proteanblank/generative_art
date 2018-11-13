@@ -51,7 +51,26 @@ pal = {0: [[26, 79, 78],  # orange
             [5, 100, 55], # red
             [359, 100, 35], # darkred
             [37, 38, 87]], #tan
+        # Kbo
+        3: [[348.7, 50.4, 94.9],  # bright salmon
+            [306.6, 40.8, 96.1], # bright pink
+            [45.7, 78.8, 94.1],  # yellow
+            [16.3, 28.6, 96.1],  # salmon
+            [358.7, 75.6, 94.9]], # red
+        # Zenburn color palette
+        4: [[60, 7, 86],   #dcdccc cream
+            [0, 28, 80],   #cc9393 pink
+            [180, 9, 69],  #9fafaf blue gray
+            [0, 13, 74],   #bca3a3 mauve
+            [24, 31, 100], #ffcfaf peach
+            [150, 22, 56]], #709080 green
+        # CMYK
+        5: [[180, 100, 100],  #00ffff cyan
+            [300, 100, 100],  #ff00ff magenta
+            [60, 100, 100],   #ffff00 yellow
+            [0, 0, 0]],        #000000 black
 }
+            
             
 ##########################################################################
 # setup()
@@ -78,7 +97,7 @@ def setup():
     rectMode(CORNER)
 
     # Stops draw() from running in an infinite loop (should be last line)
-    #noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit)
+    noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit)
 
 
 ##########################################################################
@@ -101,7 +120,7 @@ def setup():
 def draw():
     
     random_seed = int(random(0, 10000))
-    #random_seed = 7900
+    random_seed = 313
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)
     
@@ -118,7 +137,7 @@ def draw():
     background(g.backgroundColor)
 
     noFill()
-    stroke(0, 0, 25)
+    noStroke()
 
     r = 200
 
@@ -171,15 +190,16 @@ def draw():
     ##########################################################################
     # Neck
     ##########################################################################
+    curve_tightness = random(0.5, 0.9)
+    
     pushStyle()
-    curveTightness(0.9)
     
     m = createGraphics(width, height)
     m.beginDraw()
     m.pushMatrix()
     m.translate(width/2, height/2)
     m.beginShape()
-    m.curveTightness(0.9)
+    m.curveTightness(curve_tightness)
     m.curveVertex(head[12][0]+w_head*0.05, head[11][1]-g_pron*2)
     m.curveVertex(head[8][0]-w_head*0.05, head[9][1]-g_pron*2)
     m.curveVertex(head[8][0]+w_head*0.2, head[9][1]+g_pron*2)
@@ -197,7 +217,7 @@ def draw():
     
     pushStyle()
     noFill()
-    stroke(0, 0, 20)
+    #stroke(0, 0, 20)
     beginShape()
     cvp(head[12][0]+w_head*0.1, head[11][1]-g_pron)
     cvp(head[8][0]-w_head*0.1, head[9][1]-g_pron)
@@ -246,13 +266,17 @@ def draw():
     ##########################################################################
     # Head
     ##########################################################################
-    # Pokey head or a round head
-    pointed = True
+    curve_tightness = random(-0.9, 0.7)
     
-    curveTightness(0)
+    pointed = int(random(0, 3))
+    print(pointed)
+    
+    
+    
     
     m = createGraphics(width, height)
     m.beginDraw()
+    m.curveTightness(curve_tightness)
     m.pushMatrix()
     m.translate(width/2, height/2)
     m.beginShape()
@@ -271,19 +295,19 @@ def draw():
     pattern.mask(m)
     image(pattern, -width/2, -height/2)
     
-    pushStyle()
-    noFill()
-    stroke(0, 0, 20)
-    beginShape()
-    cvp(*head[2])
-    cvp(*head[7]) if pointed else cvp(*head[6])
-    cvp(*head[10])
-    cvp(*head[13]) if pointed else cvp(*head[14])
-    cvp(*head[2])
-    cvp(*head[7]) if pointed else cvp(*head[6])
-    cvp(*head[10])
-    endShape()
-    popStyle()
+    # pushStyle()
+    # noFill()
+    # #stroke(0, 0, 20)
+    # beginShape()
+    # cvp(*head[2])
+    # cvp(*head[7]) if pointed else cvp(*head[6])
+    # cvp(*head[10])
+    # cvp(*head[13]) if pointed else cvp(*head[14])
+    # cvp(*head[2])
+    # cvp(*head[7]) if pointed else cvp(*head[6])
+    # cvp(*head[10])
+    # endShape()
+    # popStyle()
     
     ##########################################################################
     # Legs
@@ -356,7 +380,7 @@ def draw():
 
     pushStyle()
     noFill()
-    stroke(0, 0, 20)
+    #stroke(0, 0, 20)
     beginShape()
     cvp(*elyt[0])
     cvp(*elyt[2])
@@ -408,7 +432,7 @@ def draw():
     # Outline
     pushStyle()
     noFill()
-    stroke(0, 0, 20)
+    #stroke(0, 0, 20)
     beginShape()
     cvp(*pron[0])
     curveTightness(0.7)
@@ -434,7 +458,7 @@ def draw():
     wing_mid_offset = 50
     #elyt[2][1] += 50
 
-    r_wing[7][0] -= wing_x_squeeze
+    #r_wing[7][0] -= wing_x_squeeze
     l_wing[13][0] += wing_x_squeeze
 
 
@@ -458,7 +482,7 @@ def draw():
 #     endShape()
 #     popMatrix()
     
-    pattern = get_pattern('dots', 1, palette, palette_bg_idx)
+    pattern = get_pattern('butterball', 1, palette, palette_bg_idx)
         
     # Left wing (to be mirrored)
     m = createGraphics(width, height)
@@ -485,11 +509,11 @@ def draw():
     pattern.mask(m)
     pushMatrix()
     image(pattern, -width/2, -height/2)
-    outline_wing(l_wing)
+    #outline_wing(l_wing)
     # Mirror the wing
     scale(-1.0, 1.0)
     image(pattern, -width/2, -height/2)
-    outline_wing(l_wing)
+    #outline_wing(l_wing)
     popMatrix()
 
 
@@ -505,10 +529,11 @@ def draw():
     x5, y5 = [x4+random(-w_head*0.5, w_head*0.5), y4+random(-h_head*0.5, h_head*0.5)]
 
     curveTightness(random(-0.9, 0.9))
-    
+     
     pushStyle()
     noFill()
     strokeWeight(3)
+    stroke(0, 0, 10)
     ellipse(x1, y1, 3, 3)
     beginShape()
     cvp(x5, y5)
@@ -629,6 +654,8 @@ def draw_leg(x, y, length_a=100, angle_a=165, span_a=50, length_b=200, angle_b=1
 def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
     bg_color = palette[palette_bg_idx]
     
+    style = int(random(1, 10))
+   
     if pattern_style == 'dots':
         pattern = createGraphics(width, height)
         pattern.beginDraw()
@@ -643,6 +670,31 @@ def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
             x = random(0, width)
             y = random(0, height)
             pattern.ellipse(x, y, r, r*random(1.2, 3))
+        pattern.endDraw()
+        pattern.popMatrix
+        
+    if pattern_style == 'butterball':
+        pattern = createGraphics(width, height)
+        pattern.beginDraw()
+        pattern.pushMatrix()
+        pattern.background(color(bg_color[0], bg_color[1], bg_color[2]*lightness_offset))
+        pattern.translate(width/2-random(0, width*0.05), height/2)
+        pattern.noStroke()
+        pattern.curveTightness(0)
+        for i in range(10):
+            fg_color = palette[int(random(0, len(palette)))]
+            pattern.fill(color(fg_color[0], fg_color[1], fg_color[2]*lightness_offset, 100))
+            
+            pattern.beginShape()
+            for angle in [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 0, 20, 40]:
+                r = random(width*0.01, width*0.3)
+                a = radians(random(angle-7, angle))
+                x_ = random(-width*0.1, width*0.1) if style%2==0 else 0
+                y_ = random(-height*0.1, height*0.1) if style%2==0 else 0
+                x, y = helper.circle_points(x_, y_, r, a)
+                pattern.curveVertex(x, y)
+            pattern.endShape()
+            
         pattern.endDraw()
         pattern.popMatrix
         
@@ -723,6 +775,13 @@ def get_16_points(x, y, w, h):
     return points
 
 
+def draw_curve_filled(data):
+    beginShape()
+    for t in data+data[:3]:
+        cvp(*t)
+    endShape()
+    
+    
 def draw_16_points(points):
     beginShape()
     for p in points + points[0:3]:
