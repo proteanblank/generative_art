@@ -52,6 +52,24 @@ pal = {0: [[26, 79, 78],  # orange
             [5, 100, 55], # red
             [359, 100, 35], # darkred
             [37, 38, 87]], #tan
+        # Kbo
+        3: [[348.7, 50.4, 94.9],  # bright salmon
+            [306.6, 40.8, 96.1], # bright pink
+            [45.7, 78.8, 94.1],  # yellow
+            [16.3, 28.6, 96.1],  # salmon
+            [358.7, 75.6, 94.9]], # red
+        # Zenburn color palette
+        4: [[60, 7, 86],   #dcdccc cream
+            [0, 28, 80],   #cc9393 pink
+            [180, 9, 69],  #9fafaf blue gray
+            [0, 13, 74],   #bca3a3 mauve
+            [24, 31, 100], #ffcfaf peach
+            [150, 22, 56]], #709080 green
+        # CMYK
+        5: [[180, 100, 100],  #00ffff cyan
+            [300, 100, 100],  #ff00ff magenta
+            [60, 100, 100],   #ffff00 yellow
+            [0, 0, 0]],        #000000 black
 }
             
 ##########################################################################
@@ -107,23 +125,26 @@ def draw():
     helper.set_seed(random_seed)
     
     
-    palette = pal[int(random(0,len(pal)))]        
-    palette_bg_idx = int(random(0, len(palette)))
+    #palette = pal[int(random(0,len(pal)))]        
+    #palette_bg_idx = int(random(0, len(palette)))
     
     background(g.backgroundColor)
 
     translate(width / 2, height / 2)
     
+    palette = pal[int(random(0, len(pal)))]
 
     ##########################################################################
     # Upper Wings
     ##########################################################################
     noStroke()
     for i in range(10):
-        if i % 2 == 0:
-            fill(random(0, 15), random(70, 85), random(50, 70), random(10, 20))
-        else:    
-            fill(random(30, 45), random(35, 50), random(70, 90), random(10, 20))
+        p = palette[int(random(0, len(palette)))]
+        fill(p[0], p[1], p[2], 10)
+        # if i % 2 == 0:
+        #     fill(random(0, 15), random(70, 85), random(50, 70), random(10, 20)) # Red
+        # else:    
+        #     fill(random(30, 45), random(35, 50), random(70, 90), random(10, 20)) # Tan
         test = []
         test.append([0, 0])
         for angle in [10, 20, 30, 40]:
@@ -137,10 +158,12 @@ def draw():
         popMatrix()
     
     for i in range(15):
-        if i % 2 == 0:
-            fill(random(0, 15), random(70, 85), random(50, 70), random(10, 20))
-        else:    
-            fill(random(30, 45), random(35, 50), random(70, 90), random(10, 20))
+        p = palette[int(random(0, len(palette)))]
+        fill(p[0], p[1], p[2], 10)
+        # if i % 2 == 0:
+        #     fill(random(0, 15), random(70, 85), random(50, 70), random(10, 20)) # Red
+        # else:    
+        #     fill(random(30, 45), random(35, 50), random(70, 90), random(10, 20)) # Tan
         test = []
         test.append([0, 0])
         for angle in [10, 20, 30, 40]:
@@ -160,10 +183,12 @@ def draw():
     ##########################################################################
     noStroke()
     for i in range(20):
-        if i % 2 == 0:
-            fill(random(0, 15), random(70, 85), random(50, 70), random(10, 20))
-        else:    
-            fill(random(30, 45), random(35, 50), random(70, 90), random(10, 20))
+        p = palette[int(random(0, len(palette)))]
+        fill(p[0], p[1], p[2], 10)
+    #     if i % 2 == 0:
+    #         fill(random(0, 15), random(70, 85), random(50, 70), random(10, 20)) # Red
+    #     else:    
+    #         fill(random(30, 45), random(35, 50), random(70, 90), random(10, 20)) # Tan
         test = []
         test.append([0, 0])
         for angle in [10, 25, 40, 55, 70]:
@@ -181,10 +206,10 @@ def draw():
     # Body
     ##########################################################################
 
-    fill(g.backgroundColor)
-    ellipse(0, -20, random(20, 45), random(50, 60))
-    ellipse(0, 0, random(20, 45), random(50, 60))
-    ellipse(0, 100, random(40, 50), random(170, 250))
+#     fill(g.backgroundColor)
+#     ellipse(0, -20, random(20, 45), random(50, 60))
+#     ellipse(0, 0, random(20, 45), random(50, 60))
+#     ellipse(0, 100, random(40, 50), random(170, 250))
     
    
     ##########################################################################
@@ -232,7 +257,7 @@ def draw():
     
     
     
-    #helper.save_frame_timestamp('butterballs', timestamp, random_seed)
+    helper.save_frame_timestamp('butterballs', timestamp, random_seed)
 
     # Save memory by closing image, just look at it in the file system
     # if (w > 1000) or (h > 1000):
