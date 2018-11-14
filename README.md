@@ -3,7 +3,7 @@
 
 I am participating in a group art show based around new media and generative artwork. The theme is "creatures". I made two programs for it, one generates beetles and the other generates abstract butterflies. 
 
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/butterballs/images/layout_test.png" alt="butterflies" width="80%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/butterballs/images/layout_test.png" alt="butterflies" width="100%"></p>
 
 
 Butterfly code is in the ['butterballs' dir](https://github.com/aaronpenne/generative_art/tree/master/butterballs).
