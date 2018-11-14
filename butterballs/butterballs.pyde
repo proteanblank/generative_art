@@ -9,6 +9,7 @@ import sys
 from random import shuffle, seed
 
 import helper
+import bug_palette
 
 ##########################################################################
 # Global variables
@@ -20,57 +21,18 @@ random_seed = 0
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
 # Parameters for draw speed
-frame_rate = 30
+frame_rate = 1
 
 ##########################################################################
 # Knobs to turn
 ##########################################################################
 
 # Canvas size
-w = 1000  # width
-h = 1000  # height
+w = 2000  # width
+h = 2000  # height
 
-##########################################################################
-# Knobs to turn
-##########################################################################
-
-# Bug Green Orange
-pal = {0: [[26, 79, 78],  # orange    
-           [107, 52, 31], # green
-           [74, 62, 51],  # weirdgreen
-           [197, 37, 38], # grayblue
-           [39, 52, 87]],  # yellow
-        # Bug Green Brown
-        1: [[44, 53, 38], # brownish  
-            [79, 40, 65], # lightgreen
-            [83, 66, 38], # green
-            [43, 42, 84], # tan
-            [38, 65, 70], # tanbrown
-            [78, 69, 19]], # darkgreen
-        # Bug Red Orange
-        2: [[14, 79, 93], # orange
-            [5, 100, 55], # red
-            [359, 100, 35], # darkred
-            [37, 38, 87]], #tan
-        # Kbo
-        3: [[348.7, 50.4, 94.9],  # bright salmon
-            [306.6, 40.8, 96.1], # bright pink
-            [45.7, 78.8, 94.1],  # yellow
-            [16.3, 28.6, 96.1],  # salmon
-            [358.7, 75.6, 94.9]], # red
-        # Zenburn color palette
-        4: [[60, 7, 86],   #dcdccc cream
-            [0, 28, 80],   #cc9393 pink
-            [180, 9, 69],  #9fafaf blue gray
-            [0, 13, 74],   #bca3a3 mauve
-            [24, 31, 100], #ffcfaf peach
-            [150, 22, 56]], #709080 green
-        # CMYK
-        5: [[180, 100, 100],  #00ffff cyan
-            [300, 100, 100],  #ff00ff magenta
-            [60, 100, 100],   #ffff00 yellow
-            [0, 0, 0]],        #000000 black
-}
+pal = bug_palette.pal        
+            
             
 ##########################################################################
 # setup()
@@ -92,7 +54,7 @@ def setup():
     # Set the number of frames per second to display
     frameRate(frame_rate)
 
-    background(0, 0, 95)
+    background(0, 0, 100)
 
     rectMode(CORNER)
 
@@ -102,158 +64,152 @@ def setup():
 
 ##########################################################################
 # draw()
-# function gets run repeatedly (unless noLoop() called in setup())
-#
-# 0--1--2--3--4
-# |           |
-# 15          5
-# |           |
-# 14          6
-# |           |
-# 13          7
-# |           |
-# 12-11-10--9-8
-#
-#
 ##########################################################################
 
 def draw():
     global random_seed
-    random_seed = int(random(0, 10000))
-    #random_seed = 7900
+    random_seed = int(frameCount*second()*10000)
+    #random_seed = 313
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)
     
+    if frameCount == 500:
+        exit()
     
     #palette = pal[int(random(0,len(pal)))]        
     #palette_bg_idx = int(random(0, len(palette)))
     
     background(g.backgroundColor)
 
-    translate(width / 2, height / 2)
+    translate(width/2, height/2)
     
     palette = pal[int(random(0, len(pal)))]
+
+    range_upper_angles = [x for x in range(int(random(0, 20)), int(random(50, 80)), int(random(7, 20)))]
+    range_lower_angles = [x for x in range(int(random(0, 20)), int(random(50, 80)), int(random(7, 20)))]
+    range_upper_radii = [width*0.2, width*0.45]
+    range_lower_radii = [width*0.2, width*0.3]
 
     ##########################################################################
     # Upper Wings
     ##########################################################################
-    noStroke()
+    stroke(0, 0, 0, 60)
+    for i in range(10):
+        p = palette[int(random(0, len(palette)))]     
+        if (i==3) and (i==6):
+            fill(0, 0, 100, 20)
+        else:
+            fill(p[0], p[1], p[2], 20)
+        wing = []
+        wing.append([0, 0])
+        for angle in range_upper_angles:
+            wing.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.2, width*0.4), radians(random(angle-7, angle))))
+
+        draw_wings(wing, True)
+    
     for i in range(10):
         p = palette[int(random(0, len(palette)))]
-        fill(p[0], p[1], p[2], 10)
-        # if i % 2 == 0:
-        #     fill(random(0, 15), random(70, 85), random(50, 70), random(10, 20)) # Red
-        # else:    
-        #     fill(random(30, 45), random(35, 50), random(70, 90), random(10, 20)) # Tan
-        test = []
-        test.append([0, 0])
-        for angle in [10, 20, 30, 40]:
-            test.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.2, width*0.4), radians(random(angle-7, angle))))
+        if (i==3) and (i==6):
+            fill(0, 0, 100, 20)
+        else:
+            fill(p[0], p[1], p[2], 20)
+        wing = []
+        wing.append([0, 0])
+        for angle in range_upper_angles:
+            wing.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.1, width*0.2), radians(random(angle-7, angle))))
 
-        pushMatrix()
-        scale(1,-1)
-        draw_curve_filled(test)
-        scale(-1,1)
-        draw_curve_filled(test)
-        popMatrix()
-    
-    for i in range(15):
-        p = palette[int(random(0, len(palette)))]
-        fill(p[0], p[1], p[2], 10)
-        # if i % 2 == 0:
-        #     fill(random(0, 15), random(70, 85), random(50, 70), random(10, 20)) # Red
-        # else:    
-        #     fill(random(30, 45), random(35, 50), random(70, 90), random(10, 20)) # Tan
-        test = []
-        test.append([0, 0])
-        for angle in [10, 20, 30, 40]:
-            test.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.1, width*0.2), radians(random(angle-7, angle))))
-
-        pushMatrix()
-        scale(1,-1)
-        draw_curve_filled(test)
-        scale(-1,1)
-        draw_curve_filled(test)
-        popMatrix()
-    
+        draw_wings(wing, True)
     
 
     ##########################################################################
     # Lower Wings
     ##########################################################################
-    noStroke()
-    for i in range(20):
+    stroke(0, 0, 0, 60)
+    for i in range(10):
         p = palette[int(random(0, len(palette)))]
-        fill(p[0], p[1], p[2], 10)
-    #     if i % 2 == 0:
-    #         fill(random(0, 15), random(70, 85), random(50, 70), random(10, 20)) # Red
-    #     else:    
-    #         fill(random(30, 45), random(35, 50), random(70, 90), random(10, 20)) # Tan
-        test = []
-        test.append([0, 0])
-        for angle in [10, 25, 40, 55, 70]:
-            test.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.05, width*0.3), radians(random(angle-7, angle))))
-        test.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.05, width*0.3), radians(random(73, 87))))
+        if (i==3) and (i==6):
+            fill(0, 0, 100, 20)
+        else:
+            fill(p[0], p[1], p[2], 20)
+        wing = []
+        wing.append([0, 0])
+        for angle in range_lower_angles:
+            wing.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.15, width*0.3), radians(random(angle-7, angle))))
+        wing.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.15, width*0.3), radians(random(73, 87))))
             
-        pushMatrix()
-        draw_curve_filled(test)
-        scale(-1,1)
-        draw_curve_filled(test)
-        popMatrix()
-        
-        
+        draw_wings(wing)
+            
+    for i in range(10):
+        p = palette[int(random(0, len(palette)))]
+        if (i==3) and (i==6):
+            fill(0, 0, 100, 20)
+        else:
+            fill(p[0], p[1], p[2], 20)
+        wing = []
+        wing.append([0, 0])
+        for angle in range_lower_angles:
+            wing.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.05, width*0.2), radians(random(angle-7, angle))))
+        wing.append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.05, width*0.2), radians(random(73, 87))))
+            
+        draw_wings(wing)
+
+    
     ##########################################################################
+    # Antennae and body
+    ##########################################################################
+    body = get_16_points(-width*0.015, -height*0.05, width*0.03, height*0.35)
+    angles, radii = get_angles_radii_antennae(10, width*0.1)
+    
+    x_ = random(-width*0.3, 0)
+    y_ = random(-height*0.4, -height*0.3)
+    
+    curve_tightness = []
+    for a in angles:
+        curve_tightness.append(random(-2, 2))
+    
+    break_point = int(random(2, len(angles)))
+    pushMatrix()
+    noFill()
+    strokeWeight(3)
+    stroke(p[0], p[1], 30)
+    beginShape()  
+    curveTightness(curve_tightness[0])
+    x, y = helper.circle_points(x_, y_, angles[-1], radii[-1])
+    curveVertex(x, y)
+    curveVertex(*body[0])
+    # curveVertex(x_head-random(w_head*0.01, w_head*0.8), y_head-random(h_head*0.01, h_head*0.5))
+    for i, (a, r, c) in enumerate(zip(angles, radii, curve_tightness)):  
+        if i >= break_point:
+            break
+        curveTightness(c)
+        x, y = helper.circle_points(x_, y_, r, radians(a))
+        curveVertex(x, y)
+    endShape()
+    curveTightness(0)
+    
+    scale(-1, 1)
+    noFill()
+    beginShape()   
+    curveTightness(curve_tightness[0])
+    x, y = helper.circle_points(x_, y_, angles[-1], radii[-1])
+    curveVertex(x, y)
+    curveVertex(*body[0])
+    # curveVertex(x_head-random(w_head*0.01, w_head*0.8), y_head-random(h_head*0.01, h_head*0.5))
+    for i, (a, r, c) in enumerate(zip(angles, radii, curve_tightness)):    
+        if i >= break_point:
+            break
+        curveTightness(c)
+        x, y = helper.circle_points(x_, y_, r, radians(a))
+        curveVertex(x, y)
+    endShape()
+    curveTightness(0)
+    popMatrix()
+    
+    
     # Body
-    ##########################################################################
-
-#     fill(g.backgroundColor)
-#     ellipse(0, -20, random(20, 45), random(50, 60))
-#     ellipse(0, 0, random(20, 45), random(50, 60))
-#     ellipse(0, 100, random(40, 50), random(170, 250))
-    
-   
-    ##########################################################################
-    # Antennae
-    ##########################################################################
-    # stroke(0, 0, 0)
-    # x1, y1 = [-10, 0]
-    # x2, y2 = [x1-random(width*0.05, width*0.1), y1-random(width*0.05, height*0.1)]
-    # x3, y3 = [x2+random(-width*0.1, width*0.1), y2+random(-height*0.1, height*0.1)]
-    # x4, y4 = [x3+random(-width*0.1, width*0.1), y3+random(-height*0.1, height*0.1)]
-    # x5, y5 = [x4+random(-width*0., width*0.), y4+random(-height*0.1, height*0.1)]
-
-    # curveTightness(random(-0.9, 0.9))
-    
-    # pushStyle()
-    # noFill()
-    # strokeWeight(3)
-    # ellipse(x1, y1, 3, 3)
-    # beginShape()
-    # cvp(x5, y5)
-    # cvp(x1, y1)
-    # cvp(x2, y2)
-    # cvp(x3, y3)
-    # cvp(x4, y4)
-    # cvp(x5, y5)
-    # cvp(x1, y1)
-    # endShape()
-    
-    # pushMatrix()
-    # scale(-1.0, 1.0)
-    # ellipse(x1, y1, 3, 3)
-    # beginShape()
-    # cvp(x5, y5)
-    # cvp(x1, y1)
-    # cvp(x2, y2)
-    # cvp(x3, y3)
-    # cvp(x4, y4)
-    # cvp(x5, y5)
-    # cvp(x1, y1)
-    # endShape()
-    # popStyle()
-    # popMatrix()
-    
-    # curveTightness(0)
+    fill(0, 0, 100)
+    noStroke()
+    draw_16_points(body)
     
     
     
@@ -268,98 +224,26 @@ def draw():
 # Functions
 ##########################################################################
 
-def draw_curve_filled(data):
-    beginShape()
-    for t in data+data[:3]:
-        cvp(*t)
-    endShape()
-    
-    
-def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
-    bg_color = palette[palette_bg_idx]
-    
-    if pattern_style == 'dots':
-        pattern = createGraphics(width, height)
-        pattern.beginDraw()
-        pattern.pushMatrix()
-        pattern.background(color(bg_color[0], bg_color[1], bg_color[2]*lightness_offset)) # mauve
-        #pattern.translate(width/2, height/2)
-        pattern.noStroke()
-        for i in range(40):
-            fg_color = palette[int(random(0, len(palette)))]
-            pattern.fill(color(fg_color[0], fg_color[1], fg_color[2]*lightness_offset))
-            r = random(5, 200)
-            x = random(0, width)
-            y = random(0, height)
-            pattern.ellipse(x, y, r, r*random(1.2, 3))
-        pattern.endDraw()
-        pattern.popMatrix
-        
-    elif pattern_style == 'bg':
-        pattern = createGraphics(width, height)
-        pattern.beginDraw()
-        pattern.pushMatrix()
-        pattern.background(color(bg_color[0], bg_color[1], bg_color[2]*lightness_offset)) # mauve
-        pattern.endDraw()
-        pattern.popMatrix
-        
-    elif pattern_style == 'gradient':
-        pattern = createGraphics(width, height)
-        pattern.beginDraw()
-        pattern.pushMatrix()
-        pattern.background(color(0, 100, 100*lightness_offset)) # mauve
-        #pattern.translate(width/2, height/2)
-        pattern.noStroke()
-        for i in range(40):
-            pattern.fill(color(random(0, 360), random(20,30), random(60,90), 50*lightness_offset)) # green
-            r = random(200, 1000)
-            x = random(0, width)
-            y = random(0, height)
-            print(x, y, r)
-            pattern.ellipse(x, y, r, r)
-        pattern.endDraw()
-        pattern.popMatrix
-        
-    return pattern
-
-
-def outline_wing(l_wing):
-    pushStyle()
-    noFill()
-    stroke(0, 0, 20)
-    
+def draw_wings(wing, upper_wing=False):
     pushMatrix()
-    # rotate(PI/40)
-    beginShape()
-    cvp(*l_wing[0])
-    cvp(*l_wing[2])
-    cvp(l_wing[5][0], l_wing[5][1]-h*0.05)
-    cvp(*l_wing[8])
-    curveTightness(0.9)
-    cvp(*l_wing[13])
-    curveTightness(0)
-    cvp(*l_wing[0])
-    cvp(*l_wing[2])
-    cvp(l_wing[5][0], l_wing[5][1]-h*0.05)
-    endShape()
+    if upper_wing:
+        scale(1,-1)
+    draw_curve_filled(wing)
+    scale(-1,1)
+    draw_curve_filled(wing)
     popMatrix()
-    popStyle()
-    
-
-def cvp(x, y):
-    curveVertex(x, y)
-    #ellipse(x, y, 5, 5)
 
 
 def get_16_points(x, y, w, h):
+    squeeze = random(-w*0.2, w*0.2)
     points = [0] * 16
     points[0] = [x, y]
     points[1] = [x + w * 0.25, y]
-    points[2] = [x + w * 0.5, y]
+    points[2] = [x + w * 0.5, y-h*0.05]
     points[3] = [x + w * 0.75, y]
     points[4] = [x + w, y]
     points[5] = [x + w, y + h * 0.25]
-    points[6] = [x + w, y + h * 0.5]
+    points[6] = [x + w + squeeze, y + h * 0.5]
     points[7] = [x + w, y + h * 0.75]
     points[8] = [x + w, y + h]
     points[9] = [x + w * 0.75, y + h]
@@ -367,25 +251,48 @@ def get_16_points(x, y, w, h):
     points[11] = [x + w * 0.25, y + h]
     points[12] = [x, y + h]
     points[13] = [x, y + h * 0.75]
-    points[14] = [x, y + h * 0.5]
+    points[14] = [x - squeeze, y + h * 0.5]
     points[15] = [x, y + h * 0.25]
+    
+    points.pop(12)
+    points.pop(8)
+    points.pop(4)
+    points.pop(0)
+    
     return points
 
-
+def cvp(x, y):
+    curveVertex(x, y)
+    #ellipse(x, y, 5, 5)
+    
 def draw_16_points(points):
     beginShape()
     for p in points + points[0:3]:
+        print(p)
         cvp(*p)
     endShape()
 
 
-def draw_12_points(points):
-    #points = [points[i] for i in [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15]]
-    curveTightness(0.3)
+def draw_curve_filled(data):
     beginShape()
-    for p in points + points[0:3]:
-        cvp(*p)
+    for t in data+data[:3]:
+        cvp(*t)
     endShape()
+
+def get_angles_radii_antennae(angle_offset, r):                    
+    angles = [0]*4
+    angles[0] = helper.random_centered(180, angle_offset)
+    angles[1] = helper.random_centered(90, angle_offset)
+    angles[2] = helper.random_centered(30, angle_offset)
+    angles[3] = helper.random_centered(300, angle_offset)
+    
+    radii = [0]*4
+    radii[0] = random(r*0.45, r*0.75)
+    radii[1] = random(r*0.25, r*0.5)
+    radii[2] = random(r*0.15, r*0.3)
+    radii[3] = random(r*0.1, r*0.15)
+
+    return angles, radii
 
 def mousePressed():
     helper.save_frame_timestamp('butterballs', timestamp, random_seed)

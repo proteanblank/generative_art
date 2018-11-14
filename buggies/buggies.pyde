@@ -9,11 +9,13 @@ import sys
 from random import shuffle, seed
 
 import helper
+import bug_palette 
 
 ##########################################################################
 # Global variables
 ##########################################################################
 
+random_seed = 0
 
 # Get time
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -26,81 +28,10 @@ frame_rate = 1
 ##########################################################################
 
 # Canvas size
-w = 1000  # width
-h = 1000  # height
+w = 2000  # width
+h = 2000  # height
 
-##########################################################################
-# Knobs to turn
-##########################################################################
-
-# Bug Green Orange
-pal = {0: [[26, 79, 78],  # orange    
-           [107, 52, 31], # green
-           [74, 62, 51],  # weirdgreen
-           [197, 37, 38], # grayblue
-           [39, 52, 87]],  # yellow
-        # Bug Green Brown
-        1: [[44, 53, 38], # brownish  
-            [79, 40, 65], # lightgreen
-            [83, 66, 38], # green
-            [43, 42, 84], # tan
-            [38, 65, 70], # tanbrown
-            [78, 69, 19]], # darkgreen
-        # Bug Red Orange
-        2: [[14, 79, 93], # orange
-            [5, 100, 55], # red
-            [359, 100, 35], # darkred
-            [37, 38, 87]], #tan
-        # Kbo
-        3: [[348.7, 50.4, 94.9],  # bright salmon
-            [306.6, 40.8, 96.1], # bright pink
-            [45.7, 78.8, 94.1],  # yellow
-            [16.3, 28.6, 96.1],  # salmon
-            [358.7, 75.6, 94.9]], # red
-        # Zenburn color palette
-        4: [[60, 7, 86],   #dcdccc cream
-            [0, 28, 80],   #cc9393 pink
-            [180, 9, 69],  #9fafaf blue gray
-            [0, 13, 74],   #bca3a3 mauve
-            [24, 31, 100], #ffcfaf peach
-            [150, 22, 56]], #709080 green
-        # Red Blue Green bug
-        5: [[60, 23, 95], # cream
-            [5, 75, 69], # red
-            [97, 55, 65], # green
-            [221, 70, 42], # dark blue
-            [162, 100, 58], # aqua?
-            [263, 39, 41], # purple
-            [31, 76, 91]], # orange
-        # Purple blue black bug
-        6: [[234, 46, 67], # light purple
-            [164, 29, 81], # light blue
-            [229, 53, 25], # basically black
-            [188, 49, 76], # blue
-            [240, 37, 69]], # purple
-        # Albrecht Durer
-        7: [[92, 23, 45], # green
-            [79, 21, 65], # green
-            [33, 32, 55], # brown
-            [26, 12, 84], # tan
-            [25, 9, 95]], # light tan
-        # Grays and browns
-        8: [[0, 0, 10], 
-            [0, 0, 30],
-            [0, 0, 50],
-            [0, 0, 70],
-            [0, 0, 90],
-            [30, 54, 45],
-            [184, 10, 65]]
-            
-            
-        # # CMYK
-        # 99: [[180, 100, 100],  #00ffff cyan
-        #     [300, 100, 100],  #ff00ff magenta
-        #     [60, 100, 100],   #ffff00 yellow
-        #     [0, 0, 0]],        #000000 black
-}
-            
+pal = bug_palette.pal        
             
 ##########################################################################
 # setup()
@@ -148,17 +79,17 @@ def setup():
 ##########################################################################
 
 def draw():
-    
-    random_seed = int(random(0, 10000))
+    global random_seed
+    random_seed = int(frameCount*second()*10000)
     #random_seed = 313
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)
     
-    
-    palette = pal[int(random(0,len(pal)))]        
+    palette_idx = int(random(0,len(pal)))
+    palette = pal[palette_idx]        
     palette_bg_idx = int(random(0, len(palette)))
     
-    if frameCount == 300:
+    if frameCount == 500:
         exit()
 
     counter = frameCount % 100
@@ -173,9 +104,9 @@ def draw():
     translate(width / 2, height / 2)
 
     # Full bug
-    w_bug = random(200, 500)
+    w_bug = random(width*0.2, width*0.5)
     # Calculate based on ratio (w_bug*random_multiplier)
-    h_bug = random(300, 600)
+    h_bug = random(height*0.3, height*0.6)
     x_0 = 0 - w_bug / 2
     y_0 = 0 - h_bug / 2
 
@@ -245,7 +176,8 @@ def draw():
     
     
     pushStyle()
-    fill(0, 0, random(10, 30))
+    c = palette[palette_bg_idx]
+    fill(c[0], c[1], random(5, 25))
     draw_leg(pron[14][0], pron[14][1], arm_length_a, up_angle_a, 50, arm_length_b, up_angle_b, 5, arm_length_c, up_angle_c, 5)
     draw_leg(elyt[15][0], elyt[15][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
     draw_leg(elyt[14][0], elyt[14][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
@@ -282,7 +214,7 @@ def draw():
     m.endDraw()
     m.popMatrix()
     
-    pattern = get_pattern('bg', 0.3, palette, palette_bg_idx)
+    pattern = get_pattern('bg', 0.7, palette, palette_bg_idx)
     pattern.mask(m)
     image(pattern, -width/2, -height/2)
     
@@ -340,10 +272,10 @@ def draw():
     curve_tightness = random(-2, 1)
     
 
-    angles, radii = get_angles_radii(45, w_head*0.3, w_head)
+    angles, radii = get_angles_radii(random(5, 30), w_head*0.1, w_head*0.8)
     
-    x_ = head[2][0]
-    y_ = head[2][1] + random(radii[2]*0.7, radii[2]*1)
+    x_ = head[10][0]
+    y_ = head[10][1] - random(-radii[2]*0.2, radii[2]*0.5)
     
     m = createGraphics(width, height)
     m.beginDraw()
@@ -547,7 +479,7 @@ def draw():
     angles, radii = get_angles_radii_antennae(30, width*0.2)
     
     x_ = random(-width*0.3, -width*0.1)
-    y_ = random(-height*0.3, height*0.3)
+    y_ = random(-height*0.3, height*0.2)
     
     curve_tightness = []
     for a in angles:
@@ -636,7 +568,7 @@ def draw():
     
     
 
-    helper.save_frame_timestamp('buggies', timestamp, random_seed)
+    helper.save_frame_timestamp('buggies_BIG_{}'.format(palette_idx), timestamp, random_seed)
 
     # Save memory by closing image, just look at it in the file system
     # if (w > 1000) or (h > 1000):
