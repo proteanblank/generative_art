@@ -1,11 +1,16 @@
-## Creatures (Work in Progress)
+## Creatures
 
+
+I am participating in a group art show based around new media and generative artwork. The theme is "creatures". I made two programs for it, one generates beetles and the other generates abstract butterflies. 
 
 <p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/butterballs/images/layout_test.png" alt="butterflies" width="80%"></p>
 
-Working on some pieces for an upcoming group art show. The theme is "creatures".
+
+Butterfly code is in the ['butterballs' dir](https://github.com/aaronpenne/generative_art/tree/master/butterballs).
 
 <p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/buggies/images/8x10_bug_mix.png" alt="beetles" width="70%"></p>
+
+Beetles code is in the ['buggies' dir](https://github.com/aaronpenne/generative_art/tree/master/buggies)
 
 ## Reach
 
