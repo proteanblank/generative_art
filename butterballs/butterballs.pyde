@@ -28,8 +28,8 @@ frame_rate = 1
 ##########################################################################
 
 # Canvas size
-w = 2000  # width
-h = 2000  # height
+w = 1000  # width
+h = 1000  # height
 
 pal = bug_palette.pal        
             
@@ -59,7 +59,7 @@ def setup():
     rectMode(CORNER)
 
     # Stops draw() from running in an infinite loop (should be last line)
-    #noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit)
+    noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit)
 
 
 ##########################################################################
@@ -68,8 +68,8 @@ def setup():
 
 def draw():
     global random_seed
-    random_seed = int(frameCount*second()*10000)
-    #random_seed = 313
+    random_seed = int(frameCount*100000/second())
+    random_seed = 3
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)
     
@@ -93,7 +93,8 @@ def draw():
     ##########################################################################
     # Upper Wings
     ##########################################################################
-    stroke(0, 0, 0, 60)
+    #stroke(0, 0, 0, 60)
+    noStroke()
     for i in range(10):
         p = palette[int(random(0, len(palette)))]     
         if (i==3) and (i==6):
@@ -124,7 +125,6 @@ def draw():
     ##########################################################################
     # Lower Wings
     ##########################################################################
-    stroke(0, 0, 0, 60)
     for i in range(10):
         p = palette[int(random(0, len(palette)))]
         if (i==3) and (i==6):
@@ -169,9 +169,10 @@ def draw():
     
     break_point = int(random(2, len(angles)))
     pushMatrix()
+    pushStyle()
     noFill()
     strokeWeight(3)
-    stroke(p[0], p[1], 30)
+    stroke(p[0], p[1], 35)
     beginShape()  
     curveTightness(curve_tightness[0])
     x, y = helper.circle_points(x_, y_, angles[-1], radii[-1])
@@ -203,6 +204,7 @@ def draw():
         curveVertex(x, y)
     endShape()
     curveTightness(0)
+    popStyle()
     popMatrix()
     
     
@@ -213,7 +215,7 @@ def draw():
     
     
     
-    helper.save_frame_timestamp('butterballs', timestamp, random_seed)
+    helper.save_frame_timestamp('butterballs_NOSTROKE', timestamp, random_seed)
 
     # Save memory by closing image, just look at it in the file system
     # if (w > 1000) or (h > 1000):
