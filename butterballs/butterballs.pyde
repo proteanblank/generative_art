@@ -90,9 +90,24 @@ def draw():
     range_upper_radii = [width*0.2, width*0.45]
     range_lower_radii = [width*0.2, width*0.3]
 
+    num_layers = 10
+
     ##########################################################################
     # Upper Wings
     ##########################################################################
+    # Makes 
+    upper_wing = {}
+    for i in range(num_layers):
+        upper_wing[i] = [0, 0]
+        for angle in range_upper_angles:
+            x = 
+            y = 
+            r = 
+            a = 
+            upper_wing[i].append(helper.circle_points_list(random(0, width*0.01), random(0, height*0.01), random(width*0.2, width*0.4), radians(random(angle-7, angle))))
+
+    print(upper_wing)
+    
     #stroke(0, 0, 0, 60)
     noStroke()
     for i in range(10):
