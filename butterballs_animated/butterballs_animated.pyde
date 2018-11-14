@@ -134,13 +134,13 @@ def setup():
     rectMode(CORNER)
 
     global body
-    body = get_16_points(-w*0.015, -h*0.05, w*0.03, h*0.35)
+    body = get_16_points(-w*0.015, -h*0.1, w*0.03, h*0.35)
     global angles
     global radii
     angles, radii = get_angles_radii_antennae(10, w*0.1)
     global curve_tightness
     for a in angles:
-        curve_tightness.append(random(-2, 2))
+        curve_tightness.append(random(-2, 0.7))
         
     # Stops draw() from running in an infinite loop (should be last line)
     #noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit)
@@ -153,7 +153,7 @@ def setup():
 def draw():
     global random_seed
     random_seed = int(frameCount*10000/(second()+1))
-    #random_seed = 3
+    random_seed = 3
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)
     
@@ -178,8 +178,7 @@ def draw():
     # Upper Wings
     ##########################################################################
     
-    #stroke(0, 0, 0, 60)
-    noStroke()
+    stroke(0, 0, 0, 60)
     for i in upper_wing:
         layer = []
         p = upper_palette[i]     
@@ -220,10 +219,15 @@ def draw():
     # Antennae and body
     ##########################################################################
 
+    
+    # Body
+    fill(0, 0, 100)
+    noStroke()
+    draw_16_points(body)
+
+
     global angles
-    global radii
     angles = [a + cos(frameCount*PI/steps)/7 for a in angles]
-    radii = [r + cos(frameCount*PI/steps)/7 for r in radii]
     global x_, y_
     x_ = x_+sin(frameCount*PI/steps)*3
     y_ = y_+sin(frameCount*PI/steps)*3
@@ -267,14 +271,8 @@ def draw():
     popStyle()
     popMatrix()
     
-    
-    # Body
-    fill(0, 0, 100)
-    noStroke()
-    draw_16_points(body)
-
     print(frameCount)
-    #helper.save_frame_timestamp('butterballs', timestamp, random_seed)
+    helper.save_frame_timestamp('butterballs', timestamp, random_seed)
 
     # Save memory by closing image, just look at it in the file system
     # if (w > 1000) or (h > 1000):

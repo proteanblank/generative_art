@@ -18,7 +18,7 @@ import bug_palette
 random_seed = 0
 
 # Get time
-timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+timestamp = None
 
 # Parameters for draw speed
 frame_rate = 1
@@ -79,9 +79,12 @@ def setup():
 ##########################################################################
 
 def draw():
+    global timestamp
+    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    
     global random_seed
-    random_seed = int(frameCount*second()*10000)
-    #random_seed = 313
+    random_seed = int(frameCount*100000/(second()+1))
+    #random_seed = 113
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)
     
@@ -483,13 +486,15 @@ def draw():
     
     curve_tightness = []
     for a in angles:
-        curve_tightness.append(random(-2, 2))
+        curve_tightness.append(random(-3, 0.6))
+        
+    p = palette[palette_bg_idx]
     
     break_point = int(random(2, len(angles)))
     pushMatrix()
     noFill()
-    strokeWeight(3)
-    stroke(0, 0, 10)
+    strokeWeight(width*0.002)
+    stroke(p[0], p[1], 10)
     beginShape()  
     curveTightness(curve_tightness[0])
     x, y = helper.circle_points(x_, y_, angles[-1], radii[-1])
@@ -507,8 +512,8 @@ def draw():
     
     scale(-1, 1)
     noFill()
-    strokeWeight(3)
-    stroke(0, 0, 10)
+    strokeWeight(width*0.002)
+    stroke(p[0], p[1], 10)
     beginShape()   
     curveTightness(curve_tightness[0])
     x, y = helper.circle_points(x_, y_, angles[-1], radii[-1])
@@ -526,49 +531,8 @@ def draw():
     popMatrix()
     
     
-    # x1, y1 = [head[10][0]-random(w_head*0.2, w_head*0.5), head[10][1]-random(h_head*0.2, h_head*0.5)]
-    # x2, y2 = [x1-random(0, w_head), y1+random(h_head*0.1, h_head)]
-    # x3, y3 = [x2+random(-w_head*0.5, w_head*0.5), y2+random(-h_head*0.5, h_head*0.5)]
-    # x4, y4 = [x3+random(-w_head*0.5, w_head*0.5), y3+random(-h_head*0.5, h_head*0.5)]
-    
-    # x5, y5 = [x4+random(-w_head*0.5, w_head*0.5), y4+random(-h_head*0.5, h_head*0.5)]
 
-    # curveTightness(random(-0.9, 0.9))
-     
-    # pushStyle()
-    # noFill()
-
-    # ellipse(x1, y1, 3, 3)
-    # beginShape()
-    # cvp(x5, y5)
-    # cvp(x1, y1)
-    # cvp(x2, y2)
-    # cvp(x3, y3)
-    # cvp(x4, y4)
-    # cvp(x5, y5)
-    # cvp(x1, y1)
-    # endShape()
-    
-    # pushMatrix()
-    # scale(-1.0, 1.0)
-    # ellipse(x1, y1, 3, 3)
-    # beginShape()
-    # cvp(x5, y5)
-    # cvp(x1, y1)
-    # cvp(x2, y2)
-    # cvp(x3, y3)
-    # cvp(x4, y4)
-    # cvp(x5, y5)
-    # cvp(x1, y1)
-    # endShape()
-    # popStyle()
-    # popMatrix()
-    
-    # curveTightness(0)
-    
-    
-
-    helper.save_frame_timestamp('buggies_BIG_{}'.format(palette_idx), timestamp, random_seed)
+    helper.save_frame_timestamp('buggies_{}'.format(palette_idx), timestamp, random_seed)
 
     # Save memory by closing image, just look at it in the file system
     # if (w > 1000) or (h > 1000):
@@ -659,15 +623,18 @@ def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
     bg_color = palette[palette_bg_idx]
     
     style = int(random(1, 10))
+    
+    blend_mode = helper.random_list_value([BLEND, MULTIPLY, SUBTRACT, LIGHTEST])
    
     if pattern_style == 'dots':
         pattern = createGraphics(width, height)
         pattern.beginDraw()
         pattern.pushMatrix()
+        pattern.blendMode(blend_mode)
         pattern.background(color(bg_color[0], bg_color[1], bg_color[2]*lightness_offset)) # mauve
         #pattern.translate(width/2, height/2)
         pattern.noStroke()
-        for i in range(40):
+        for i in range(int(random(20, 40))):
             fg_color = palette[int(random(0, len(palette)))]
             pattern.fill(color(fg_color[0], fg_color[1], fg_color[2]*lightness_offset))
             r = random(5, 200)
@@ -681,11 +648,12 @@ def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
         pattern = createGraphics(width, height)
         pattern.beginDraw()
         pattern.pushMatrix()
+        pattern.blendMode(blend_mode)
         pattern.background(color(bg_color[0], bg_color[1], bg_color[2]*lightness_offset))
         pattern.translate(width/2-random(0, width*0.05), height/2)
         pattern.noStroke()
         pattern.curveTightness(0)
-        for i in range(10):
+        for i in range(int(random(3, 11))):
             fg_color = palette[int(random(0, len(palette)))]
             pattern.fill(color(fg_color[0], fg_color[1], fg_color[2]*lightness_offset, 100))
             
@@ -714,6 +682,7 @@ def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
         pattern = createGraphics(width, height)
         pattern.beginDraw()
         pattern.pushMatrix()
+        pattern.blendMode(blend_mode)
         pattern.background(color(0, 100, 100*lightness_offset)) # mauve
         #pattern.translate(width/2, height/2)
         pattern.noStroke()
@@ -726,6 +695,9 @@ def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
         pattern.endDraw()
         pattern.popMatrix
         
+        
+    blendMode(BLEND)
+    
     return pattern
 
 
