@@ -10,7 +10,7 @@ Butterfly code is in the ['butterballs' dir](https://github.com/aaronpenne/gener
 
 <p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/buggies/images/8x10_bug_mix.png" alt="beetles" width="70%"></p>
 
-Beetles code is in the ['buggies' dir](https://github.com/aaronpenne/generative_art/tree/master/buggies)
+Beetles code is in the ['buggies' dir](https://github.com/aaronpenne/generative_art/tree/master/buggies).
 
 ## Reach
 
