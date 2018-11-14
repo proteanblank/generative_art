@@ -64,11 +64,41 @@ pal = {0: [[26, 79, 78],  # orange
             [0, 13, 74],   #bca3a3 mauve
             [24, 31, 100], #ffcfaf peach
             [150, 22, 56]], #709080 green
-        # CMYK
-        5: [[180, 100, 100],  #00ffff cyan
-            [300, 100, 100],  #ff00ff magenta
-            [60, 100, 100],   #ffff00 yellow
-            [0, 0, 0]],        #000000 black
+        # Red Blue Green bug
+        5: [[60, 23, 95], # cream
+            [5, 75, 69], # red
+            [97, 55, 65], # green
+            [221, 70, 42], # dark blue
+            [162, 100, 58], # aqua?
+            [263, 39, 41], # purple
+            [31, 76, 91]], # orange
+        # Purple blue black bug
+        6: [[234, 46, 67], # light purple
+            [164, 29, 81], # light blue
+            [229, 53, 25], # basically black
+            [188, 49, 76], # blue
+            [240, 37, 69]], # purple
+        # Albrecht Durer
+        7: [[92, 23, 45], # green
+            [79, 21, 65], # green
+            [33, 32, 55], # brown
+            [26, 12, 84], # tan
+            [25, 9, 95]], # light tan
+        # Grays and browns
+        8: [[0, 0, 10], 
+            [0, 0, 30],
+            [0, 0, 50],
+            [0, 0, 70],
+            [0, 0, 90],
+            [30, 54, 45],
+            [184, 10, 65]]
+            
+            
+        # # CMYK
+        # 99: [[180, 100, 100],  #00ffff cyan
+        #     [300, 100, 100],  #ff00ff magenta
+        #     [60, 100, 100],   #ffff00 yellow
+        #     [0, 0, 0]],        #000000 black
 }
             
             
@@ -92,12 +122,12 @@ def setup():
     # Set the number of frames per second to display
     frameRate(frame_rate)
 
-    background(0, 0, 95)
+    background(0, 0, 100)
 
     rectMode(CORNER)
 
     # Stops draw() from running in an infinite loop (should be last line)
-    noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit)
+    #noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit)
 
 
 ##########################################################################
@@ -120,7 +150,7 @@ def setup():
 def draw():
     
     random_seed = int(random(0, 10000))
-    random_seed = 313
+    #random_seed = 313
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)
     
@@ -128,9 +158,8 @@ def draw():
     palette = pal[int(random(0,len(pal)))]        
     palette_bg_idx = int(random(0, len(palette)))
     
-    step = 20
-    # if frameCount == step*2:
-    #     exit()
+    if frameCount == 300:
+        exit()
 
     counter = frameCount % 100
 
@@ -187,6 +216,48 @@ def draw():
     r_eye = get_16_points(head[3][0]-w_eyes/2, head[3][1], h_eyes, w_eyes)
 
 
+    ##########################################################################
+    # Legs
+    ##########################################################################
+    wing_x_squeeze = 50
+    
+    elyt[7][0] -= wing_x_squeeze*1.1
+    elyt[13][0] += wing_x_squeeze*1.1
+    elyt[14][0] += wing_x_squeeze
+    
+    elyt[0] = [pron[12][0], pron[12][1]-h_pron*0.1]
+    elyt[2] = [pron[10][0], pron[10][1]-h_pron*0.1]
+    elyt[4] = [pron[8][0], pron[8][1]-h_pron*0.1]
+    
+    arm_length_a = w_elyt*random(0.01, 0.1)
+    arm_length_b = h_elyt*random(0.01, 0.4)
+    arm_length_c = h_elyt*random(0.01, 0.4)
+    arm_width_a = random(15, 30)
+    arm_width_b = random(15, 30)
+    arm_width_c = random(15, 30)
+    
+    up_angle_a = random(200, 260)
+    up_angle_b = random(200, 340)
+    up_angle_c = random(200, 340)
+    dn_angle_a = random(145, 185)
+    dn_angle_b = random(60, 160)
+    dn_angle_c = random(60, 160)
+    
+    
+    pushStyle()
+    fill(0, 0, random(10, 30))
+    draw_leg(pron[14][0], pron[14][1], arm_length_a, up_angle_a, 50, arm_length_b, up_angle_b, 5, arm_length_c, up_angle_c, 5)
+    draw_leg(elyt[15][0], elyt[15][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
+    draw_leg(elyt[14][0], elyt[14][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
+    pushMatrix()
+    scale(-1.0, 1.0)  
+    draw_leg(pron[14][0], pron[14][1], arm_length_a, up_angle_a, 50, arm_length_b, up_angle_b, 5, arm_length_c, up_angle_c, 5)
+    draw_leg(elyt[15][0], elyt[15][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
+    draw_leg(elyt[14][0], elyt[14][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
+    popMatrix()
+    popStyle()
+    
+    
     ##########################################################################
     # Neck
     ##########################################################################
@@ -266,13 +337,13 @@ def draw():
     ##########################################################################
     # Head
     ##########################################################################
-    curve_tightness = random(-0.9, 0.7)
+    curve_tightness = random(-2, 1)
     
-    pointed = int(random(0, 3))
-    print(pointed)
+
+    angles, radii = get_angles_radii(45, w_head*0.3, w_head)
     
-    
-    
+    x_ = head[2][0]
+    y_ = head[2][1] + random(radii[2]*0.7, radii[2]*1)
     
     m = createGraphics(width, height)
     m.beginDraw()
@@ -280,77 +351,30 @@ def draw():
     m.pushMatrix()
     m.translate(width/2, height/2)
     m.beginShape()
-    m.curveVertex(*head[2])
-    m.curveVertex(*head[7]) if pointed else m.curveVertex(*head[6])
-    m.curveVertex(*head[10])
-    m.curveVertex(*head[13]) if pointed else m.curveVertex(*head[14])
-    m.curveVertex(*head[2])
-    m.curveVertex(*head[7]) if pointed else m.curveVertex(*head[6])
-    m.curveVertex(*head[10])
+    for a, r in zip(angles, radii):
+        x, y = helper.circle_points(x_, y_, r, radians(a))
+        m.curveVertex(x, y)
     m.endShape()
     m.endDraw()
     m.popMatrix()
     
-    pattern = get_pattern('bg', 0.45, palette, palette_bg_idx)
+    pattern = get_pattern('bg', random(0.5, 0.7), palette, palette_bg_idx)
     pattern.mask(m)
     image(pattern, -width/2, -height/2)
     
-    # pushStyle()
-    # noFill()
-    # #stroke(0, 0, 20)
-    # beginShape()
-    # cvp(*head[2])
-    # cvp(*head[7]) if pointed else cvp(*head[6])
-    # cvp(*head[10])
-    # cvp(*head[13]) if pointed else cvp(*head[14])
-    # cvp(*head[2])
-    # cvp(*head[7]) if pointed else cvp(*head[6])
-    # cvp(*head[10])
-    # endShape()
-    # popStyle()
-    
-    ##########################################################################
-    # Legs
-    ##########################################################################
-    wing_x_squeeze = 50
-    
-    elyt[7][0] -= wing_x_squeeze*1.1
-    elyt[13][0] += wing_x_squeeze*1.1
-    elyt[14][0] += wing_x_squeeze
-    
-    elyt[0] = [pron[12][0], pron[12][1]-h_pron*0.1]
-    elyt[2] = [pron[10][0], pron[10][1]-h_pron*0.1]
-    elyt[4] = [pron[8][0], pron[8][1]-h_pron*0.1]
-    
-    arm_length_a = w_elyt*random(0.01, 0.1)
-    arm_length_b = h_elyt*random(0.2, 0.4)
-    arm_length_c = h_elyt*random(0.2, 0.5)
-    arm_length_d = 50
-    arm_width_a = 20
-    arm_width_b = 20
-    arm_width_c = 20
-    arm_width_d = 20
-    
-    up_angle_a = random(200, 260)
-    up_angle_b = random(210, 270)
-    up_angle_c = random(215, 270)
-    dn_angle_a = random(145, 185)
-    dn_angle_b = random(85, 125)
-    dn_angle_c = random(75, 115)
-    
-    
     pushStyle()
-    fill(0, 0, random(10, 30))
-    draw_leg(pron[14][0], pron[14][1], arm_length_a, up_angle_a, 50, arm_length_b, up_angle_b, 5, arm_length_c, up_angle_c, 5)
-    draw_leg(elyt[15][0], elyt[15][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
-    draw_leg(elyt[14][0], elyt[14][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
-    pushMatrix()
-    scale(-1.0, 1.0)  
-    draw_leg(pron[14][0], pron[14][1], arm_length_a, up_angle_a, 50, arm_length_b, up_angle_b, 5, arm_length_c, up_angle_c, 5)
-    draw_leg(elyt[15][0], elyt[15][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
-    draw_leg(elyt[14][0], elyt[14][1], arm_length_a, dn_angle_a, 50, arm_length_b, dn_angle_b, 5, arm_length_c, dn_angle_c, 5, True)
-    popMatrix()
+    beginShape()
+    noFill()
+    stroke(0, 0, 0)
+    strokeWeight(1)
+    curveTightness(curve_tightness)
+    for a, r in zip(angles, radii):
+        x, y = helper.circle_points(x_, y_, r, radians(a))
+        curveVertex(x, y)
+    endShape()
     popStyle()
+    
+    
     
     ##########################################################################
     # Elytron
@@ -399,6 +423,21 @@ def draw():
     ##########################################################################
     pron[0][0] += w_pron*0.1
     pron[4][0] -= w_pron*0.1
+    rw = w_pron*0.1
+    rh = h_pron*0.1
+    rand_00 = random(-rw, rw)
+    rand_01 = random(-rh, rh)
+    rand_2 = random(-rh, rh)
+    rand_70 = random(-rw, rw)
+    rand_71 = random(-rh, rh)
+    rand_10 = random(-rh, rh)
+    
+    pron[0][0] += rand_00
+    pron[0][1] += rand_01
+    pron[2][1] += rand_2
+    pron[4][0] -= rand_00
+    pron[4][1] += rand_01
+    pron[10][1] += rand_10
 
         
     m = createGraphics(width, height)
@@ -425,14 +464,15 @@ def draw():
     m.endDraw()
     m.popMatrix()
 
-    pattern = get_pattern('bg', 0.5, palette, palette_bg_idx)
+    pattern = get_pattern('bg', random(0.5, 0.7), palette, palette_bg_idx)
     pattern.mask(m)
     image(pattern, -width/2, -height/2)
     
     # Outline
     pushStyle()
     noFill()
-    #stroke(0, 0, 20)
+    stroke(0, 0, 0)
+    strokeWeight(1)
     beginShape()
     cvp(*pron[0])
     curveTightness(0.7)
@@ -461,28 +501,12 @@ def draw():
     #r_wing[7][0] -= wing_x_squeeze
     l_wing[13][0] += wing_x_squeeze
 
-
-
-#     # Right wing
-#     pushMatrix()
-#     # rotate(-PI/40)
-#     beginShape()
-#     cvp(*r_wing[15])
-#     curveTightness(0.9)
-#     cvp(*r_wing[1])
-#     curveTightness(0)
-#     cvp(*r_wing[4])
-#     cvp(*r_wing[7])
-#     cvp(*r_wing[12])
-#     cvp(*r_wing[15])
-#     curveTightness(0.9)
-#     cvp(*r_wing[1])
-#     curveTightness(0)
-#     cvp(*r_wing[4])
-#     endShape()
-#     popMatrix()
+    for i in [0, 2, 12, 13]:
+        l_wing[i][0] = helper.random_centered(l_wing[i][0], w_elyt*0.1)
+        l_wing[i][1] = helper.random_centered(l_wing[i][1], w_elyt*0.1)
     
-    pattern = get_pattern('butterball', 1, palette, palette_bg_idx)
+    pattern_style = helper.random_list_value(['dots', 'butterball'])
+    pattern = get_pattern(pattern_style, 1, palette, palette_bg_idx)
         
     # Left wing (to be mirrored)
     m = createGraphics(width, height)
@@ -509,58 +533,106 @@ def draw():
     pattern.mask(m)
     pushMatrix()
     image(pattern, -width/2, -height/2)
-    #outline_wing(l_wing)
+    outline_wing(l_wing)
     # Mirror the wing
     scale(-1.0, 1.0)
     image(pattern, -width/2, -height/2)
-    #outline_wing(l_wing)
+    outline_wing(l_wing)
     popMatrix()
-
 
     
     ##########################################################################
     # Antennae
     ##########################################################################
-    x1, y1 = [head[10][0]-random(w_head*0.2, w_head*0.5), head[10][1]-random(h_head*0.2, h_head*0.5)]
-    x2, y2 = [x1-random(0, w_head), y1+random(h_head*0.1, h_head)]
-    x3, y3 = [x2+random(-w_head*0.5, w_head*0.5), y2+random(-h_head*0.5, h_head*0.5)]
-    x4, y4 = [x3+random(-w_head*0.5, w_head*0.5), y3+random(-h_head*0.5, h_head*0.5)]
+    angles, radii = get_angles_radii_antennae(30, width*0.2)
     
-    x5, y5 = [x4+random(-w_head*0.5, w_head*0.5), y4+random(-h_head*0.5, h_head*0.5)]
-
-    curveTightness(random(-0.9, 0.9))
-     
-    pushStyle()
+    x_ = random(-width*0.3, -width*0.1)
+    y_ = random(-height*0.3, height*0.3)
+    
+    curve_tightness = []
+    for a in angles:
+        curve_tightness.append(random(-2, 2))
+    
+    break_point = int(random(2, len(angles)))
+    pushMatrix()
     noFill()
     strokeWeight(3)
     stroke(0, 0, 10)
-    ellipse(x1, y1, 3, 3)
-    beginShape()
-    cvp(x5, y5)
-    cvp(x1, y1)
-    cvp(x2, y2)
-    cvp(x3, y3)
-    cvp(x4, y4)
-    cvp(x5, y5)
-    cvp(x1, y1)
+    beginShape()  
+    curveTightness(curve_tightness[0])
+    x, y = helper.circle_points(x_, y_, angles[-1], radii[-1])
+    curveVertex(x, y)
+    curveVertex(pron[1][0], pron[1][1])
+    # curveVertex(x_head-random(w_head*0.01, w_head*0.8), y_head-random(h_head*0.01, h_head*0.5))
+    for i, (a, r, c) in enumerate(zip(angles, radii, curve_tightness)):  
+        if i >= break_point:
+            break
+        curveTightness(c)
+        x, y = helper.circle_points(x_, y_, r, radians(a))
+        curveVertex(x, y)
     endShape()
+    curveTightness(0)
     
-    pushMatrix()
-    scale(-1.0, 1.0)
-    ellipse(x1, y1, 3, 3)
-    beginShape()
-    cvp(x5, y5)
-    cvp(x1, y1)
-    cvp(x2, y2)
-    cvp(x3, y3)
-    cvp(x4, y4)
-    cvp(x5, y5)
-    cvp(x1, y1)
+    scale(-1, 1)
+    noFill()
+    strokeWeight(3)
+    stroke(0, 0, 10)
+    beginShape()   
+    curveTightness(curve_tightness[0])
+    x, y = helper.circle_points(x_, y_, angles[-1], radii[-1])
+    curveVertex(x, y)
+    curveVertex(pron[1][0], pron[1][1])
+    # curveVertex(x_head-random(w_head*0.01, w_head*0.8), y_head-random(h_head*0.01, h_head*0.5))
+    for i, (a, r, c) in enumerate(zip(angles, radii, curve_tightness)):    
+        if i >= break_point:
+            break
+        curveTightness(c)
+        x, y = helper.circle_points(x_, y_, r, radians(a))
+        curveVertex(x, y)
     endShape()
-    popStyle()
+    curveTightness(0)
     popMatrix()
     
-    curveTightness(0)
+    
+    # x1, y1 = [head[10][0]-random(w_head*0.2, w_head*0.5), head[10][1]-random(h_head*0.2, h_head*0.5)]
+    # x2, y2 = [x1-random(0, w_head), y1+random(h_head*0.1, h_head)]
+    # x3, y3 = [x2+random(-w_head*0.5, w_head*0.5), y2+random(-h_head*0.5, h_head*0.5)]
+    # x4, y4 = [x3+random(-w_head*0.5, w_head*0.5), y3+random(-h_head*0.5, h_head*0.5)]
+    
+    # x5, y5 = [x4+random(-w_head*0.5, w_head*0.5), y4+random(-h_head*0.5, h_head*0.5)]
+
+    # curveTightness(random(-0.9, 0.9))
+     
+    # pushStyle()
+    # noFill()
+
+    # ellipse(x1, y1, 3, 3)
+    # beginShape()
+    # cvp(x5, y5)
+    # cvp(x1, y1)
+    # cvp(x2, y2)
+    # cvp(x3, y3)
+    # cvp(x4, y4)
+    # cvp(x5, y5)
+    # cvp(x1, y1)
+    # endShape()
+    
+    # pushMatrix()
+    # scale(-1.0, 1.0)
+    # ellipse(x1, y1, 3, 3)
+    # beginShape()
+    # cvp(x5, y5)
+    # cvp(x1, y1)
+    # cvp(x2, y2)
+    # cvp(x3, y3)
+    # cvp(x4, y4)
+    # cvp(x5, y5)
+    # cvp(x1, y1)
+    # endShape()
+    # popStyle()
+    # popMatrix()
+    
+    # curveTightness(0)
     
     
 
@@ -718,7 +790,6 @@ def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
             r = random(200, 1000)
             x = random(0, width)
             y = random(0, height)
-            print(x, y, r)
             pattern.ellipse(x, y, r, r)
         pattern.endDraw()
         pattern.popMatrix
@@ -729,7 +800,8 @@ def get_pattern(pattern_style, lightness_offset, palette, palette_bg_idx):
 def outline_wing(l_wing):
     pushStyle()
     noFill()
-    stroke(0, 0, 20)
+    stroke(0, 0, 0)
+    strokeWeight(1)
     
     pushMatrix()
     # rotate(PI/40)
@@ -796,6 +868,55 @@ def draw_12_points(points):
     for p in points + points[0:3]:
         cvp(*p)
     endShape()
+
+def get_angles_radii(angle_offset, r_min, r_max):
+    angles = [0]*11
+    angles[0] = helper.random_centered(0, angle_offset)
+    angles[1] = helper.random_centered(45, angle_offset)
+    angles[2] = helper.random_centered(90, angle_offset)
+    angles[3] = 180 - angles[1]
+    angles[4] = 180 - angles[0]
+    angles[5] = helper.random_centered(225, angle_offset)
+    angles[6] = 270
+    angles[7] = 180 - angles[5]
+    angles[8] = angles[0]
+    angles[9] = angles[1]
+    angles[10] = angles[2]
+
+    radii = [0]*11
+    radii[0] = random(r_min, r_max)
+    radii[1] = random(r_min, r_max)
+    radii[2] = random(r_min, r_max)
+    radii[3] = radii[1]
+    radii[4] = radii[0]
+    radii[5] = random(r_min, r_max)
+    radii[6] = random(r_min, r_max)
+    radii[7] = radii[5]
+    radii[8] = radii[0]
+    radii[9] = radii[1]
+    radii[10] = radii[2]
+
+    return angles, radii
+
+
+def get_angles_radii_antennae(angle_offset, r):                    
+    angles = [0]*6
+    angles[0] = helper.random_centered(315, angle_offset)
+    angles[1] = helper.random_centered(270, angle_offset)
+    angles[2] = helper.random_centered(180, angle_offset)
+    angles[3] = helper.random_centered(90, angle_offset)
+    angles[4] = helper.random_centered(30, angle_offset)
+    angles[5] = helper.random_centered(300, angle_offset)
+    
+    radii = [0]*6
+    radii[0] = random(r*0.85, r)
+    radii[1] = random(r*0.7, r*0.9)
+    radii[2] = random(r*0.45, r*0.75)
+    radii[3] = random(r*0.25, r*0.5)
+    radii[4] = random(r*0.15, r*0.3)
+    radii[5] = random(r*0.1, r*0.15)
+
+    return angles, radii
 
 def mousePressed():
     helper.save_frame_timestamp('buggies', timestamp, random_seed)
