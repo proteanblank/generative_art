@@ -83,7 +83,7 @@ def draw():
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
     
     global random_seed
-    random_seed = int(frameCount*100000/(second()+1))
+    random_seed = int(frameCount*1000000/(second()+1))
     #random_seed = 113
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)

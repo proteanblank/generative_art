@@ -18,7 +18,7 @@ import bug_palette
 random_seed = 0
 
 # Get time
-timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+timestamp = None
 
 # Parameters for draw speed
 frame_rate = 30
@@ -89,25 +89,20 @@ for i in range(13, 26):
         
         
 palette = pal[int(random(0, len(pal)))]
-    
+print(palette)
+
 upper_palette = []
 for i in upper_wing:
     upper_palette.append(palette[int(random(0, len(palette)))])   
 lower_palette = []
 for i in lower_wing:
     lower_palette.append(palette[int(random(0, len(palette)))])
-        
-# Antennae
+      
 body = None
 angles = None
 radii = None
-
-x_ = random(-w*0.3, 0)
-y_ = random(-h*0.4, -w*0.3)
-
+antennae = None
 curve_tightness = []
-
-
 
 ##########################################################################
 # setup()
@@ -115,7 +110,7 @@ curve_tightness = []
 ##########################################################################
 
 def setup():
-
+    print(frameCount)
     # Sets size of canvas in pixels (must be first line)
     size(w, h)
 
@@ -133,15 +128,26 @@ def setup():
 
     rectMode(CORNER)
 
-    global body
-    body = get_16_points(-w*0.015, -h*0.1, w*0.03, h*0.35)
-    global angles
-    global radii
+    global body, angles, radii, antennae, curve_tightness
+    
+    
+    # Antennae
+    body = get_16_points(-w*0.015, -h*0.2, w*0.03, h*0.4)
     angles, radii = get_angles_radii_antennae(10, w*0.1)
-    global curve_tightness
-    for a in angles:
-        curve_tightness.append(random(-2, 0.7))
-        
+    
+    
+    antennae = []
+    for i in range(int(random(3, 8))):
+        x = body[0][0]
+        y = body[0][1]
+        r = random(height * 0.1, height * 0.3)
+        a = random(45, 80) 
+        phase = random(0, 128) * PI/64
+        antennae.append([x, y, r, a, phase])
+
+    for a in antennae:
+        curve_tightness.append(random(-2, 0.8))
+
     # Stops draw() from running in an infinite loop (should be last line)
     #noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit)
 
@@ -151,15 +157,20 @@ def setup():
 ##########################################################################
 
 def draw():
+    global timestamp
+    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    
     global random_seed
-    random_seed = int(frameCount*10000/(second()+1))
-    random_seed = 3
+    random_seed = int(frameCount*100000/(second()+1))
+    random_seed = 1143
     random_seed = helper.get_seed(random_seed)
     helper.set_seed(random_seed)
     
-    steps = 16
+    global body, angles, radii, antennae, curve_tightness
     
-    if frameCount > 2*steps:
+    steps = 32
+    
+    if frameCount >= 2*steps:
         exit()
     
     #palette = pal[int(random(0,len(pal)))]        
@@ -169,16 +180,16 @@ def draw():
 
     translate(width/2, height/2)
     
+    curveTightness(curve_tightness[-1])
 
-
-    
-            
             
     ##########################################################################
     # Upper Wings
     ##########################################################################
     
-    stroke(0, 0, 0, 60)
+    #stroke(0, 0, 0, 60)
+    noStroke()
+    
     for i in upper_wing:
         layer = []
         p = upper_palette[i]     
@@ -188,7 +199,7 @@ def draw():
             fill(p[0], p[1], p[2], 20)
             
         for x, y, r, a, phase in upper_wing[i]:
-            r = r + sin(frameCount*PI/steps+phase) * 10
+            r = r + sin(frameCount*PI/steps+phase) * 20
             layer.append(helper.circle_points_list(x, y, r, a))
 
         draw_wings(layer, True)
@@ -208,7 +219,7 @@ def draw():
             fill(p[0], p[1], p[2], 20)
             
         for x, y, r, a, phase in lower_wing[i]:
-            r = r + sin(frameCount*PI/steps+phase) * 10
+            r = r + sin(frameCount*PI/steps+phase) * 20
             layer.append(helper.circle_points_list(x, y, r, a))
 
         draw_wings(layer)
@@ -218,60 +229,50 @@ def draw():
     ##########################################################################
     # Antennae and body
     ##########################################################################
-
+    
+    
+    
+    antennae_points = []
+    for x, y, r, a, phase in antennae:
+        r = r + sin(frameCount*PI/steps+phase) * 7
+        a = a + sin(frameCount*PI/steps+phase) * 11
+        antennae_points.append(helper.circle_points_list(x, y, r, radians(a)))
     
     # Body
     fill(0, 0, 100)
     noStroke()
     draw_16_points(body)
-
-
-    global angles
-    angles = [a + cos(frameCount*PI/steps)/7 for a in angles]
-    global x_, y_
-    x_ = x_+sin(frameCount*PI/steps)*3
-    y_ = y_+sin(frameCount*PI/steps)*3
-    
-    pushMatrix()
+        
     pushStyle()
+    pushMatrix()
+
+    translate(0, -random(height * 0.32, height * 0.35))
     noFill()
-    strokeWeight(3)
-    stroke(p[0], p[1], 35)
-    beginShape()  
-    curveTightness(curve_tightness[0])
-    x, y = helper.circle_points(x_, y_, angles[-1], radii[-1])
-    curveVertex(x, y)
-    curveVertex(*body[0])
-    # curveVertex(x_head-random(w_head*0.01, w_head*0.8), y_head-random(h_head*0.01, h_head*0.5))
-    for i, (a, r, c) in enumerate(zip(angles, radii, curve_tightness)):  
-        # if i >= break_point:
-        #     break
-        curveTightness(c)
-        x, y = helper.circle_points(x_, y_, r, radians(a))
+    strokeWeight(width * 0.001)
+    stroke(p[0], p[1], 25)
+
+    scale(1, -1)
+
+    beginShape()
+    curveVertex(*body[2])
+    curveVertex(*body[2])
+    for i, (x, y) in enumerate(antennae_points):
+        curveTightness(curve_tightness[i])
         curveVertex(x, y)
     endShape()
-    curveTightness(0)
-    
+
     scale(-1, 1)
-    noFill()
-    beginShape()   
-    curveTightness(curve_tightness[0])
-    x, y = helper.circle_points(x_, y_, angles[-1], radii[-1])
-    curveVertex(x, y)
-    curveVertex(*body[0])
-    # curveVertex(x_head-random(w_head*0.01, w_head*0.8), y_head-random(h_head*0.01, h_head*0.5))
-    for i, (a, r, c) in enumerate(zip(angles, radii, curve_tightness)):    
-        # if i >= break_point:
-        #     break
-        curveTightness(c)
-        x, y = helper.circle_points(x_, y_, r, radians(a))
+
+    beginShape()
+    curveVertex(*body[2])
+    curveVertex(*body[2])
+    for i, (x, y) in enumerate(antennae_points):
+        curveTightness(curve_tightness[i])
         curveVertex(x, y)
     endShape()
-    curveTightness(0)
     popStyle()
     popMatrix()
-    
-    print(frameCount)
+
     helper.save_frame_timestamp('butterballs', timestamp, random_seed)
 
     # Save memory by closing image, just look at it in the file system
@@ -294,7 +295,7 @@ def draw_wings(wing, upper_wing=False):
 
 
 def get_16_points(x, y, w, h):
-    squeeze = random(-w*0.2, w*0.2)
+    squeeze = random(w*0.2, w*0.3)
     points = [0] * 16
     points[0] = [x, y]
     points[1] = [x + w * 0.25, y]
