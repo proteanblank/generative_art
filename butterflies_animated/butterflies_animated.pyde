@@ -34,8 +34,8 @@ h = 1000  # height
 pal = bug_palette.pal        
 
 
-upper_angles = [random(x-7, x) for x in range(int(random(0, 20)), int(random(60, 80)), int(random(7, 20)))]
-lower_angles = [random(x-7, x) for x in range(int(random(0, 20)), int(random(60, 80)), int(random(7, 20)))]
+upper_angles = [random(x-7, x) for x in range(int(random(0, 20)), int(random(60, 80)), int(random(13, 20)))]
+lower_angles = [random(x-7, x) for x in range(int(random(0, 20)), int(random(60, 80)), int(random(13, 20)))]
 
 upper_radii_high = [random(w*0.4, w*0.3) for x in upper_angles]
 upper_radii_low = [random(w*0.01, w*0.2) for x in upper_angles]
@@ -87,8 +87,8 @@ for i in range(13, 26):
         lower_wing[i].append([x, y, r, a, phase]) 
     # lower_wing[i].append([x, y, r, radians(random(70, 80)), 0])
         
-        
-palette = pal[int(random(0, len(pal)))]
+palette_idx = int(random(0, len(pal)))
+palette = pal[2]
 print(palette)
 
 upper_palette = []
@@ -199,7 +199,7 @@ def draw():
             fill(p[0], p[1], p[2], 20)
             
         for x, y, r, a, phase in upper_wing[i]:
-            r = r + sin(frameCount*PI/steps+phase) * 20
+            r = r + sin(frameCount*PI/steps+phase) * 15
             layer.append(helper.circle_points_list(x, y, r, a))
 
         draw_wings(layer, True)
@@ -219,7 +219,7 @@ def draw():
             fill(p[0], p[1], p[2], 20)
             
         for x, y, r, a, phase in lower_wing[i]:
-            r = r + sin(frameCount*PI/steps+phase) * 20
+            r = r + sin(frameCount*PI/steps+phase) * 11
             layer.append(helper.circle_points_list(x, y, r, a))
 
         draw_wings(layer)
@@ -234,8 +234,8 @@ def draw():
     
     antennae_points = []
     for x, y, r, a, phase in antennae:
-        r = r + sin(frameCount*PI/steps+phase) * 7
-        a = a + sin(frameCount*PI/steps+phase) * 11
+        r = r + sin(frameCount*PI/steps+phase) * 5
+        a = a + sin(frameCount*PI/steps+phase) * 7
         antennae_points.append(helper.circle_points_list(x, y, r, radians(a)))
     
     # Body
