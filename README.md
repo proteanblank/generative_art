@@ -1,14 +1,16 @@
+**To run the Python Processing scripts you need the Processing IDE with Python mode enabled. [This will get you started](https://py.processing.org/tutorials/gettingstarted/). The default installation location of Processing has a dir titled `libraries/site-packages` where any further Python scripts/imports live. Be sure to copy/paste this repo's `libraries/site-packages` files into that dir on your system.**
+
 ## Creatures
 
 
 I am participating in a group art show based around new media and generative artwork. The theme is "creatures". I made two programs for it, one generates beetles and the other generates abstract butterflies. 
 
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/butterballs/images/layout_test.png" alt="butterflies" width="100%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/butterflies/images/butterflies_3up.png" alt="butterflies" width="100%"></p>
 
 
-Butterfly code is in the ['butterballs' dir](https://github.com/aaronpenne/generative_art/tree/master/butterballs).
+Butterfly code is in the ['butterflies' dir](https://github.com/aaronpenne/generative_art/tree/master/butterballs).
 
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/buggies/images/8x10_bug_mix.png" alt="beetles" width="70%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/buggies/images/beetle_layout_4.png" alt="beetles" width="100%"></p>
 
 Beetles code is in the ['buggies' dir](https://github.com/aaronpenne/generative_art/tree/master/buggies).
 
