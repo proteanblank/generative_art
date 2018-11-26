@@ -36,16 +36,18 @@ function draw() {
   c1 = c1 + 0.5
   c = c1%360
 
-  pn1 = map(noise(t1), 0, 1, 0, width);
-  pn2 = map(noise(t2), 0, 1, 0, height);
+  pn1 = map(noise(t1), 0, 1, 0, width*0.5);
+  pn2 = map(noise(t2), 0, 1, 0, height*0.5);
 
   x = width/2;
   y = height/2;
 
+  var min_r = map(noise(t1), 0, 1, width*0.05, width*0.5)
+
   stroke(210,	22,	18, 5);
   //fill(c, 50, 80);
   noFill()
-  ellipse(x, y, pn1*sin(frameCount*PI/400), pn2*sin(frameCount*PI/330));
+  ellipse(x, y, pn1*abs(sin(frameCount*PI/400))+min_r, pn2*abs(sin(frameCount*PI/330))+min_r);
   noFill();
   rect(0, 0, w-1, h-1);
 }
@@ -67,4 +69,12 @@ function canvasMouseClicked() {
   saveCanvas('sketch', 'png');
   noLoop();
   return false;
+}
+
+function keyPressed() {
+  if (key == 's') {
+    saveCanvas('sketch', 'png');
+    noLoop();
+    return false;
+  }
 }
