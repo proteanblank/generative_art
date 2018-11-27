@@ -5,6 +5,8 @@ var c1 = 0;
 var w, h;
 var x, y;
 
+var y_offset_content = 200;
+
 var drawing = 1;
 
 function setup() {
@@ -14,11 +16,11 @@ function setup() {
   if (w > 1100) {
     w = 1100;
   }
-  h = windowHeight*0.7;
+  h = windowHeight*0.8;
   if (h > 1000) {
     h = 1000;
   }
-  var canvas = createCanvas(w, h);
+  var canvas = createCanvas(w, h-y_offset_content);
   canvas.parent('sketch-div');
 
   background(0, 0, 100);
@@ -65,7 +67,7 @@ function draw() {
   noFill();
   push()
   stroke(0,	0, 30);
-  rect(0, 0, w-1, h-1);
+  rect(0, 0, w-1, h-1-y_offset_content);
   pop()
 }
 
@@ -74,11 +76,11 @@ function windowResized() {
   if (w > 1100) {
     w = 1100;
   }
-  h = windowHeight*0.7;
+  h = windowHeight*0.8;
   if (h > 1000) {
     h = 1000;
   }
-  resizeCanvas(w, h);
+  resizeCanvas(w, h-y_offset_content);
   background(0, 0, 100);
 }
 
@@ -103,4 +105,8 @@ function keyPressed() {
       drawing = 1;
     }
   }
+}
+
+function touchMoved() {
+  return false;
 }
