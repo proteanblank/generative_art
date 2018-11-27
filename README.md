@@ -1,5 +1,13 @@
 **Note:** To run the Python Processing scripts you need the Processing IDE with Python mode enabled. [This will get you started](https://py.processing.org/tutorials/gettingstarted/). The default installation location of Processing has a dir titled `libraries/site-packages` where any further Python scripts/imports live. Be sure to copy/paste this repo's `libraries/site-packages` files into that dir on your system.
 
+## Seuss Tubes
+
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/p5_play/images/seuss_tubes_6.png" alt="seuss_tube" width="90%"></p>
+
+
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/p5_play/images/stack_wave_test_04.png" alt="seuss_tube" width="90%"></p>
+
+
 ## Creatures
 
 
