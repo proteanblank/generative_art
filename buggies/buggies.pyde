@@ -28,8 +28,8 @@ frame_rate = 1
 ##########################################################################
 
 # Canvas size
-w = 2000  # width
-h = 2000  # height
+w = 1000  # width
+h = 1000  # height
 
 pal = bug_palette.pal        
             

@@ -50,3 +50,10 @@ a svg:hover path {
   padding: 1rem;
   text-align: center;
 }
+
+.lock-screen {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+    position: fixed;
+}

@@ -85,9 +85,6 @@ function windowResized() {
 }
 
 function canvasMouseClicked() {
-  saveCanvas('sketch', 'png');
-  noLoop();
-  drawing = 0;
   return false;
 }
 
