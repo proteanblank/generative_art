@@ -10,6 +10,8 @@ import math
 import sys
 from random import shuffle, seed
 
+import helper
+
 ################################################################################
 # Global variables
 ################################################################################
@@ -18,7 +20,8 @@ from random import shuffle, seed
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
 # Set random seed value for both Python 'random' and Processing 'random'
-rand_seed = 1171989
+rand_seed = helper.get_seed('emptymonkey')
+print(rand_seed)
 # Comment out seeds below to get new shape on every run
 seed(rand_seed) # This only applys to the Python random functions
 randomSeed(rand_seed) # This only applys to the Processing random functions
@@ -52,12 +55,22 @@ len_anchors = 0
 #        (98, 19, 87),  # green
 #       ]
 
-pal = [(348.7, 50.4, 94.9),  # bright salmon
-       (306.6, 40.8, 96.1), # bright pink
-       (45.7, 78.8, 94.1),  # yellow
-       (16.3, 28.6, 96.1),  # salmon
-       (358.7, 75.6, 94.9), # red
+# Hull House Wage Map Polk
+pal = [(71, 7, 79), # gray
+       (221, 22, 22), # black
+       (210, 87, 57), # blue
+       (0, 59, 90), # orange
+       (185, 46, 60), # tourqouise
+       (43, 53, 89), # yellow
+       (327, 34, 65) # purple
        ]
+
+# pal = [(348.7, 50.4, 94.9),  # bright salmon
+#        (306.6, 40.8, 96.1), # bright pink
+#        (45.7, 78.8, 94.1),  # yellow
+#        (16.3, 28.6, 96.1),  # salmon
+#        (358.7, 75.6, 94.9), # red
+#        ]
 
 # Counter to allow for tracking draw() runs
 count = 0
@@ -68,25 +81,36 @@ count = 0
 ################################################################################
 
 # Canvas size
-w = 4000  # width
-h = 4000  # height
+w = 1000  # width
+h = 1000  # height
 
 # Number of positions across canvas
-step = 10
+x_grid_size = 12
+y_grid_size = 12
+
+# Center of each ball
+x_pos = [x*w/x_grid_size for x in range(x_grid_size)]
+y_pos = [y*h/y_grid_size for y in range(y_grid_size)]
+
+# Size of empty space between edge and piece
+x_pad = 2
+y_pad = 2
 
 # Number of points around individual circle
 num_anchors = 4
 
 # Radius of individual circle
-r_mult = 0.75  # Decimal multiplier is pct of space to fill
-radius = w/(2*step) * r_mult 
+r_mult = 0.7  # Decimal multiplier is pct of space to fill
+if w > h:
+    r_full = h/y_grid_size/2
+else:
+    r_full = w/x_grid_size/2
+radius = r_full * r_mult 
 
 # Size of lines
-stroke_weight = 4
+stroke_weight = 2
 
-# Size of empty space between edge and piece
-w_pad = 2
-h_pad = 2
+
 
 ################################################################################
 # setup() 
@@ -121,6 +145,8 @@ def setup():
 ################################################################################
 
 def draw():
+    curveTightness(0)
+    
     # Loop counter to control number of draw() runs
     global count
     print(count)
@@ -128,7 +154,7 @@ def draw():
         sys.exit(0)
     count += 1
 
-    background(0, 0, 100)
+    background(*pal[0])
 
     # Moves origin to center of image so (0,0) becomes center instead of (w/2,h/2)
     # translate(w/2, h/2)
@@ -136,21 +162,41 @@ def draw():
     ################################################################################
     # Actual shape drawing begins
     ################################################################################
-    w_step = w/step
-    h_step = h/step
-    
-    for i in range(w_pad,step-w_pad+1):
-        for j in range(h_pad,step-h_pad+1):
+    for x in x_pos[x_pad:-x_pad+1]:
+        for y in y_pos[y_pad:-y_pad+1]:
+            print(x, y)
             # Aesthetics of lines
             # noFill()
-            fill(*random_list_value(pal))
+            #fill(*random_list_value(pal))
+            
+            
+            
+            p = random_list_value([2,3,4,5,6])
+            fill(*pal[p])
+            '''
+            # Fill color based on probs
+            p = random(0,1)
+            if x < w/3:
+                if p<0.5:
+                    fill(*pal[3])
+            elif x > 2*w/3:
+                if p<0.5:
+                    fill(*pal[3])
+               
+            if (x<w/5) or (x>4*w/5):
+                if p<0.4:
+                    continue
+            elif (x<2*w/5) or (x>3*w/5):
+                if p<0.2:
+                    continue
+            '''
             
             #noStroke()
-            stroke(0, 0, 25)
+            stroke(*pal[1])
             #stroke(*pal[0])
             strokeWeight(stroke_weight)
             
-            draw_yarn_ball(i*w_step, j*h_step, radius)
+            draw_yarn_ball(x, y, radius)
 
     save_frame_timestamp('yarn', timestamp)
     
