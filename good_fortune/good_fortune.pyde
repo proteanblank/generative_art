@@ -55,22 +55,22 @@ len_anchors = 0
 #        (98, 19, 87),  # green
 #       ]
 
-# Hull House Wage Map Polk
-pal = [(71, 7, 79), # gray
-       (221, 22, 22), # black
-       (210, 87, 57), # blue
-       (0, 59, 90), # orange
-       (185, 46, 60), # tourqouise
-       (43, 53, 89), # yellow
-       (327, 34, 65) # purple
-       ]
-
-# pal = [(348.7, 50.4, 94.9),  # bright salmon
-#        (306.6, 40.8, 96.1), # bright pink
-#        (45.7, 78.8, 94.1),  # yellow
-#        (16.3, 28.6, 96.1),  # salmon
-#        (358.7, 75.6, 94.9), # red
+# # Hull House Wage Map Polk
+# pal = [(71, 7, 79), # gray
+#        (221, 22, 22), # black
+#        (210, 87, 57), # blue
+#        (0, 59, 90), # orange
+#        (185, 46, 60), # tourqouise
+#        (43, 53, 89), # yellow
+#        (327, 34, 65) # purple
 #        ]
+
+pal = [(348.7, 50.4, 94.9),  # bright salmon
+       (306.6, 40.8, 96.1), # bright pink
+       (45.7, 78.8, 94.1),  # yellow
+       (16.3, 28.6, 96.1),  # salmon
+       (358.7, 75.6, 94.9), # red
+       ]
 
 # Counter to allow for tracking draw() runs
 count = 0
@@ -81,12 +81,12 @@ count = 0
 ################################################################################
 
 # Canvas size
-w = 1000  # width
-h = 1000  # height
+w = 16800  # width
+h = 5600  # height
 
 # Number of positions across canvas
-x_grid_size = 12
-y_grid_size = 12
+x_grid_size = 32
+y_grid_size = 10
 
 # Center of each ball
 x_pos = [x*w/x_grid_size for x in range(x_grid_size)]
@@ -108,7 +108,7 @@ else:
 radius = r_full * r_mult 
 
 # Size of lines
-stroke_weight = 2
+stroke_weight = 4
 
 
 
@@ -154,7 +154,7 @@ def draw():
         sys.exit(0)
     count += 1
 
-    background(*pal[0])
+    background(0,0,100)
 
     # Moves origin to center of image so (0,0) becomes center instead of (w/2,h/2)
     # translate(w/2, h/2)
@@ -171,7 +171,7 @@ def draw():
             
             
             
-            p = random_list_value([2,3,4,5,6])
+            p = random_list_value([0,1,2,3,4])
             fill(*pal[p])
             '''
             # Fill color based on probs
@@ -192,7 +192,7 @@ def draw():
             '''
             
             #noStroke()
-            stroke(*pal[1])
+            stroke(0)
             #stroke(*pal[0])
             strokeWeight(stroke_weight)
             
@@ -246,7 +246,7 @@ def save_frame_timestamp(filename, timestamp='', output_dir='output'):
     '''Saves each frame with a structured filename to allow for tracking all output'''
     filename = filename.replace('\\', '')
     filename = filename.replace('/', '')
-    output_filename = os.path.join(output_dir, '{}_{}_{}_####.png'.format(timestamp, filename, rand_seed))
+    output_filename = os.path.join(output_dir, '{}_{}_{}_####.tif'.format(timestamp, filename, rand_seed))
     saveFrame(output_filename)
     print(output_filename)
     
@@ -255,7 +255,7 @@ def save_timestamp(filename, timestamp='', output_dir='output'):
     '''Saves image with a structured filename to allow for tracking all output'''
     filename = filename.replace('\\', '')
     filename = filename.replace('/', '')
-    output_filename = os.path.join(output_dir, '{}_{}_####.png'.format(timestamp, filename))
+    output_filename = os.path.join(output_dir, '{}_{}_####.tif'.format(timestamp, filename))
     save(output_filename)
     print(output_filename)
     
