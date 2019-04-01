@@ -23,7 +23,7 @@ randomSeed(rand_seed) # This only applys to the Processing random functions
 # Knobs to turn
 ################################################################################
 
-animate = True
+animate = False
 
 # Canvas size
 w = 1000  # width
@@ -39,8 +39,6 @@ frame_rate = 10
 c_tan = (41, 13, 97) #f8eed9
 c_red = (351, 95, 77) #c40926
 c_blue = (245, 90, 59) #1b0f96
-
-
 
 w_pad = w*0.15
 h_pad = h*0.15
@@ -75,10 +73,16 @@ def draw():
     background(*c_tan)
     noStroke()
     
-    up_start = (3*TAU/8) + sin(frameCount*TAU/100)
-    up_stop = (7*TAU/8) - sin(frameCount*TAU/50)
-    down_start = (3*TAU/8 - PI) + sin(frameCount*TAU/50)
-    down_stop = (7*TAU/8 - PI) - sin(frameCount*TAU/100)
+    up_start = 3*TAU/8
+    up_stop = 7*TAU/8
+    down_start = 3*TAU/8 - PI
+    down_stop = 7*TAU/8 - PI
+    
+    if animate:
+        up_start = up_start + sin(frameCount*TAU/100)
+        up_stop = up_stop - sin(frameCount*TAU/50)
+        down_start = down_start + sin(frameCount*TAU/50)
+        down_stop = down_stop - sin(frameCount*TAU/100)
 
     # Set up first row
     top = [x/10.0 for x in range(10+1)]
@@ -122,6 +126,6 @@ def save_frame_timestamp(filename, timestamp='', output_dir='output'):
     '''Saves each frame with a structured filename to allow for tracking all output'''
     filename = filename.replace('\\', '')
     filename = filename.replace('/', '')
-    output_filename = os.path.join(output_dir, '{}_{}_{}_####.tif'.format(timestamp, filename, rand_seed))
+    output_filename = os.path.join(output_dir, '{}_{}_{}_####.png'.format(timestamp, filename, rand_seed))
     saveFrame(output_filename)
     print(output_filename)
