@@ -23,6 +23,8 @@ randomSeed(rand_seed) # This only applys to the Processing random functions
 # Knobs to turn
 ################################################################################
 
+animate = True
+
 # Canvas size
 w = 1000  # width
 h = 1000  # height
@@ -65,7 +67,8 @@ def setup():
     frameRate(frame_rate)
 
     # Stops draw() from running in an infinite loop (should be last line)
-    #noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit) 
+    if not animate:
+        noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit) 
 
     
 def draw():
@@ -102,8 +105,8 @@ def draw():
             pct = lerp(top[i_x], btm[i_x], i_y/10.0)
             draw_pies(x, y, pct, up_start, up_stop, down_start, down_stop)
             
-    # Draw 10x10 values with pad
-    save_frame_timestamp('parc_pie', timestamp)
+    if not animate:
+        save_frame_timestamp('parc_pie', timestamp)
     
 def draw_pies(x, y, pct, up_start, up_stop, down_start, down_stop):
     d = pct * TAU/4
