@@ -75,10 +75,10 @@ def draw():
     background(*c_tan)
     noStroke()
     
-    up_start = 3*TAU/8 + sin(frameCount*TAU/50)
-    up_stop = 7*TAU/8
-    down_start = 3*TAU/8 - PI + sin(frameCount*TAU/50)
-    down_stop = 7*TAU/8 - PI
+    up_start = (3*TAU/8) + sin(frameCount*TAU/100)
+    up_stop = (7*TAU/8) - sin(frameCount*TAU/50)
+    down_start = (3*TAU/8 - PI) + sin(frameCount*TAU/50)
+    down_stop = (7*TAU/8 - PI) - sin(frameCount*TAU/100)
 
     # Set up first row
     top = [x/10.0 for x in range(10+1)]
