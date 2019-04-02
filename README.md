@@ -2,7 +2,7 @@
 
 ## My take on [Mutación de Formas by Julio Le Parc](https://hyperallergic.com/478943/julio-le-parc-1959-met-breuer/)
 
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/parc-pie/images/parc_pie_wannabe.png" alt="parc_pie_wannabe" width="90%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/parc_pie/images/parc_pie_wannabe.png" alt="parc_pie_wannabe" width="90%"></p>
 
 ## Seuss Tubes
 
