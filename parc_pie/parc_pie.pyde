@@ -23,8 +23,11 @@ randomSeed(rand_seed) # This only applys to the Processing random functions
 # Knobs to turn
 ################################################################################
 
-record = True
+record = False
 animate = True
+animate_mode = 'sinusoid'
+
+noise_increment = 0.0005
 
 # Canvas size
 w = 1000  # width
@@ -36,6 +39,7 @@ num_loops = 4
 x_spots = 10
 y_spots = 10
 
+yoff = 0
 frame_rate = 10
 
 c_tan = (41, 13, 97) #f8eed9
@@ -83,18 +87,30 @@ def draw():
     down_start = 3*TAU/8 - PI
     down_stop = 7*TAU/8 - PI
     
-    if animate:
-        up_start = up_start + sin(frameCount*TAU/steps)
-        up_stop = up_stop - sin(frameCount*TAU/(steps/2))
-        down_start = down_start + cos(frameCount*TAU/(steps/2))
-        down_stop = down_stop - cos(frameCount*TAU/steps)
 
+    global yoff
+        
+    if animate_mode == 'sinusoid':
+        up_start_offset = sin(frameCount*TAU/steps)
+        up_stop_offset = sin(frameCount*TAU/(steps/2))
+        down_start_offset = cos(frameCount*TAU/(steps/2))
+        down_stop_offset = cos(frameCount*TAU/steps)
+    else:
+        up_start_offset = 0
+        up_stop_offset = 0
+        down_start_offset = 0
+        down_stop_offset = 0
+        
+    if animate:
+        up_start = up_start + up_start_offset
+        up_stop = up_stop - up_stop_offset
+        down_start = down_start + down_start_offset
+        down_stop = down_stop - down_stop_offset
+        
     # Set up first row
-    top = [x/10.0 for x in range(10)]
-    btm = [x/10.0 for x in range(10)]
+    top = [x/9.0 for x in range(10)]
+    btm = [x/9.0 for x in range(10)]
     btm.reverse()
-    
-    print(top, btm)
     
     big = []
     for i in range(10):
@@ -104,14 +120,25 @@ def draw():
         print(small)
         big.append(small)
 
-    
+    xoff = 0
     for i_x in range(10):
         x = lerp(x_min, x_max, i_x/9.0)
+        xoff += noise_increment
         
         for i_y in range(10):
             y = lerp(y_min, y_max, i_y/9.0)
+            yoff += noise_increment
             
-            pct = lerp(top[i_x], btm[i_x], i_y/10.0)
+            pct = lerp(top[i_x], btm[i_x], i_y/9.0)
+            
+            if animate_mode == 'noise':
+                up_start_offset = map(noise(xoff, yoff), 0, 1, -0.1, 0.1)
+                up_stop_offset = map(noise(xoff, yoff), 0, 1, -0.1, 0.1)
+                down_start_offset = map(noise(xoff, yoff), 0, 1, -0.1, 0.1)
+                down_stop_offset = map(noise(xoff, yoff), 0, 1, -0.1, 0.1)
+                
+            print(up_start_offset)
+        
             draw_pies(x, y, pct, up_start, up_stop, down_start, down_stop)
             
     if record:
