@@ -23,13 +23,15 @@ randomSeed(rand_seed) # This only applys to the Processing random functions
 # Knobs to turn
 ################################################################################
 
-animate = False
+record = True
+animate = True
 
 # Canvas size
 w = 1000  # width
 h = 1000  # height
 
-pad = 2
+steps = 100
+num_loops = 4
 
 x_spots = 10
 y_spots = 10
@@ -40,16 +42,16 @@ c_tan = (41, 13, 97) #f8eed9
 c_red = (351, 95, 77) #c40926
 c_blue = (245, 90, 59) #1b0f96
 
-w_pad = w*0.15
-h_pad = h*0.15
+w_pad = w*0.12
+h_pad = h*0.12
 
 x_min = w_pad
 x_max = w - w_pad
-x_rad = (x_max - x_min)/10
+x_rad = (x_max - x_min)/9
 
 y_min = h_pad
 y_max = h - h_pad
-y_rad = (y_max - y_min)/10
+y_rad = (y_max - y_min)/9
 
 def setup():
     # Sets size of canvas in pixels (must be first line)
@@ -70,6 +72,9 @@ def setup():
 
     
 def draw():
+    if frameCount > (steps * num_loops):
+        exit()
+        
     background(*c_tan)
     noStroke()
     
@@ -79,37 +84,37 @@ def draw():
     down_stop = 7*TAU/8 - PI
     
     if animate:
-        up_start = up_start + sin(frameCount*TAU/100)
-        up_stop = up_stop - sin(frameCount*TAU/50)
-        down_start = down_start + sin(frameCount*TAU/50)
-        down_stop = down_stop - sin(frameCount*TAU/100)
+        up_start = up_start + sin(frameCount*TAU/steps)
+        up_stop = up_stop - sin(frameCount*TAU/(steps/2))
+        down_start = down_start + cos(frameCount*TAU/(steps/2))
+        down_stop = down_stop - cos(frameCount*TAU/steps)
 
     # Set up first row
-    top = [x/10.0 for x in range(10+1)]
-    btm = [x/10.0 for x in range(10+1)]
+    top = [x/10.0 for x in range(10)]
+    btm = [x/10.0 for x in range(10)]
     btm.reverse()
     
     print(top, btm)
     
     big = []
-    for i in range(10+1):
+    for i in range(10):
         small = []
-        for j in range(10+1):
+        for j in range(10):
             small.append(lerp(top[i], btm[i], j/10.0))
         print(small)
         big.append(small)
 
     
-    for i_x in range(10+1):
-        x = lerp(x_min, x_max, i_x/10.0)
+    for i_x in range(10):
+        x = lerp(x_min, x_max, i_x/9.0)
         
-        for i_y in range(10+1):
-            y = lerp(y_min, y_max, i_y/10.0)
+        for i_y in range(10):
+            y = lerp(y_min, y_max, i_y/9.0)
             
             pct = lerp(top[i_x], btm[i_x], i_y/10.0)
             draw_pies(x, y, pct, up_start, up_stop, down_start, down_stop)
             
-    if not animate:
+    if record:
         save_frame_timestamp('parc_pie', timestamp)
     
 def draw_pies(x, y, pct, up_start, up_stop, down_start, down_stop):
