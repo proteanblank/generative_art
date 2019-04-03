@@ -1,6 +1,5 @@
 
 import datetime
-import helper
 from random import shuffle, seed
 
 
@@ -12,7 +11,7 @@ from random import shuffle, seed
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
 # Set random seed value for both Python 'random' and Processing 'random'
-rand_seed = helper.get_seed('circle')
+rand_seed = 1138
 print(rand_seed)
 # Comment out seeds below to get new shape on every run
 seed(rand_seed) # This only applys to the Python random functions
