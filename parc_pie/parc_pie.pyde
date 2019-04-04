@@ -26,8 +26,6 @@ record = False
 animate = True
 animate_mode = 'sinusoid'
 
-noise_increment = 0.0005
-
 # Canvas size
 w = 1000  # width
 h = 1000  # height
@@ -38,8 +36,7 @@ num_loops = 4
 x_spots = 10
 y_spots = 10
 
-yoff = 0
-frame_rate = 10
+frame_rate = 15
 
 c_tan = (41, 13, 97) #f8eed9
 c_red = (351, 95, 77) #c40926
@@ -86,9 +83,6 @@ def draw():
     down_start = 3*TAU/8 - PI
     down_stop = 7*TAU/8 - PI
     
-
-    global yoff
-        
     if animate_mode == 'sinusoid':
         up_start_offset = sin(frameCount*TAU/steps)
         up_stop_offset = sin(frameCount*TAU/(steps/2))
@@ -106,44 +100,38 @@ def draw():
         down_start = down_start + down_start_offset
         down_stop = down_stop - down_stop_offset
         
-    # Set up first row
-    top = [x/9.0 for x in range(10)]
-    btm = [x/9.0 for x in range(10)]
-    btm.reverse()
+        # Sets up top and bottom rows
+        top = [x/9.0 for x in range(10)]
+        btm = [x/9.0 for x in range(10)]
+        btm.reverse() # reverses list in place
     
-    big = []
-    for i in range(10):
-        small = []
-        for j in range(10):
-            small.append(lerp(top[i], btm[i], j/10.0))
-        print(small)
-        big.append(small)
-
-    xoff = 0
+    # Loops through grid and assign values to each pie
     for i_x in range(10):
-        x = lerp(x_min, x_max, i_x/9.0)
-        xoff += noise_increment
         
-        for i_y in range(10):
-            y = lerp(y_min, y_max, i_y/9.0)
-            yoff += noise_increment
-            
-            pct = lerp(top[i_x], btm[i_x], i_y/9.0)
-            
-            if animate_mode == 'noise':
-                up_start_offset = map(noise(xoff, yoff), 0, 1, -0.1, 0.1)
-                up_stop_offset = map(noise(xoff, yoff), 0, 1, -0.1, 0.1)
-                down_start_offset = map(noise(xoff, yoff), 0, 1, -0.1, 0.1)
-                down_stop_offset = map(noise(xoff, yoff), 0, 1, -0.1, 0.1)
+        # Calculates x location (in pixels) using interpolation (lerp)
+        x = lerp(x_min, x_max, i_x/9.0)
+        
+        for i_y in range(10): 
                 
-            print(up_start_offset)
+            # Calculates y location (in pixels) using interpolation (lerp)
+            y = lerp(y_min, y_max, i_y/9.0)
+            
+            # Percentage of pie slice to show
+            pct = lerp(top[i_x], btm[i_x], i_y/9.0)
         
             draw_pies(x, y, pct, up_start, up_stop, down_start, down_stop)
-            
+                
     if record:
         save_frame_timestamp('parc_pie', timestamp)
-    
+        
+        
 def draw_pies(x, y, pct, up_start, up_stop, down_start, down_stop):
+    """
+    Draws both pie slices, with the top pie as the lead and bottom pie as follower
+    There is always a 90 degree (tau/4) gap between top and bottom slices
+    """
+    
+    # d controls the amount of each slice that is shown
     d = pct * TAU/4
     fill(*c_blue)
     arc(x, y, x_rad, y_rad, up_start+d, up_stop-d, PIE)
@@ -151,8 +139,7 @@ def draw_pies(x, y, pct, up_start, up_stop, down_start, down_stop):
     d = (1-pct) * TAU/4
     fill(*c_red)
     arc(x, y, x_rad, y_rad, down_start+d, down_stop-d, PIE)
-
-    
+        
 def save_frame_timestamp(filename, timestamp='', output_dir='output'):
     '''Saves each frame with a structured filename to allow for tracking all output'''
     filename = filename.replace('\\', '')
