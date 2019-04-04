@@ -30,7 +30,7 @@ Beetles code is in the ['buggies' dir](https://github.com/aaronpenne/generative_
 ## Reach
 
 
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/p5_play/images/stack_2.png" alt="stack" width="70%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/p5/images/stack_2.png" alt="stack" width="70%"></p>
 
 
 ## Good Fortune ([source](https://github.com/aaronpenne/generative_art/tree/master/yarn))
