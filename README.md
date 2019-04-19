@@ -79,7 +79,7 @@ Beetles code is in the ['buggies' dir](https://github.com/aaronpenne/generative_
 
 ## My take on [M74 by Wojciech Fangor](https://desa.pl/en/auctions/414/object/41872/wojciech-fangor-m-74-19702001)
 
-<p align="center"><img src="https://github.com/aaronpenne/generative_art/blob/master/fangor_m74/images/fangor_wannabe.png" alt="fangor_wannabe" width="60%"></p>
+<p align="center"><img src="https://github.com/aaronpenne/generative_art/blob/master/fangor_m74/images/fangor_remake.png" alt="fangor_wannabe" width="60%"></p>
 
 
 ## Random iterations in the Fangor style ([source](https://github.com/aaronpenne/generative_art/tree/master/fangor_iterative))
