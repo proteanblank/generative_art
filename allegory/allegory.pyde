@@ -1,10 +1,3 @@
-################################################################################
-# Adapted from the incredible Daniel Shiffman
-# https://natureofcode.com/book/chapter-6-autonomous-agents/
-# https://www.youtube.com/watch?v=BjoM9oKOAKY&t=1326s
-################################################################################
-
-
 import datetime
 from random import shuffle, seed
 
@@ -28,9 +21,9 @@ randomSeed(rand_seed) # This only applys to the Processing random functions
 # Knobs to turn
 ################################################################################
 
-filename = 'circlish_circle'
+filename = 'allegory'
 
-record = False
+record = True
 animate = True
 animate_mode = 'sinusoid'
 
