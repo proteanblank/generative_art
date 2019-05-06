@@ -43,8 +43,8 @@ rows = floor(h/scl)
     
 step = TAU/steps
 t1 = 0
-t2 = 1000
-t3 = 100000
+# t2 = 1000
+# t3 = 100000
 
 c_points = [radians(x) for x in range(1, 360, 10)]
 print(c_points)
@@ -76,8 +76,8 @@ def draw():
     global t3
     
     t1 = t1 + 0.03;
-    t2 = t2 + 2;
-    t3 = t3 + 2;
+    # t2 = t2 + 2;
+    # t3 = t3 + 2;
     if frameCount > (steps * num_loops):
         #exit()
         pass
@@ -86,6 +86,8 @@ def draw():
     
     r = w*0.03
     
+    # First 3 points of each blob line are explicitly set because 
+    # they are needed at the end of the shape to close the loop
     a = c_points[0]
     n = map(noise(t1, a), 0, 1, 1, 2)
     x0, y0 = circle_point(w/2, h/2+h/6, n*(r+frameCount), a)
@@ -102,11 +104,13 @@ def draw():
     curveVertex(x2, y2)
     
     for i,a in enumerate(c_points):
+        # Limiting which points get vertices makes the "floor"
         if i>15:
             n = map(noise(t1, a), 0, 1, 1, 2)
             x, y = circle_point(w/2, h/2+h/6, n*(r+frameCount), a)
             curveVertex(x, y)
 
+    # The three first points are laid out again to smoothly close the loop
     curveVertex(x0, y0)
     curveVertex(x1, y1)
     curveVertex(x2, y2)
