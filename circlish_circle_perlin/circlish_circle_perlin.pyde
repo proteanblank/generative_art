@@ -21,7 +21,7 @@ randomSeed(rand_seed) # This only applys to the Processing random functions
 # Knobs to turn
 ################################################################################
 
-filename = 'allegory'
+filename = 'circlish_circle_perlin'
 
 record = True
 animate = True
@@ -34,7 +34,7 @@ h = 800  # height
 steps = 1000
 num_loops = 1
 
-frame_rate = 20
+frame_rate = 40
 
 inc = 0.01
 scl = 20
@@ -71,53 +71,27 @@ def setup():
     fill(0, 0, 25, 0)
     
 def draw():
+    fill(0, 0, 25)
+    
     global t1
     global t2
     global t3
     
     t1 = t1 + 0.03;
-    # t2 = t2 + 2;
-    # t3 = t3 + 2;
+    t2 = t2 + 0.03;
+    t3 = t3 + 0.03;
     if frameCount > (steps * num_loops):
         #exit()
         pass
     
-    beginShape()
+    r = w*0.02
     
-    r = w*0.03
+    x_c = frameCount*2
+    y_c = h/2
     
-    # First 3 points of each blob line are explicitly set because 
-    # they are needed at the end of the shape to close the loop
-    a = c_points[0]
-    n = map(noise(t1, a), 0, 1, 1, 2)
-    x0, y0 = circle_point(w/2, h/2, n*(r+frameCount), a)
-    curveVertex(x0, y0)
+    draw_blob(x_c, y_c, r, t1, 1, 20)
     
-    a = c_points[1]
-    n = map(noise(t1, a), 0, 1, 1, 2)
-    x1, y1 = circle_point(w/2, h/2, n*(r+frameCount), a)
-    curveVertex(x1, y1)
-    
-    a = c_points[2]
-    n = map(noise(t1, a), 0, 1, 1, 2)
-    x2, y2 = circle_point(w/2, h/2, n*(r+frameCount), a)
-    curveVertex(x2, y2)
-    
-    for i,a in enumerate(c_points):
-        # Limiting which points get vertices makes the "floor"
-        if i>3:
-            n = map(noise(t1, a), 0, 1, 1, 2)
-            x, y = circle_point(w/2, h/2, n*(r+frameCount), a)
-            curveVertex(x, y)
 
-    # The three first points are laid out again to smoothly close the loop
-    curveVertex(x0, y0)
-    curveVertex(x1, y1)
-    curveVertex(x2, y2)
-    
-    
-    endShape()
-    
     
     if record:
         save_frame_timestamp(filename, timestamp)
@@ -135,3 +109,39 @@ def circle_point(cx, cy, r, a):
     x = cx + r * cos(a)
     y = cy + r * sin(a)
     return x, y
+
+def draw_blob(x_c, y_c, r, n_start=0, min_noise=1, max_noise=2):    
+    beginShape()
+              
+    # First 3 points of each blob line are explicitly set because 
+    # they are needed at the end of the shape to close the loop
+    a = c_points[0]
+    n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
+    x0, y0 = circle_point(x_c, y_c, n*r, a)
+    curveVertex(x0, y0)
+    
+    a = c_points[1]
+    n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
+    x1, y1 = circle_point(x_c, y_c, n*r, a)
+    curveVertex(x1, y1)
+    
+    a = c_points[2]
+    n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
+    x2, y2 = circle_point(x_c, y_c, n*r, a)
+    curveVertex(x2, y2)
+    
+    for i,a in enumerate(c_points):
+        # Limiting which points get vertices makes the "floor"
+        if i>3:
+            n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
+            x, y = circle_point(x_c, y_c, n*r, a)
+            curveVertex(x, y)
+
+    # The three first points are laid out again to smoothly close the loop
+    curveVertex(x0, y0)
+    curveVertex(x1, y1)
+    curveVertex(x2, y2)
+    
+    
+    endShape()
+    
