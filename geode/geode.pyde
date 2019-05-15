@@ -21,7 +21,7 @@ randomSeed(rand_seed) # This only applys to the Processing random functions
 # Knobs to turn
 ################################################################################
 
-filename = 'circlish_circle_perlin'
+filename = 'geode'
 
 record = False
 animate = True
@@ -45,6 +45,10 @@ step = TAU/steps
 t1 = 0
 t2 = 1000
 t3 = 100000
+
+c_start = w/5
+c_stop = 4*w/5
+num_geodes = 1
 
 c_points = [radians(x) for x in range(1, 361, 5)]
 print(c_points)
@@ -72,24 +76,35 @@ def setup():
     
 def draw():
     fill(0, 0, 25)
-    
+
     global t1
     global t2
-    global t3
+    global c_start
+    global c_stop
+    global num_geodes
     
-    t1 = t1 + 0.01;
-    t2 = t2 + 0.03;
-    t3 = t3 + 0.03;
-    if frameCount > (steps * num_loops):
-        #exit()
-        pass
+    t1 = t1 + 0.012
+    t2 = t2 + 0.02
     
-    r = w*0.03
+    x_c = (frameCount) + c_start
+    y_c = h/2 - 100 + map(noise(t2), 0, 1, -50, 50)
     
-    x_c = w/2
-    y_c = frameCount
+    r = h*0.03*sin(map(x_c, c_start, c_stop, 0, num_geodes*PI))
     
-    draw_blob(x_c, y_c, r, t1, 1, 10)
+    if r>h*0.03:
+        r = h*0.03
+    
+    if x_c > c_stop:
+        noLoop()
+        save_frame_timestamp(filename, timestamp)
+    
+    max_noise = 12
+    
+    if (num_geodes == 1) & (x_c > w/2):
+        y_c = y_c + 150
+        if x_c 
+    else:
+        draw_blob(x_c, y_c, r, t1, 1, max_noise)
     
 
     
@@ -132,7 +147,7 @@ def draw_blob(x_c, y_c, r, n_start=0, min_noise=1, max_noise=2):
     
     for i,a in enumerate(c_points):
         # Limiting which points get vertices makes the "floor"
-        if i<320:
+        if i>=3:
             n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
             x, y = circle_point(x_c, y_c, n*r, a)
             curveVertex(x, y)
