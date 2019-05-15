@@ -1,5 +1,10 @@
 **Note:** To run the Python Processing scripts you need the Processing IDE with Python mode enabled. [This will get you started](https://py.processing.org/tutorials/gettingstarted/). The default installation location of Processing has a dir titled `libraries/site-packages` where any further Python scripts/imports live. Be sure to copy/paste this repo's `libraries/site-packages` files into that dir on your system.
 
+## Generative geodes ([source](https://github.com/aaronpenne/generative_art/tree/master/geode))
+
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/geode/images/20190515_104236_circlish_circle_perlin_1138_0481.png" alt="geode" width="90%"></p>
+
+
 ## Allegory ([source](https://github.com/aaronpenne/generative_art/tree/master/allegory))
 
 <p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/allegory/images/allegory_take_01.png" alt="allegory" width="90%"></p>
