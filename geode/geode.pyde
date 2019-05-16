@@ -70,13 +70,16 @@ def setup():
     if not animate:
         noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit) 
 
-    background(0, 0, 25)
-    stroke(60, 7, 86)
-    fill(0, 0, 25, 0)
+    # background(0, 0, 25)
+    # stroke(60, 7, 86)
+    background(60, 7, 86)
+    stroke(0, 0, 25)
     
 def draw():
-    fill(0, 0, 25)
 
+    # fill(0, 0, 25, 100)
+    fill(60, 7, 86)
+    
     global t1
     global t2
     global c_start
@@ -100,13 +103,13 @@ def draw():
     
     max_noise = 12
     
-    if (num_geodes == 1) & (x_c > w/2):
-        y_c = y_c + 150
-        if x_c 
-    else:
-        draw_blob(x_c, y_c, r, t1, 1, max_noise)
+    # if (num_geodes == 1) & (x_c > w/2):
+    #     y_c = y_c + 150
+    # else:
+        # draw_blob(x_c, y_c, r, t1, 1, max_noise)
     
-
+    draw_blob(x_c, y_c, r, t1, 1, max_noise)
+    
     
     if record:
         save_frame_timestamp(filename, timestamp)
