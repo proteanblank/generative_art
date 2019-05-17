@@ -50,6 +50,9 @@ c_start = w/5
 c_stop = 4*w/5
 num_geodes = 1
 
+max_blobs = 200
+num_blobs = 0
+
 c_points = [radians(x) for x in range(1, 361, 5)]
 print(c_points)
 
@@ -77,40 +80,53 @@ def setup():
     
 def draw():
 
-    # fill(0, 0, 25, 100)
     fill(60, 7, 86)
     
     global t1
-    global t2
-    global c_start
-    global c_stop
-    global num_geodes
+    global max_blobs
+    global num_blobs
     
-    t1 = t1 + 0.012
-    t2 = t2 + 0.02
+    t1 += 0.02
     
-    x_c = 100*sin(map(frameCount, 0, 480, 0, PI)+PI/2) + w/2 
+    x = map(sin(num_blobs*PI/4/max_blobs), -1, 1, w/4, 3*w/4)
+    y = h/2
+    r = 100
+    
+    min_noise = 0
+    max_noise = 0
+    push()
+    translate(-w/8,-h/3)
+    if num_blobs < max_blobs:
+        draw_blob(x, y, r, t1, min_noise, max_noise)
+    pop()
 
-    y_c = h/2 - map(noise(t2), 0, 1, -5, 5)
+    min_noise = 0
+    max_noise = 20
+    push()
+    translate(-w/8,0)
+    if num_blobs < max_blobs:
+        draw_blob(x, y, r, t1, min_noise, max_noise)
+    pop()
     
-    r = h*0.03*sin(map(frameCount, 0, 480, 0, num_geodes*PI))
+    min_noise = 0
+    max_noise = 60
+    push()
+    translate(-w/8,h/3)
+    if num_blobs < max_blobs:
+        draw_blob(x, y, r, t1, min_noise, max_noise)
+    pop()
     
-    if r>h*0.03:
-        r = h*0.03
-    
-    if frameCount >= 480:
+    if num_blobs >= 2*max_blobs:
         noLoop()
         save_frame_timestamp(filename, timestamp)
     
-    max_noise = 15
     
     # if (num_geodes == 1) & (x_c > w/2):
     #     y_c = y_c + 150
     # else:
         # draw_blob(x_c, y_c, r, t1, 1, max_noise)
     
-    draw_blob(x_c, y_c, r, t1, 1, max_noise)
-    
+    num_blobs += 1
     
     if record:
         save_frame_timestamp(filename, timestamp)
@@ -129,31 +145,43 @@ def circle_point(cx, cy, r, a):
     y = cy + r * sin(a)
     return x, y
 
-def draw_blob(x_c, y_c, r, n_start=0, min_noise=1, max_noise=2):    
+def draw_blob(x_c, y_c, r_max, n_start=0, min_noise=1, max_noise=2):   
+    global max_blobs
+    global num_blobs
+     
     beginShape()
               
     # First 3 points of each blob line are explicitly set because 
     # they are needed at the end of the shape to close the loop
     a = c_points[0]
     n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
-    x0, y0 = circle_point(x_c, y_c, n*r, a)
+    r = map(sin(num_blobs*PI/max_blobs), 0, 1, 0, r_max)
+    r = map(sin((r+n)*PI/(r_max+max_noise)), 0, 1, 0, r_max)
+    x0, y0 = circle_point(x_c, y_c, r, a)
     curveVertex(x0, y0)
     
     a = c_points[1]
     n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
-    x1, y1 = circle_point(x_c, y_c, n*r, a)
+    r = map(sin(num_blobs*PI/max_blobs), 0, 1, 0, r_max)
+    r = map(sin((r+n)*PI/(r_max+max_noise)), 0, 1, 0, r_max)
+    x1, y1 = circle_point(x_c, y_c, r, a)
     curveVertex(x1, y1)
     
     a = c_points[2]
     n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
-    x2, y2 = circle_point(x_c, y_c, n*r, a)
+    r = map(sin(num_blobs*PI/max_blobs), 0, 1, 0, r_max)
+    r = map(sin((r+n)*PI/(r_max+max_noise)), 0, 1, 0, r_max)
+    x2, y2 = circle_point(x_c, y_c, r, a)
     curveVertex(x2, y2)
+    print(n, r)
     
     for i,a in enumerate(c_points):
         # Limiting which points get vertices makes the "floor"
         if i>=3:
             n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
-            x, y = circle_point(x_c, y_c, n*r, a)
+            r = map(sin(num_blobs*PI/max_blobs), 0, 1, 0, r_max)
+            r = map(sin((r+n)*PI/(r_max+max_noise)), -1, 1, 0, r_max)
+            x, y = circle_point(x_c, y_c, r, a)
             curveVertex(x, y)
 
     # The three first points are laid out again to smoothly close the loop
