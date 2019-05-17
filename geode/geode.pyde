@@ -89,19 +89,20 @@ def draw():
     t1 = t1 + 0.012
     t2 = t2 + 0.02
     
-    x_c = (frameCount) + c_start
-    y_c = h/2 - 100 + map(noise(t2), 0, 1, -50, 50)
+    x_c = 100*sin(map(frameCount, 0, 480, 0, PI)+PI/2) + w/2 
+
+    y_c = h/2 - map(noise(t2), 0, 1, -5, 5)
     
-    r = h*0.03*sin(map(x_c, c_start, c_stop, 0, num_geodes*PI))
+    r = h*0.03*sin(map(frameCount, 0, 480, 0, num_geodes*PI))
     
     if r>h*0.03:
         r = h*0.03
     
-    if x_c > c_stop:
+    if frameCount >= 480:
         noLoop()
         save_frame_timestamp(filename, timestamp)
     
-    max_noise = 12
+    max_noise = 15
     
     # if (num_geodes == 1) & (x_c > w/2):
     #     y_c = y_c + 150
