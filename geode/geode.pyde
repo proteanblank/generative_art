@@ -134,6 +134,5 @@ def circle_noise_locations(cx, cy, r, r_delta, n_points, noise_offset):
         yield x, y
     yield x0, y0
     
-    
 def mousePressed():
     save_frame_timestamp(filename, timestamp)
