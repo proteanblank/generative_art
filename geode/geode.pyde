@@ -1,64 +1,58 @@
+################################################################################
+# code and images by Aaron Penne
+# https://github.com/aaronpenne/generative_art
+#
+# released under the MIT license (https://opensource.org/licenses/MIT)
+################################################################################
+
+# Standard Python imports
 import datetime
 from random import shuffle, seed
 
 
 ################################################################################
-# Global variables
+# Global variables - knobs to turn
 ################################################################################
 
-# Get time 
-timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-
-# Set random seed value for both Python 'random' and Processing 'random'
-rand_seed = 1138
-print(rand_seed)
-# Comment out seeds below to get new shape on every run
-seed(rand_seed) # This only applys to the Python random functions
-randomSeed(rand_seed) # This only applys to the Processing random functions
-
-
-################################################################################
-# Knobs to turn
-################################################################################
-
-filename = 'geode'
-
-record = False
-animate = True
-animate_mode = 'sinusoid'
+# Logic controls
+record = True  # Save every frame?
+animate = True  # Loop through draw()? 
+seeded = True  # Set random seeds?
 
 # Canvas size
 w = 800  # width
 h = 800  # height
 
-steps = 1000
-num_loops = 1
+# Initializes randomness to make results repeateable (if randomize is set to True)
+rand_seed = 1138
 
-frame_rate = 80
+# Controls resolution of noise()
+noise_increment = 0.03
+offset_frame = 0
+offset_blob = 0
 
-inc = 0.01
-scl = 20
-cols = floor(w/scl)
-rows = floor(h/scl)
-    
-step = TAU/steps
-t1 = 0
-t2 = 1000
-t3 = 100000
+################################################################################
+# Global variables - color
+################################################################################
+color_background = (60, 7, 86)
+color_foreground = (0, 0, 25)
+color_stroke = (0, 0, 25)
 
-c_start = w/5
-c_stop = 4*w/5
-num_geodes = 1
+################################################################################
+# Global variables - no need to touch
+################################################################################
 
-max_blobs = 200
-num_blobs = 0
+# Gets filename of this script
+filename = __file__[:-5]
 
-c_points = [radians(x) for x in range(1, 361, 5)]
-print(c_points)
+# Gets current YYMMDD_HHMMSS timestamp (e.g. 20160530_065530)
+timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
+
+# The setup() function is part of Processing, it gets called one time when this file is run
 def setup():
     # Sets size of canvas in pixels (must be first line)
-    size(w, h) # (width, height)
+    size(w, h)
     
     # Sets resolution dynamically (affects resolution of saved image)
     pixelDensity(displayDensity())  # 1 for low, 2 for high
@@ -67,67 +61,51 @@ def setup():
     colorMode(HSB, 360, 100, 100, 100)
         
     # Set the number of frames per second to display
-    frameRate(frame_rate)
-
-    # Stops draw() from running in an infinite loop (should be last line)
+    frameRate(60)
+    
+    # Keeps text centered vertically and horizontally at (x,y) coords
+    textMode(CENTER)
+    textAlign(CENTER, CENTER)
+    
+    # Stops draw() from running in an infinite loop
     if not animate:
-        noLoop()  # Comment to run draw() infinitely (or until 'count' hits limit) 
-
-    # background(0, 0, 25)
-    # stroke(60, 7, 86)
-    background(60, 7, 86)
-    stroke(0, 0, 25)
+        noLoop()
+        
+    # Sets random seed value for both Python and Processing 
+    if seeded:
+        seed(rand_seed)       # Only applies to the random Python module
+        randomSeed(rand_seed) # Only applies to the random() Processing function
+        noiseSeed(rand_seed)  # Only applies to the noise() Processing function
     
+    # Initializes colors for the first frame
+    background(*color_background)
+    stroke(*color_foreground)
+    fill(*color_foreground)
+
+    
+# The draw() function is part of Processing, it gets called in an infinite loop every frame
 def draw():
-
-    fill(60, 7, 86)
+    background(*color_background)
+    fill(*color_background)
     
-    global t1
-    global max_blobs
+    # Allows for modifying global variables. This is done to allow variables to persist through draw() loops
+    global offset_frame
+    global offset_blob
     global num_blobs
     
-    t1 += 0.02
+    offset_frame += noise_increment
     
-    x = map(sin(num_blobs*PI/4/max_blobs), -1, 1, w/4, 3*w/4)
-    y = h/2
-    r = 100
-    
-    min_noise = 0
-    max_noise = 0
-    push()
-    translate(-w/8,-h/3)
-    if num_blobs < max_blobs:
-        draw_blob(x, y, r, t1, min_noise, max_noise)
-    pop()
+    r = 60
+    r_delta = 80
+    num_points = 200
 
-    min_noise = 0
-    max_noise = 20
-    push()
-    translate(-w/8,0)
-    if num_blobs < max_blobs:
-        draw_blob(x, y, r, t1, min_noise, max_noise)
-    pop()
-    
-    min_noise = 0
-    max_noise = 60
-    push()
-    translate(-w/8,h/3)
-    if num_blobs < max_blobs:
-        draw_blob(x, y, r, t1, min_noise, max_noise)
-    pop()
-    
-    if num_blobs >= 2*max_blobs:
-        noLoop()
-        save_frame_timestamp(filename, timestamp)
-    
-    
-    # if (num_geodes == 1) & (x_c > w/2):
-    #     y_c = y_c + 150
-    # else:
-        # draw_blob(x_c, y_c, r, t1, 1, max_noise)
-    
-    num_blobs += 1
-    
+    for i in range(0, 410, 2):
+        offset_blob += 0.02
+        beginShape()
+        for x, y in circle_noise_locations(w/2+i-200, h/2, r, r_delta, num_points, offset_frame):
+            vertex(x, y)
+        endShape()
+        
     if record:
         save_frame_timestamp(filename, timestamp)
 
@@ -140,55 +118,22 @@ def save_frame_timestamp(filename, timestamp='', output_dir='output'):
     saveFrame(output_filename)
     print(output_filename)
     
-def circle_point(cx, cy, r, a):
-    x = cx + r * cos(a)
-    y = cy + r * sin(a)
-    return x, y
-
-def draw_blob(x_c, y_c, r_max, n_start=0, min_noise=1, max_noise=2):   
-    global max_blobs
-    global num_blobs
-     
-    beginShape()
-              
-    # First 3 points of each blob line are explicitly set because 
-    # they are needed at the end of the shape to close the loop
-    a = c_points[0]
-    n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
-    r = map(sin(num_blobs*PI/max_blobs), 0, 1, 0, r_max)
-    r = map(sin((r+n)*PI/(r_max+max_noise)), 0, 1, 0, r_max)
-    x0, y0 = circle_point(x_c, y_c, r, a)
-    curveVertex(x0, y0)
-    
-    a = c_points[1]
-    n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
-    r = map(sin(num_blobs*PI/max_blobs), 0, 1, 0, r_max)
-    r = map(sin((r+n)*PI/(r_max+max_noise)), 0, 1, 0, r_max)
-    x1, y1 = circle_point(x_c, y_c, r, a)
-    curveVertex(x1, y1)
-    
-    a = c_points[2]
-    n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
-    r = map(sin(num_blobs*PI/max_blobs), 0, 1, 0, r_max)
-    r = map(sin((r+n)*PI/(r_max+max_noise)), 0, 1, 0, r_max)
-    x2, y2 = circle_point(x_c, y_c, r, a)
-    curveVertex(x2, y2)
-    print(n, r)
-    
-    for i,a in enumerate(c_points):
-        # Limiting which points get vertices makes the "floor"
-        if i>=3:
-            n = map(noise(n_start, a), 0, 1, min_noise, max_noise)
-            r = map(sin(num_blobs*PI/max_blobs), 0, 1, 0, r_max)
-            r = map(sin((r+n)*PI/(r_max+max_noise)), -1, 1, 0, r_max)
-            x, y = circle_point(x_c, y_c, r, a)
-            curveVertex(x, y)
-
-    # The three first points are laid out again to smoothly close the loop
-    curveVertex(x0, y0)
-    curveVertex(x1, y1)
-    curveVertex(x2, y2)
+def circle_noise_locations(cx, cy, r, r_delta, n_points, noise_offset):
+    offset_angle = 0
+    x0, y0 = 0, 0
+    for i in range(n_points):
+        offset_angle = noise_increment 
+        a = i*TAU/n_points
+        r_noise = r + map(noise(1*cos(a)+1, cx*0.01, noise_offset), 0, 1, r-r_delta, r+r_delta)
+        x = r_noise * cos(a) + cx
+        y = 1.6 * r_noise * sin(a) + cy
+        # Connects the first point to the last
+        if i == 0:
+            x0 = x
+            y0 = y
+        yield x, y
+    yield x0, y0
     
     
-    endShape()
-    
+def mousePressed():
+    save_frame_timestamp(filename, timestamp)
