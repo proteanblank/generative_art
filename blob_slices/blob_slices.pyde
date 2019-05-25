@@ -26,14 +26,19 @@ h = 800  # height
 # Initializes randomness to make results repeateable (if randomize is set to True)
 rand_seed = 1138
 
-noise_increment = 0.02
-
 ################################################################################
 # Global variables - color
 ################################################################################
 color_background = (0, 0, 100)
 color_foreground = (0, 0, 25)
 color_stroke = (0, 0, 25)
+pal = [(348.7, 50.4, 94.9),  # bright salmon
+       (306.6, 40.8, 96.1), # bright pink
+       (45.7, 78.8, 94.1),  # yellow
+       (16.3, 28.6, 96.1),  # salmon
+       (358.7, 75.6, 94.9), # red
+       (0, 0, 25), # black
+]
 
 ################################################################################
 # Global variables - no need to touch
@@ -85,38 +90,33 @@ def draw():
     background(*color_background)
     fill(*color_background)
 
-    xoff = 0
-    for x in frange(w/5, 4*w/5, 1):
-        yoff = 0
-        for y in frange(h/5, 4*w/5, 1):
-            noise_value = noise(xoff, yoff)
-            alpha_value = map(noise_value, 0, 1, 0, 100)
-            if alpha_value>50:
-                fill(0, 0, 0, 100)
-            else:
-                fill(0, 0, 0, 0)
-            ellipse(x, y, 2, 2)
-            yoff += noise_increment
-        xoff += noise_increment
-        
-        
-    xoff = 0
-    for x in frange(w/5, 4*w/5, 1):
-        yoff = 0
-        for y in frange(h/5, 4*w/5, 1):
-            noise_value = noise(xoff+100, yoff+100)
-            alpha_value = map(noise_value, 0, 1, 0, 100)
-            if alpha_value>50:
-                fill(0, 50, 50, 100)
-            else:
-                fill(0, 50, 50, 0)
-            ellipse(x, y, 2, 2)
-            yoff += noise_increment
-        xoff += noise_increment
+    draw_blob_slice(0.007, 50, pal[5])
+    draw_blob_slice(0.007, 50, pal[4], 0.25)
+    draw_blob_slice(0.007, 50, pal[3], 0.5)
+    draw_blob_slice(0.007, 50, pal[2], 0.75)
+    draw_blob_slice(0.007, 50, pal[1], 1)
+    draw_blob_slice(0.007, 50, pal[0], 1.25)
     
     if record:
         save_frame_timestamp(filename, timestamp)
 
+
+def draw_blob_slice(noise_increment=0.02, threshold=50, fill_color=(0,0,0), offset=0, step=0.5, radius=1):
+    fill_color = color(*fill_color)
+    xoff = 0
+    for x in frange(w/5, 4*w/5, step):
+        yoff = 0
+        for y in frange(h/5, 4*w/5, step):
+            noise_value = noise(xoff+offset, yoff+offset)
+            alpha_value = map(noise_value, 0, 1, 0, 100)
+            if alpha_value>threshold:
+                fill(fill_color, 100)
+            else:
+                fill(fill_color, 0)
+            ellipse(x, y, radius, radius)
+            yoff += noise_increment
+        xoff += noise_increment
+        
 def save_frame_timestamp(filename, timestamp='', output_dir='output'):
     '''Saves each frame with a structured filename to allow for tracking all output'''
     filename = filename.replace('\\', '')
