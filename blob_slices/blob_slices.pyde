@@ -91,11 +91,11 @@ def draw():
     fill(*color_background)
 
     draw_blob_slice(0.007, 50, pal[5])
-    draw_blob_slice(0.007, 50, pal[4], 0.25)
-    draw_blob_slice(0.007, 50, pal[3], 0.5)
-    draw_blob_slice(0.007, 50, pal[2], 0.75)
-    draw_blob_slice(0.007, 50, pal[1], 1)
-    draw_blob_slice(0.007, 50, pal[0], 1.25)
+    draw_blob_slice(0.007, 50, pal[4], 10.25)
+    draw_blob_slice(0.007, 50, pal[3], 110.5)
+    draw_blob_slice(0.007, 50, pal[2], 1110.75)
+    draw_blob_slice(0.007, 50, pal[1], 11111)
+    draw_blob_slice(0.007, 50, pal[0], 111111.25)
     
     if record:
         save_frame_timestamp(filename, timestamp)
