@@ -15,8 +15,8 @@ from random import shuffle, seed
 ################################################################################
 
 # Logic controls
-record = True  # Save every frame?
-animate = False  # Loop through draw()? 
+record = False  # Save every frame?
+animate = True  # Loop through draw()? 
 seeded = False  # Set random seeds?
 
 # Canvas size
@@ -26,19 +26,20 @@ h = 800  # height
 # Initializes randomness to make results repeateable (if randomize is set to True)
 rand_seed = 1138
 
+min_x = w*0.1
+max_x = w*0.9
+min_y = h*0.1
+max_y = h*0.9
+
+noise_xy_inc = 0.007
+noise_t_inc = 0.02
+
+toff = 0
+
 ################################################################################
 # Global variables - color
 ################################################################################
-color_background = (0, 0, 100)
-color_foreground = (0, 0, 25)
-color_stroke = (0, 0, 25)
-pal = [(348.7, 50.4, 94.9),  # bright salmon
-       (306.6, 40.8, 96.1), # bright pink
-       (45.7, 78.8, 94.1),  # yellow
-       (16.3, 28.6, 96.1),  # salmon
-       (358.7, 75.6, 94.9), # red
-       (0, 0, 25), # black
-]
+pal = []
 
 ################################################################################
 # Global variables - no need to touch
@@ -69,6 +70,8 @@ def setup():
     textMode(CENTER)
     textAlign(CENTER, CENTER)
     
+    rectMode(CORNERS)
+    
     # Stops draw() from running in an infinite loop
     if not animate:
         noLoop()
@@ -79,41 +82,80 @@ def setup():
         randomSeed(rand_seed) # Only applies to the random() Processing function
         noiseSeed(rand_seed)  # Only applies to the noise() Processing function
     
+    global pal
+    
+    # Fisk Mississipi maps
+    pal = [color(0,0,100),
+           color(0,0,25),
+           color(39, 16.9, 92.9), # tan background
+           color(48.8, 27, 92.9), # yellowish
+           color(152, 15.38, 76.47), # blueish
+           color(2.7, 40.3, 86.7), # reddish
+           color(60, 18.4, 80.8) # greenish
+    ]
+    
     # Initializes colors for the first frame
-    background(*color_background)
-    stroke(*color_foreground)
-    fill(*color_foreground)
+    background(pal[0])
+    stroke(pal[1])
+    fill(pal[0])
     noStroke()
     
 # The draw() function is part of Processing, it gets called in an infinite loop every frame
 def draw():
-    background(*color_background)
-    fill(*color_background)
+    global pal
+    global toff
+    
+    background(pal[0])
+    
+    push()
+    fill(pal[2])
+    noStroke()
+    rect(min_x, min_y, max_x, max_y)
+    pop()
 
-    draw_blob_slice(0.007, 50, pal[5])
-    draw_blob_slice(0.007, 50, pal[4], 10.25)
-    draw_blob_slice(0.007, 50, pal[3], 110.5)
-    draw_blob_slice(0.007, 50, pal[2], 1110.75)
-    draw_blob_slice(0.007, 50, pal[1], 11111)
-    draw_blob_slice(0.007, 50, pal[0], 111111.25)
+    draw_blob_slice_points(noise_xy_inc, 50, pal[3], 0, 5, 50)
+    draw_blob_slice_points(noise_xy_inc, 50, shadow_color(pal[4]), 0, 5, 50)
     
     if record:
         save_frame_timestamp(filename, timestamp)
+        
+    toff += noise_t_inc
 
+def shadow_color(c):
+    c_hue = hue(c)
+    c_sat = saturation(c)
+    c_brite = brightness(c)*0.5
+    c_alpha = 50
+    return color(c_hue, c_sat, c_brite, c_alpha)
 
-def draw_blob_slice(noise_increment=0.02, threshold=50, fill_color=(0,0,0), offset=0, step=0.5, radius=1):
-    fill_color = color(*fill_color)
+def draw_blob_slice(noise_increment=0.02, toff=0, threshold=50, fill_color=color(0,0,0), offset=0, step=0.5, radius=1):
     xoff = 0
-    for x in frange(w/5, 4*w/5, step):
+    for x in frange(min_x+radius/2, max_x+radius/2, step):
         yoff = 0
-        for y in frange(h/5, 4*w/5, step):
-            noise_value = noise(xoff+offset, yoff+offset)
+        for y in frange(min_y+radius/2, max_y+radius/2, step):
+            noise_value = noise(xoff+offset, yoff+offset, toff)
             alpha_value = map(noise_value, 0, 1, 0, 100)
             if alpha_value>threshold:
                 fill(fill_color, 100)
             else:
                 fill(fill_color, 0)
             ellipse(x, y, radius, radius)
+            yoff += noise_increment
+        xoff += noise_increment
+
+def draw_blob_slice_points(noise_increment=0.02, threshold=50, fill_color=color(0,0,0), offset=0, step=0.5, radius=1):
+    xoff = 0
+    for x in frange(min_x+radius/2, max_x+radius/2, step):
+        yoff = 0
+        for y in frange(min_y+radius/2, max_y+radius/2, step):
+            noise_value = noise(xoff+offset, yoff+offset, toff)
+            alpha_value = map(noise_value, 0, 1, 0, 100)
+            if alpha_value>threshold:
+                stroke(fill_color, 100)
+            else:
+                stroke(fill_color, 0)
+            strokeWeight(radius)
+            point(x, y)
             yoff += noise_increment
         xoff += noise_increment
         
