@@ -15,9 +15,9 @@ from random import shuffle, seed
 ################################################################################
 
 # Logic controls
-record = False  # Save every frame?
+record = True  # Save every frame?
 animate = True  # Loop through draw()? 
-seeded = False  # Set random seeds?
+seeded = True  # Set random seeds?
 
 # Canvas size
 w = 800  # width
@@ -31,8 +31,9 @@ max_x = w*0.9
 min_y = h*0.1
 max_y = h*0.9
 
-noise_xy_inc = 0.007
+noise_xy_inc = 0.01
 noise_t_inc = 0.02
+noise_threshold = 45
 
 toff = 0
 
@@ -113,37 +114,44 @@ def draw():
     rect(min_x, min_y, max_x, max_y)
     pop()
 
-    draw_blob_slice_points(noise_xy_inc, 50, pal[3], 0, 5, 50)
-    draw_blob_slice_points(noise_xy_inc, 50, shadow_color(pal[4]), 0, 5, 50)
+    # coff = 0
+    # draw_blob_slice(noise_xy_inc, noise_threshold, shadow_color(pal[4]), coff-0.1, 7, 7)
+    # draw_blob_slice(noise_xy_inc, noise_threshold, shadow_color(pal[4]), coff+0.02, 7, 7)
+    # draw_blob_slice(noise_xy_inc, noise_threshold, pal[4], coff, 7, 7)
+    
+    coff = 20
+    # draw_blob_slice(noise_xy_inc, noise_threshold, shadow_color(pal[5]), coff-0.2, 20, 20)
+    draw_blob_slice(noise_xy_inc, noise_threshold, shadow_color(pal[5]), coff-0.1, 5, 5)
+    # draw_blob_slice(noise_xy_inc, noise_threshold, pal[6], 0, 20, 20)
+    draw_blob_slice(noise_xy_inc, noise_threshold, pal[5], coff, 5, 5)
+    # draw_blob_slice(noise_xy_inc, noise_threshold, pal[4], 20, 20, 20)
+    
+    toff += noise_t_inc
+    
+    # Trick to smooth Perlin noise stutter step
+    # https://forum.processing.org/two/discussion/21869/confused-about-perlin-animation-result
+    if (toff % 1.0 >= 0.975) or (toff % 1.0 < 0.025):
+        toff += 0.045
     
     if record:
         save_frame_timestamp(filename, timestamp)
         
-    toff += noise_t_inc
-
 def shadow_color(c):
     c_hue = hue(c)
     c_sat = saturation(c)
-    c_brite = brightness(c)*0.5
-    c_alpha = 50
+    c_brite = brightness(c)*0.7
+    c_alpha = 100
     return color(c_hue, c_sat, c_brite, c_alpha)
 
-def draw_blob_slice(noise_increment=0.02, toff=0, threshold=50, fill_color=color(0,0,0), offset=0, step=0.5, radius=1):
-    xoff = 0
-    for x in frange(min_x+radius/2, max_x+radius/2, step):
-        yoff = 0
-        for y in frange(min_y+radius/2, max_y+radius/2, step):
-            noise_value = noise(xoff+offset, yoff+offset, toff)
-            alpha_value = map(noise_value, 0, 1, 0, 100)
-            if alpha_value>threshold:
-                fill(fill_color, 100)
-            else:
-                fill(fill_color, 0)
-            ellipse(x, y, radius, radius)
-            yoff += noise_increment
-        xoff += noise_increment
+def noise_loop(a, r, min_val, max_val, x_c, y_c):
+    # Samples 2D Perlin noise in a circle to make smooth noise loops
+    # Adapted from https://github.com/CodingTrain/website/blob/master/CodingChallenges/CC_136_Polar_Noise_Loop_2/P5/noiseLoop.js
+    xoff = map(cos(a), -1, 1, x_c, x_c + 2*r);
+    yoff = map(sin(a), -1, 1, y_c, y_c + 2*r);
+    r = noise(xoff, yoff)
+    return map(r, 0, 1, this.min, this.max);
 
-def draw_blob_slice_points(noise_increment=0.02, threshold=50, fill_color=color(0,0,0), offset=0, step=0.5, radius=1):
+def draw_blob_slice(noise_increment=0.02, threshold=50, fill_color=color(0,0,0), offset=0, step=0.5, radius=1):
     xoff = 0
     for x in frange(min_x+radius/2, max_x+radius/2, step):
         yoff = 0
