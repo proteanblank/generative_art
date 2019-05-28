@@ -26,10 +26,10 @@ h = 800  # height
 # Initializes randomness to make results repeateable (if randomize is set to True)
 rand_seed = 1138
 
-min_x = w*0.1
-max_x = w*0.9
-min_y = h*0.1
-max_y = h*0.9
+min_x = w*0
+max_x = w*1
+min_y = h*0
+max_y = h*1
 
 noise_xy_inc = 0.01
 noise_t_inc = 0.02
@@ -119,11 +119,13 @@ def draw():
     # draw_blob_slice(noise_xy_inc, noise_threshold, shadow_color(pal[4]), coff+0.02, 7, 7)
     # draw_blob_slice(noise_xy_inc, noise_threshold, pal[4], coff, 7, 7)
     
-    coff = 20
-    # draw_blob_slice(noise_xy_inc, noise_threshold, shadow_color(pal[5]), coff-0.2, 20, 20)
-    draw_blob_slice(noise_xy_inc, noise_threshold, shadow_color(pal[5]), coff-0.1, 5, 5)
-    # draw_blob_slice(noise_xy_inc, noise_threshold, pal[6], 0, 20, 20)
+    coff = 1000
+    draw_blob_slice(noise_xy_inc, noise_threshold, shadow_color(pal[5]), coff-0.05, 5, 5)
     draw_blob_slice(noise_xy_inc, noise_threshold, pal[5], coff, 5, 5)
+    coff = 20
+    draw_blob_slice(noise_xy_inc, noise_threshold*1.25, shadow_color(pal[4]), coff-0.05, 5, 5)
+    draw_blob_slice(noise_xy_inc, noise_threshold*1.25, pal[4], coff, 5, 5)
+    # draw_blob_slice(noise_xy_inc, noise_threshold, pal[6], 0, 20, 20)
     # draw_blob_slice(noise_xy_inc, noise_threshold, pal[4], 20, 20, 20)
     
     toff += noise_t_inc
