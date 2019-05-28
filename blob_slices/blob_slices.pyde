@@ -15,13 +15,13 @@ from random import shuffle, seed
 ################################################################################
 
 # Logic controls
-record = True  # Save every frame?
+record = False  # Save every frame?
 animate = True  # Loop through draw()? 
 seeded = True  # Set random seeds?
 
 # Canvas size
-w = 800  # width
-h = 800  # height
+w = 900  # width
+h = 1600  # height
 
 # Initializes randomness to make results repeateable (if randomize is set to True)
 rand_seed = 1138
