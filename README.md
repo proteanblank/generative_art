@@ -2,7 +2,7 @@
 
 ## Blob slices ([source](https://github.com/aaronpenne/generative_art/tree/master/blob_slices))
 
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/blob_slices/images/20190524_170527_blob_slices_1138_0001.png" alt="geode" width="90%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/blob_slices/images/20190528_131443_blob_slices_1138_0727.png" alt="geode" width="90%"></p>
 
 
 ## Generative geodes ([source](https://github.com/aaronpenne/generative_art/tree/master/geode))
