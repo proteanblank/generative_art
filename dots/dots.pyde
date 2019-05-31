@@ -11,11 +11,12 @@ import sys
 # Define globals here
 rand_seed = 1138
 frame_rate = 1
-w = 1500  # width
-h = 500  # height
+w = 800  # width
+h = 800  # height
 count = 0
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
+zoff = 0
 
 pal = [(60, 7, 86),   #dcdccc cream
        (0, 28, 80),   #cc9393 pink
@@ -24,6 +25,8 @@ pal = [(60, 7, 86),   #dcdccc cream
        (24, 31, 100), #ffcfaf peach
        (150, 22, 56), #709080 green
       ]
+
+# pal = [(0, 0, 95)]
 
 def setup():
     # Sets size of canvas in pixels (must be first line)
@@ -42,34 +45,37 @@ def setup():
         
     # Stops draw() from running in an infinite loop (should be last line)
     # randomSeed(rand_seed)
-    noLoop()
+    # noLoop()
 
 
 def draw():
     global count
-    if count > 30:
+    global zoff
+    if count > 480:
         sys.exit(0)
     count += 1
     
     background(0, 0, 25)
     translate(w/2, h/2)
     
-    r = 40
-    grid_x = [x for x in range(int(-w/2 + 4*r), int(w/2 - 3*r), int(r*1.5))]
-    grid_y = [y for y in range(int(-h/2 + 3*r), int(h/2 - 2*r), int(r*1.5))]
+    r = 30
+    grid_x = [x for x in range(int(-w/2 + 2*r), int(w/2 - r), int(r*1.5))]
+    grid_y = [y for y in range(int(-h/2 + 2*r), int(h/2 - r), int(r*1.5))]
     
-    x_skip = int(random(1, len(grid_x)))
-    y_skip = int(random(1, len(grid_y)))
+    # x_skip = int(random(1, len(grid_x)))
+    # y_skip = int(random(1, len(grid_y)))
+    x_skip = len(grid_x)-3
+    y_skip = 2
     print(x_skip, y_skip)
     
     # Draw all the shadows first
     for ix, x in enumerate(grid_x):
         for iy, y in enumerate(grid_y):
-            ellipse_values = (x, y, r*0.9, r*0.9)
+            ellipse_values = (x, y, r*0.5, r*0.5)
             pushMatrix()
             translate(0, 0, -10)
             if (ix!=x_skip) or (iy!=y_skip):
-                shadow_ellipse(ellipse_values, colors_tuple=(0, 0, 0, 100), w_offset=0, h_offset=0)
+                shadow_ellipse(ellipse_values, colors_tuple=(0, 0, 0, 100), w_offset=0, h_offset=0, blur=10)
             #shadow_ellipse(ellipse_values, colors_tuple=(0, 0, 0, 40), w_offset=0, h_offset=0)
             popMatrix()
             
@@ -89,14 +95,16 @@ def draw():
             #     fill(*pal[0])
         
             pushMatrix()
-            z = random(-5, r*0.3)
+            # z = random(-10, r*1.2)
+            z = map(noise(x/50, y/50, zoff), 0, 1, -10, r*1.2)
             translate(0, 0, z)
+            # ellipse(*ellipse_values)
             if (ix!=x_skip) or (iy!=y_skip):
                 ellipse(*ellipse_values)
-            #ellipse(*ellipse_values)
             popMatrix()
         
     save_frame_timestamp('ellipse', timestamp)
+    zoff += 0.05
 
 
 def shadow_ellipse(values_tuple, colors_tuple=(0, 0, 0, 80), w_offset=10, h_offset=20, blur=15):
