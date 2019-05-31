@@ -1,8 +1,12 @@
 **Note:** To run the Python Processing scripts you need the Processing IDE with Python mode enabled. [This will get you started](https://py.processing.org/tutorials/gettingstarted/). The default installation location of Processing has a dir titled `libraries/site-packages` where any further Python scripts/imports live. Be sure to copy/paste this repo's `libraries/site-packages` files into that dir on your system.
 
+## Dots (animation in source dir) ([source](https://github.com/aaronpenne/generative_art/tree/master/dots))
+
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/dots/images/white_circles_updated_2.png" alt="dots" width="90%"></p>
+
 ## Blob slices ([source](https://github.com/aaronpenne/generative_art/tree/master/blob_slices))
 
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/blob_slices/images/20190528_131443_blob_slices_1138_0727.png" alt="geode" width="90%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/blob_slices/images/20190528_131443_blob_slices_1138_0727.png" alt="blobs" width="90%"></p>
 
 
 ## Generative geodes ([source](https://github.com/aaronpenne/generative_art/tree/master/geode))
