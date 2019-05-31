@@ -11,8 +11,8 @@ import sys
 # Define globals here
 rand_seed = 1138
 frame_rate = 1
-w = 900  # width
-h = 1600  # height
+w = 800  # width
+h = 800  # height
 count = 0
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
@@ -61,7 +61,7 @@ def draw():
     background(0, 0, 25)
     translate(w/2, h/2)
     
-    r = 50
+    r = 40
     grid_x = [x for x in range(int(-w/2 + 2*r), int(w/2 - r), int(r*1.5))]
     grid_y = [y for y in range(int(-h/2 + 2*r), int(h/2 - r), int(r*1.5))]
     
