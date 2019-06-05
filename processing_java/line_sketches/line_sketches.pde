@@ -17,9 +17,9 @@ float t_off = 0.0;
 
 float z_increment = 0.02;
 
-boolean record = true;
-boolean animate = false;
-boolean seeded = true;
+boolean record = false;
+boolean animate = true;
+boolean seeded = false;
 
 int rand_seed = 1138;
 
@@ -34,7 +34,7 @@ String timestamp = String.format("%04d%02d%02d_%02d%02d%02d", year(), month(), d
 
 void setup() {
   // Sets size of canvas in pixels (must be first line)
-  size(700, 700);
+  size(800, 800);
     
   // Sets resolution dynamically (affects resolution of saved image)
   pixelDensity(displayDensity());  // 1 for low, 2 for high
@@ -67,29 +67,74 @@ void setup() {
   pal[1] = color(0,0,25);
   pal[2] = color(39, 16.9, 92.9);    // tan background
   pal[3] = color(48.8, 27, 92.9);    // yellowish
-  pal[4] = color(152, 15.38, 76.47); // blueish
+  pal[4] = color(152, 11, 76);       // blueish
   pal[5] = color(2.7, 40.3, 86.7);   // reddish
-  pal[6] = color(60, 18.4, 80.8);   // greenish
+  pal[6] = color(60, 18.4, 80.8);    // greenish
          
   background(pal[4]);
 }
 
 void draw() {
+  background(pal[4]);
+  translate(width/2, height/2);
+  
+  strokeWeight(2);
   stroke(pal[1]);
   fill(pal[1]);
+  noFill();
+  
+  NoiseLoop rNoise = new NoiseLoop(0.5, 100, 300);
   
   float x, y;
-  int r = 200;
-  for(int a=0; a<=360; a++) {
+  beginShape();
+  for(int a=0; a<=360+2; a+=1) {
+    float r = rNoise.value(radians(a));
     x = r * cos(radians(a));
     y = r * sin(radians(a));
-    point(x,y);
+    curveVertex(x,y);
   }
+  endShape();
   
   
   if (record) {
+    save_frame_to_file();
+  }
+}
+
+
+void save_frame_to_file() {
     String output_filepath = "output/%s_####.png";
     println(String.format("Saving %04d to %s", frameCount, String.format(output_filepath, timestamp)));
     saveFrame(String.format(output_filepath, timestamp));
+}
+
+void mousePressed() {
+  save_frame_to_file();
+  noLoop();
+}
+
+
+// NoiseLoop by Daniel Shiffman
+// Samples 2D perlin noise space in a circular fashion
+// https://github.com/CodingTrain/website/tree/master/CodingChallenges/CC_136_Polar_Noise_Loop_2/Processing/CC_136_Polar_Noise_Loop_2
+class NoiseLoop {
+  float diameter;
+  float min, max;
+  float cx;
+  float cy;
+
+  NoiseLoop(float diameter, float min, float max) {
+    this.diameter = diameter;
+    this.min = min;
+    this.max = max;
+    cx = random(1000);
+    cy = random(1000);
+  }
+
+  float value(float a) {
+    float xoff = map(cos(a), -1, 1, cx, cx + diameter);
+    float yoff = map(sin(a), -1, 1, cy, cy + diameter);
+    float r = noise(xoff, yoff);
+    return map(r, 0, 1, min, max);
   }
 }
