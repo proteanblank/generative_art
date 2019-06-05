@@ -17,8 +17,8 @@ float t_off = 0.0;
 
 float z_increment = 0.02;
 
-boolean record = false;
-boolean animate = true;
+boolean record = true;
+boolean animate = false;
 boolean seeded = false;
 
 int rand_seed = 1138;
@@ -78,16 +78,17 @@ void draw() {
   background(pal[4]);
   translate(width/2, height/2);
   
-  strokeWeight(2);
+  strokeWeight(7);
   stroke(pal[1]);
   fill(pal[1]);
   noFill();
   
-  NoiseLoop rNoise = new NoiseLoop(0.5, 100, 300);
+  NoiseLoop rNoise = new NoiseLoop(1, 50, 500);
   
   float x, y;
   beginShape();
-  for(int a=0; a<=360+2; a+=1) {
+  float step = 5;
+  for(int a=0; a<=360+(2*step); a+=step) {
     float r = rNoise.value(radians(a));
     x = r * cos(radians(a));
     y = r * sin(radians(a));
