@@ -17,17 +17,15 @@ float t_off = 0.0;
 
 float z_increment = 0.02;
 
-boolean record = true;
-boolean animate = false;
+boolean record = false;
+boolean animate = true;
 boolean seeded = false;
 
 int rand_seed = 1138;
 
 OpenSimplexNoise noise;
 
-
-// Fisk Mississipi maps
-color[] pal = new color[7];
+color[] pal = new color[20];
 
                  
 String timestamp = String.format("%04d%02d%02d_%02d%02d%02d", year(), month(), day(), hour(), minute(), second());
@@ -65,33 +63,39 @@ void setup() {
   
   pal[0] = color(0,0,100);
   pal[1] = color(0,0,25);
+  // Fisk Map colors
   pal[2] = color(39, 16.9, 92.9);    // tan background
   pal[3] = color(48.8, 27, 92.9);    // yellowish
   pal[4] = color(152, 11, 76);       // blueish
   pal[5] = color(2.7, 40.3, 86.7);   // reddish
   pal[6] = color(60, 18.4, 80.8);    // greenish
+  // Red/black shirt colors
+  pal[7] = color(11, 50, 68);   // reddish
+  pal[8] = color(207, 22, 20);  // blackish
          
-  background(pal[4]);
+  background(pal[7]);
 }
 
 void draw() {
-  background(pal[4]);
+  background(pal[7]);
   translate(width/2, height/2);
   
   strokeWeight(7);
-  stroke(pal[1]);
-  fill(pal[1]);
+  stroke(pal[8]);
+  fill(pal[8]);
   noFill();
   
-  NoiseLoop rNoise = new NoiseLoop(1, 50, 500);
+  NoiseLoop rNoise = new NoiseLoop(1, 50, 500, 1, 1);
+  NoiseLoop zNoise = new NoiseLoop(0.02, -50, 50, 0, 0);
   
   float x, y;
   beginShape();
-  float step = 5;
+  float step = 30;
+  float z = zNoise.value(radians(frameCount/10));
   for(int a=0; a<=360+(2*step); a+=step) {
     float r = rNoise.value(radians(a));
-    x = r * cos(radians(a));
-    y = r * sin(radians(a));
+    x = r * cos(radians(a)) + z;
+    y = r * sin(radians(a)) + z;
     curveVertex(x,y);
   }
   endShape();
@@ -124,12 +128,16 @@ class NoiseLoop {
   float cx;
   float cy;
 
-  NoiseLoop(float diameter, float min, float max) {
+  NoiseLoop(float diameter, float min, float max, float cx, float cy) {
     this.diameter = diameter;
     this.min = min;
     this.max = max;
-    cx = random(1000);
-    cy = random(1000);
+    if (cx != 1) {
+      cx = random(1000);
+    }
+    if (cy != 1) {
+      cy = random(1000);
+    }
   }
 
   float value(float a) {
