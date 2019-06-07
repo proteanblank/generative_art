@@ -5,21 +5,17 @@
 // released under the MIT license (https://opensource.org/licenses/MIT)
 ////////////////////////////////////////////////////////////////////////////////
 
-int max_frames = 10;
-
-float step = 5;
-int radius = 5;
-
-float increment = 0.025;
-
-float z_off = 0.0;
-float t_off = 0.0;
-
-float z_increment = 0.02;
-
-boolean record = false;
+boolean record = true;
 boolean animate = true;
-boolean seeded = false;
+boolean seeded = true;
+
+int stroke_weight = 20;
+float z_off = 0;
+float z_inc = 0.02;
+
+NoiseLoop rNoise = new NoiseLoop(0.05, 40, 300, 1, 1);
+
+color fg, bg;
 
 int rand_seed = 1138;
 
@@ -50,7 +46,7 @@ void setup() {
     
   // Stops draw() from running in an infinite loop
   if (!animate) {
-   noLoop();
+    noLoop();
   }
         
   // Sets random seed value for both Python and Processing 
@@ -73,39 +69,55 @@ void setup() {
   pal[7] = color(11, 50, 68);   // reddish
   pal[8] = color(207, 22, 20);  // blackish
          
+  fg = pal[7];
+  bg = pal[8];
+        
   background(pal[7]);
 }
 
 void draw() {
-  background(pal[7]);
+  background(fg);
   translate(width/2, height/2);
   
-  strokeWeight(7);
-  stroke(pal[8]);
-  fill(pal[8]);
+  strokeWeight(stroke_weight);
+  stroke(bg);
+  //noStroke();
+  
+  fill(fg);
   noFill();
   
-  NoiseLoop rNoise = new NoiseLoop(1, 50, 500, 1, 1);
-  NoiseLoop zNoise = new NoiseLoop(0.02, -50, 50, 0, 0);
-  
-  float x, y;
-  beginShape();
-  float step = 30;
-  float z = zNoise.value(radians(frameCount/10));
-  for(int a=0; a<=360+(2*step); a+=step) {
-    float r = rNoise.value(radians(a));
-    x = r * cos(radians(a)) + z;
-    y = r * sin(radians(a)) + z;
-    curveVertex(x,y);
+  for (int r_step=-80; r_step<=480; r_step+=40) {
+    draw_blob(45, r_step);
   }
-  endShape();
   
+  z_off += z_inc;
   
   if (record) {
     save_frame_to_file();
   }
+      
+  // Stops draw() from running in an infinite loop
+  if (!animate) {
+    save_frame_to_file();
+  }
+        
 }
 
+
+
+void draw_blob(float a_step, float r_step) {
+  float x, y;
+  float r;
+  
+  beginShape();
+  for(int a=0; a<=360+(2*a_step); a+=a_step) {
+    r = rNoise.value(radians(a));
+    x = (r_step + r) * cos(radians(a));
+    y = (r_step + r) * sin(radians(a));
+    curveVertex(x,y);
+  }
+  endShape();
+}
 
 void save_frame_to_file() {
     String output_filepath = "output/%s_####.png";
@@ -143,7 +155,7 @@ class NoiseLoop {
   float value(float a) {
     float xoff = map(cos(a), -1, 1, cx, cx + diameter);
     float yoff = map(sin(a), -1, 1, cy, cy + diameter);
-    float r = noise(xoff, yoff);
-    return map(r, 0, 1, min, max);
+    float r = (float)noise.eval(xoff, yoff, z_off);
+    return map(r, -1, 1, min, max);
   }
 }
