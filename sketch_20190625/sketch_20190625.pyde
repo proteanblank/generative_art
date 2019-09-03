@@ -101,19 +101,38 @@ def setup():
 # Sketch functions
 ################################################################################
 def draw():
-    noFill()
     
-    m1 = draw_mask(200)
-    m2 = draw_mask(400)
-    for i in range(200):
-        g = draw_blob(width/2, height/2, 200, 5)
-        g.mask(m2)
-        image(g, 0, 0)
-    p = draw_pattern()
-    p.mask(m1)
+    loadPixels()
+    i = 0
+    for x in range(width*2):
+        for y in range(height*2):
+            val = map(noise(x*0.01, y*0.01), 0.2, 0.8, 0, 360)
+            
+            if val < 72:
+                pixels[i] = color(c[5])
+            elif val < 144:
+                pixels[i] = color(lerpColor(c[5], c[6], (val-72)/(144-72)))
+            elif val < 216:
+                pixels[i] = color(c[6])
+            elif val <= 288:
+                pixels[i] = color(lerpColor(c[6], c[1], (val-216)/(288-216)))
+            elif val <= 360:
+                pixels[i] = color(val, 70, 70)
+                
+            i += 1
+    updatePixels()
+
+
+#     loadPixels()
+#     huey = 0
+#     i = 0
+#     for x in range(width*height*4):
+#         pixels[i] = color(huey, 70, 80)
+#         huey = map(i, 0, width*height*4, 0, 360)
+#         i += 1
+#     updatePixels()
     
-    image(p, 0, 0)
-    
+    # Used for saving files according to global variables set above
     if record:
         save_frame_timestamp(filename, timestamp)
     if not animate:
@@ -125,52 +144,7 @@ def draw():
 ################################################################################
 # Sketch functions
 ################################################################################
-def draw_mask(r):    
-    m = createGraphics(width, height)
-    m.beginDraw()
-    m.stroke(c[0])
-    m.fill(c[0])
-    m.ellipse(w/2, h/2, r, r)
-    m.endDraw()
-    return m
-    
-def draw_blob(x, y, r, step):  
-    g = createGraphics(width, height)
-    g.beginDraw()
-    g.beginShape()
-    g.stroke(c[0])
-    g.fill(c[0])
-    
-    a_vals = [a for a in range(0, 361, int(step))]
-    shuffle(a_vals)
-    for a in a_vals:
-        x0, y0 = circle_point(x, y, r, r, radians(a))
-        g.curveVertex(x0, y0)
-    for a in a_vals:
-        x0, y0 = circle_point(x, y, r, r, radians(a))
-        g.curveVertex(x0, y0)
-    
-    g.endShape()
-    g.endDraw()
-    return g
-    
-def draw_pattern():
-    p = createGraphics(width, height)
-    p.beginDraw()
-    p.noStroke()
-    p.background(c[12])
-    step = 10
-    for i,x in enumerate(range(0,width+step,step)):
-        if i%2==0:
-            p.fill(c[12])
-        else:
-            p.fill(c[0])
-            pass # p.fill(c[8])
-        p.rect(0, x, h, x+step)
-    p.endDraw()
-    
-    return p
-    
+
     
 ################################################################################
 # Helper and utility functions (used across multiple sketches)
