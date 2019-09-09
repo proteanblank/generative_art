@@ -76,7 +76,7 @@ def setup():
 
     global c
     # Fisk Mississipi maps
-    c[0] = color(39, 16.9, 92.9)  # tan background
+    c[0] = color(39, 11.9, 92.9)  # tan background
     c[1] = color(48.8, 27, 92.9)  # yellowish
     c[2] = color(152, 15.38, 76.47)  # blueish
     c[3] = color(2.7, 40.3, 86.7)  # reddish
@@ -143,8 +143,8 @@ def setup():
 ##########################################################################
 def draw():
     
-    x_step = 10
-    y_step = 10
+    x_step = 11
+    y_step = 11
     
     pad_scale = 0.8
     
@@ -172,28 +172,27 @@ def draw():
         i_y = 0
         for y in range(yc_start, yc_stop+1, y_d):
             cnt += 1
-            if cnt in [3, 7, 15, 18, 25, 30, 60, 63, 78]:
-                continue
+            # if cnt in [3, 7, 15, 18, 25, 30, 60, 63, 78]:
+            #     continue
             
             push()
             translate(x, y)
             strokeWeight(2)
+            fill(c[0])
             rect(0, 0, x_d, y_d)
-            strokeWeight(2)
             
-
+            strokeWeight(2)
+            curveTightness(3)
         
-            curveTightness(0)
-            beginShape()
-            vertex(-x_r, 0)
-            curveVertex(random(-x_r,x_r),random(-y_r,y_r))
-            curveVertex(random(-x_r,x_r),random(-y_r,y_r))
-            curveVertex(random(-x_r,x_r),random(-y_r,y_r))
-            curveVertex(random(-x_r,x_r),random(-y_r,y_r))
-            vertex(x_r, 0)
-            endShape()
-        
+            rotate(choice([0, PI/2, PI, TWO_PI]))
+            draw_quadrant(-x_r, 0, 0, y_r, c[3])
+            draw_quadrant(0, -y_r, -x_r, 0, c[3])
+            draw_quadrant(x_r, 0, 0, -y_r, c[2])
+            draw_quadrant(0, y_r, x_r, 0, c[2])
 
+            noFill()
+            
+            # rect(0, 0, x_d, y_d)
             
             pop()
             i_y += 1
@@ -214,7 +213,25 @@ def draw():
 ##########################################################################
 # Sketch functions
 ##########################################################################
-
+def draw_quadrant(x1, y1, x2, y2, c_val):
+    fill(c_val)
+    beginShape()
+    vertex(x1, y1)
+    # top left
+    # if (x1<=0) & (y1<=0):
+    #     vertex(random(x2,0),random(0,y1))
+    # top right
+    # elif (x1>=0) & (y1<=0):
+    #     vertex(random(0,x1),random(y2,0))
+    # # bottom right
+    # elif (x1>=0) & (y1>=0):
+    #     vertex(random(,),random(,))
+    # # bottom right
+    # elif (x1<=0) & (y1>=0):
+    #     vertex(random(-x_r,x_r),random(-y_r,y_r))
+    vertex(x2, y2)
+    vertex(x1, y2)
+    endShape(CLOSE)
 
 
 
