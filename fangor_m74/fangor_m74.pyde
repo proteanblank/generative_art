@@ -10,8 +10,8 @@ import sys
 # Define globals here
 rand_seed = 1138
 frame_rate = 1
-w = 800  # width
-h = 800  # height
+w = 3600  # width
+h = 3600  # height
 border_pad = 60
 count = 0
 
@@ -34,7 +34,7 @@ def setup():
     imageMode(CENTER)
     ellipseMode(CENTER)
     
-    background(0, 0, 97)
+    background(0, 0, 100)
     
     # Stops draw() from running in an infinite loop (should be last line)
     randomSeed(rand_seed)
@@ -45,9 +45,9 @@ def setup():
 def draw():
 
     background(0, 0, 90)
-    offset = 3
+    offset = 3 * width/800
     
-    r = 600
+    r = 600 * width/800
     big = createGraphics(w, h)
     big.beginDraw()
     big.background(g.backgroundColor)
@@ -62,11 +62,11 @@ def draw():
     big.filter(BLUR, 50)
     image(big, width/2, height/2)
     
-    r = 400
+    r = 400 * width/800
     fill(color(0, 0, 90, 100))
     ellipse(width/2, height/2, r, r)
     
-    r = 270
+    r = 270 * width/800
     lil = createGraphics(w, h)
     lil.beginDraw()
     lil.noStroke()

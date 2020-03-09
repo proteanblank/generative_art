@@ -11,8 +11,8 @@ import sys
 # Define globals here
 rand_seed = 1138
 frame_rate = 1
-w = 800  # width
-h = 800  # height
+w = 3600  # width
+h = 3600  # height
 count = 0
 timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
@@ -49,7 +49,7 @@ def setup():
     #        (150, 22, 56), #709080 green
     #       ]
     
-    pal = [(0, 0, 25)]
+    pal = [(0, 0, 100)]
 
 def draw():
     global count
@@ -58,10 +58,10 @@ def draw():
         sys.exit(0)
     count += 1
     
-    background(0, 0, 25)
+    background(0, 0, 100)
     translate(w/2, h/2)
     
-    r = 40
+    r = 120
     grid_x = [x for x in range(int(-w/2 + 2*r), int(w/2 - r), int(r*1.5))]
     grid_y = [y for y in range(int(-h/2 + 2*r), int(h/2 - r), int(r*1.5))]
     
@@ -74,12 +74,14 @@ def draw():
     # Draw all the shadows first
     for ix, x in enumerate(grid_x):
         for iy, y in enumerate(grid_y):
-            ellipse_values = (x, y, r*0.7, r*0.7)
+            
+            
+            ellipse_values = (x, y, r*0.6, r*0.6)
             pushMatrix()
             translate(0, 0, -10)
             if (ix!=x_skip) or (iy!=y_skip):
-                colors_tuple = color(0, 0, 95, 100)
-                shadow_ellipse(ellipse_values, colors_tuple=colors_tuple, w_offset=0, h_offset=0, blur=6)
+                colors_tuple = color(0, 0, 50, 100)
+                shadow_ellipse(ellipse_values, colors_tuple=colors_tuple, w_offset=0, h_offset=0, blur=10)
             #shadow_ellipse(ellipse_values, colors_tuple=(0, 0, 0, 40), w_offset=0, h_offset=0)
             popMatrix()
             
@@ -100,7 +102,7 @@ def draw():
         
             pushMatrix()
             # z = random(-10, r*1.2)
-            z = map(noise(x/50, y/50, zoff), 0, 1, -10, r*1.2)
+            z = map(noise(x*0.01, y*0.01, zoff), 0, 1, -10, r*1.3)
             translate(0, 0, z)
             # ellipse(*ellipse_values)
             if (ix!=x_skip) or (iy!=y_skip):

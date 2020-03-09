@@ -23,13 +23,13 @@ randomSeed(rand_seed) # This only applys to the Processing random functions
 
 filename = 'allegory'
 
-record = True
-animate = True
+record = False
+animate = False
 animate_mode = 'sinusoid'
 
 # Canvas size
-w = 800  # width
-h = 800  # height
+w = 3500  # width
+h = 3500  # height
 
 steps = 1000
 num_loops = 1
@@ -68,60 +68,68 @@ def setup():
 
     background(0, 0, 25)
     stroke(60, 7, 86)
+    strokeWeight(2)
     fill(0, 0, 25, 0)
     
 def draw():
-    global t1
-    global t2
-    global t3
     
-    t1 = t1 + 0.03;
-    # t2 = t2 + 2;
-    # t3 = t3 + 2;
-    if frameCount > (steps * num_loops):
-        #exit()
-        pass
+    for indexxx in range(0,3000,2):
+        global t1
+        global t2
+        global t3
+        
+        t1 = t1 + 0.03;
+        # t2 = t2 + 2;
+        # t3 = t3 + 2;
+        if frameCount > (steps * num_loops):
+            #exit()
+            pass
+        
+        beginShape()
+        
+        r = w*0.03
+        y_off = h*0.1
+        
+        # First 3 points of each blob line are explicitly set because 
+        # they are needed at the end of the shape to close the loop
+        a = c_points[0]
+        n = map(noise(t1, a), 0, 1, 1, 2)
+        x0, y0 = circle_point(w/2, h/2+y_off, n*(r+indexxx), a)
+        curveVertex(x0, y0)
+        
+        a = c_points[1]
+        n = map(noise(t1, a), 0, 1, 1, 2)
+        x1, y1 = circle_point(w/2, h/2+y_off, n*(r+indexxx), a)
+        curveVertex(x1, y1)
+        
+        a = c_points[2]
+        n = map(noise(t1, a), 0, 1, 1, 2)
+        x2, y2 = circle_point(w/2, h/2+y_off, n*(r+indexxx), a)
+        curveVertex(x2, y2)
+        
+        for i,a in enumerate(c_points):
+            # Limiting which points get vertices makes the "floor"
+            if i>15:
+                n = map(noise(t1, a), 0, 1, 1, 2)
+                x, y = circle_point(w/2, h/2+y_off, n*(r+indexxx), a)
+                curveVertex(x, y)
     
-    beginShape()
+        # The three first points are laid out again to smoothly close the loop
+        curveVertex(x0, y0)
+        curveVertex(x1, y1)
+        curveVertex(x2, y2)
+        
+        
+        endShape()
+        
     
-    r = w*0.03
-    
-    # First 3 points of each blob line are explicitly set because 
-    # they are needed at the end of the shape to close the loop
-    a = c_points[0]
-    n = map(noise(t1, a), 0, 1, 1, 2)
-    x0, y0 = circle_point(w/2, h/2, n*(r+frameCount), a)
-    curveVertex(x0, y0)
-    
-    a = c_points[1]
-    n = map(noise(t1, a), 0, 1, 1, 2)
-    x1, y1 = circle_point(w/2, h/2, n*(r+frameCount), a)
-    curveVertex(x1, y1)
-    
-    a = c_points[2]
-    n = map(noise(t1, a), 0, 1, 1, 2)
-    x2, y2 = circle_point(w/2, h/2, n*(r+frameCount), a)
-    curveVertex(x2, y2)
-    
-    for i,a in enumerate(c_points):
-        # Limiting which points get vertices makes the "floor"
-        if i>3:
-            n = map(noise(t1, a), 0, 1, 1, 2)
-            x, y = circle_point(w/2, h/2, n*(r+frameCount), a)
-            curveVertex(x, y)
-
-    # The three first points are laid out again to smoothly close the loop
-    curveVertex(x0, y0)
-    curveVertex(x1, y1)
-    curveVertex(x2, y2)
+    # if record:
+    save_frame_timestamp(filename, timestamp)
     
     
-    endShape()
-    
-    
-    if record:
-        save_frame_timestamp(filename, timestamp)
-
+def mousePressed():
+    # pass
+    save_frame_timestamp(filename, timestamp)
         
 def save_frame_timestamp(filename, timestamp='', output_dir='output'):
     '''Saves each frame with a structured filename to allow for tracking all output'''
