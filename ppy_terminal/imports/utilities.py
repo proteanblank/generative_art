@@ -11,26 +11,91 @@
 import os
 import logging
 import sys
-
-# from datetime import timezone
+from datetime import datetime
+import ConfigParser
 
 from setup_logging import log
 
-class Utilities():
-    def __init__(self, rand_seed=1138):
-        self.rand_seed = rand_seed
+class ConfigUtils(object):
+    def cast_dict(self, dictionary):
+        """
+        Tries to convert the values in a dict to int, then float
+        """
+        for key in dictionary:
+            try:
+                dictionary[key] = int(dictionary[key])
+            except:
+                try:
+                    dictionary[key] = float(dictionary[key])
+                except:
+                    pass
+        return dictionary
+
+    def config_to_dict(self, config_path, config_section='default'):
+        """
+        Grabs section from config file and converts it to a dict
+        """
+        config = ConfigParser.ConfigParser()
+        config.read(config_path)
+        section_list = config.items(config_section)
+        log.info('Args pulled from config file:')
+        for pair in section_list:
+            log.info('  {}: {}'.format(pair[0], pair[1]))
+        section_dict = dict(section_list)
+        section_dict = self.cast_dict(section_dict)
+        return section_dict
+
+
+class OpsUtils(object):
+    def __init__(self, script_path, seed=1138):
+        self.script_path = script_path
+        self.script_name = os.path.basename(script_path)
+        self.script_dir = os.path.dirname(script_path)
+        self.sketch_name = os.path.splitext(self.script_name)[0]
+        self.seed = seed
+        self.timestamp = self.get_timestamp_string()
 
     def print_seed(self):
-        log.info(self.rand_seed)
+        log.info(self.seed)
 
-def draw_test(pg): 
-    for i in range(1000):
-        pg.fill(random(255),50,50,10)
-        pg.ellipse(random(pg.width),random(pg.height),random(pg.width*0.2),random(pg.height*0.2))
+    def get_timestamp_string(self):
+        timestamp = datetime.now()
+        timestamp = timestamp.strftime('%Y%m%d_%H%M%S')
+        return timestamp
 
-def get_timestamp_string():
-    timestamp = datetime.now(timezone.utc)
-    return timestamp.strftime('%Y%m%d_%H%M%S')
+    def get_filename(self, counter):
+        filename = '{}_{}_{}_{:03d}.png'.format(self.sketch_name, self.seed, self.timestamp, counter)
+        return filename
+
+    def make_dir(self, path):
+        try:
+            os.makedirs(path)
+        except OSError:
+            if not os.path.isdir(path):
+                raise
+
+    def save_graphic(self, pg, path, counter):
+        self.make_dir(path)
+        output_file = self.get_filename(counter)
+        output_path = os.path.join(path, output_file)
+        pg.save(output_path)
+        log.info('Saved to {}'.format(output_path))
+
+        
+
+
+class DrawUtils(OpsUtils):
+    def __init__(self, script_path, width, height, seed=1138):
+        super(DrawUtils, self).__init__(script_path, seed)  # Calls init from inherited class to get those variables first
+        log.info(self.timestamp)
+        self.width = width
+        self.height = height
+
+    def draw_test(self, pg, num_circles): 
+        for i in range(num_circles):
+            pg.fill(random(255),50,50,10)
+            pg.ellipse(random(pg.width),random(pg.height),random(pg.width*0.2),random(pg.height*0.2))
+
 
 # FIXME Replace with smarter dir creation if necessary and split .py and pg.save and counter as arg, etc
 def save_image(pg, filename, timestamp=True, output_dir='output'):
@@ -42,7 +107,7 @@ def save_image(pg, filename, timestamp=True, output_dir='output'):
     
     filename = filename.replace('\\', '')
     filename = filename.replace('/', '')
-    output_filename = os.path.join(output_dir, '{}_{}_{}_####.png'.format(filename, timestamp, rand_seed))
+    output_filename = os.path.join(output_dir, '{}_{}_{}_####.png'.format(filename, timestamp, seed))
     saveFrame(output_filename)
     print(output_filename)
     
