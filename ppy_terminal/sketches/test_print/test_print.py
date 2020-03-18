@@ -1,21 +1,34 @@
+
+# Processing mode uses Python 2.7 but I prefer Python 3.x
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+import os
 import sys
-sys.path.append("/Users/apenne/Desktop/ppy")
-import funfun
+
+# Very bad way to get the "imports" dir available so we can import modules from it
+sys.path.insert(0, '/Users/apenne/github.com/generative_art/ppy_terminal/imports')
+from utilities import Utilities
+from setup_logging import log
+
+u = Utilities()
+
+u.print_seed()
+
+log.info('test')
 
 def setup(): 
     global pg
-    pg = createGraphics(1000, 1000)
+    pg = createGraphics(4000, 4000)
     noLoop()
 
 def draw(): 
     pg.beginDraw()
-    pg.background(102)
-    pg.stroke(255)
-    pg.line(pg.width*0.5, pg.height*0.5, pg.width, pg.height)
-    funfun.editfun(pg)
-    #for i in range(1000):
-    #    pg.fill(random(255),50,50,10)
-    #    pg.ellipse(random(pg.width),random(pg.height),random(pg.width*0.2),random(pg.height*0.2))
+    pg.background(250)
+    
+#   util.draw_test(pg)
+    
     pg.endDraw()
     pg.save('output.png')
     print(__file__)

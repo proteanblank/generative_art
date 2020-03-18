@@ -1,10 +1,4 @@
 
-def editfun(pg): 
-    for i in range(1000):
-        pg.fill(random(255),50,50,10)
-        pg.ellipse(random(pg.width),random(pg.height),random(pg.width*0.2),random(pg.height*0.2))
-
-
 ################################################################################
 # Helper and utility functions
 # 
@@ -15,12 +9,42 @@ def editfun(pg):
 ################################################################################
 
 import os
+import logging
+import sys
+# from datetime import timezone
+
+class Utilities():
+    def __init__(self, rand_seed=1138):
+        self.rand_seed = rand_seed
+        self.log = self.logger()
+
+    def print_seed(self):
+        log.info(self.rand_seed)
+
+    def logger(self):
+        logging.basicConfig(level=logging.INFO,
+                            stream=sys.stdout,
+                            format='%(asctime)s - %(levelname)s - %(message)s',
+                            datefmt='%Y-%m-%d %H:%M:%S')
+        return logging.getLogger(__name__)
+
+def draw_test(pg): 
+    for i in range(1000):
+        pg.fill(random(255),50,50,10)
+        pg.ellipse(random(pg.width),random(pg.height),random(pg.width*0.2),random(pg.height*0.2))
+
+def get_timestamp_string():
+    timestamp = datetime.now(timezone.utc)
+    return timestamp.strftime('%Y%m%d_%H%M%S')
 
 # FIXME Replace with smarter dir creation if necessary and split .py and pg.save and counter as arg, etc
-def save_frame_timestamp(filename, timestamp='', output_dir='output'):
+def save_image(pg, filename, timestamp=True, output_dir='output'):
     '''
     Saves each frame with a structured filename to allow for tracking all output
     '''
+    if timestamp==True:
+        timestamp = get_timestamp_string()
+    
     filename = filename.replace('\\', '')
     filename = filename.replace('/', '')
     output_filename = os.path.join(output_dir, '{}_{}_{}_####.png'.format(filename, timestamp, rand_seed))
