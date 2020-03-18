@@ -5,11 +5,12 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import with_statement
 
+# Normal Python imports
 import os
 import sys
 import random
 
-# Bad way to get the "imports" dir available so we can import modules from it
+# Bad way to make our "imports" dir available so we can import modules from it
 sys.path.insert(0, '/Users/apenne/github.com/generative_art/ppy_terminal/imports')
 from utilities import DrawUtils, OpsUtils, ConfigUtils
 from setup_logging import log
