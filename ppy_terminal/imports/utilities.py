@@ -98,19 +98,38 @@ class DrawUtils(OpsUtils):
 
 
     def circle_point(self, cx, cy, rx, ry, a):
-        '''
+        """
         Translates polar coords to cartesian
-        '''
+        """
         x = cx + rx * cos(a)
         y = cy + ry * sin(a)
         return x, y
         
     def noise_loop(self, a, r, min_val, max_val, x_c, y_c):
-        '''
+        """
         Samples 2D Perlin noise in a circle to make smooth noise loops
         Adapted from https://github.com/CodingTrain/website/blob/master/CodingChallenges/CC_136_Polar_Noise_Loop_2/P5/noiseLoop.js
-        '''
+        """
         xoff = map(cos(a), -1, 1, x_c, x_c + 2*r)
         yoff = map(sin(a), -1, 1, y_c, y_c + 2*r)
         r = noise(xoff, yoff)
-        return map(r, 0, 1, this.min, this.max)
+        return map(r, 0, 1, min_val, max_val)
+
+    def frange(self, start, end=None, increment=None):
+        """
+        Adapted from http://code.activestate.com/recipes/66472
+        """
+        if end == None:
+            end = start + 0.0
+            start = 0.0
+        if increment == None:
+            increment = 1.0
+        L = []
+        while 1:
+            next = start + len(L) * increment
+            if increment > 0 and next >= end:
+                break
+            elif increment < 0 and next <= end:
+                break
+            L.append(next)
+        return L
