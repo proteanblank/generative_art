@@ -1,3 +1,10 @@
+################################################################################
+# Code and images by Aaron Penne
+# https://github.com/aaronpenne/generative_art
+#
+# Released under the MIT license (https://opensource.org/licenses/MIT)
+################################################################################
+
 
 # Processing mode uses Python 2.7 but I prefer Python 3.x
 from __future__ import absolute_import
@@ -24,8 +31,6 @@ du = DrawUtils(script_path=os.path.abspath(__file__),
                height=args['height'], 
                seed=args['seed'])
 
-print(du.seed)
-du.seed = 4
 
 # Initialize random number generators with seed
 randomSeed(du.seed)
@@ -36,14 +41,31 @@ def setup():
     global pg
     pg = createGraphics(du.width, du.height)
 
+
     noLoop()
 
 def draw(): 
     pg.beginDraw()
-    pg.background(250)
+    pg.colorMode(HSB, 360, 100, 100, 100)
+    pg.translate(pg.width/2, pg.height/2)
+
+    pg.background(0, 0, 25)
+    pg.stroke(60, 7, 86)
+    pg.strokeWeight(1)
+    pg.noFill()
     
-    du.draw_test(pg, args['num_circles'])
-     
+    angles = du.frange(0, TAU, TAU/100)
+    angles.extend(angles[0:3])
+
+
+    for i in range(0,300):
+        pg.beginShape()
+        for a in angles:
+            r = du.noise_loop(a, i/10.0, i*4, (pg.width*0.05)+i*4, 0, 0)
+            x, y = du.circle_point(pg.width*0.1, pg.height*0.1, r, r, a)
+            pg.curveVertex(x, y)
+        pg.endShape()
+
     pg.endDraw()
     du.save_graphic(pg, 'output', frameCount)
     exit()

@@ -1,5 +1,5 @@
 [default]
 seed = 1138
-width = 2000
-height = 2000
+width = 1080
+height = 1080
 num_circles = 1000
