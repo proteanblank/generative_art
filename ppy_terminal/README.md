@@ -37,21 +37,21 @@ The main steps are:
 
 As the [tutorial above](https://py.processing.org/tutorials/command-line/) states, you need to call the processing-py.jar file to run your sketches. Once the processing-py.jar lives somewhere (I prefer the exec dir) a sketch can be run like below. Note that you'll have to change the path to processing-py.jar to suite your setup:
 
-'''
+```
 java -jar ~/github.com/generative_art/ppy_terminal/exec/processing-py.jar my_sketch.py
-'''
+```
 
 This is a mouthful to type, so I alias it in my .zshrc and .bashrc files like this:
 
-'''
+```
 alias ppy="java -jar ~/github.com/generative_art/ppy_terminal/exec/processing-py.jar"
-'''
+```
 
 Now I can just run this command to run my sketch:
 
-'''
+```
 ppy my_sketch.py
-'''
+```
 
 ## Directory structure
 
@@ -85,7 +85,7 @@ The trick is to use [createGraphics()](https://processing.org/examples/creategra
 
 Here is a working example (also at templates/template_basic.py):
 
-'''python
+```python
 def setup():
   global pg
   pg = createGraphics(1000, 1000)
@@ -105,7 +105,7 @@ def draw():
   pg.endDraw()
   pg.save('image.png')
   exit()
-'''
+```
 
 
 ## Nice to have tools
