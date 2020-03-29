@@ -105,7 +105,7 @@ class DrawUtils(OpsUtils):
         y = cy + ry * sin(a)
         return x, y
         
-    def noise_loop(self, a, r, min_val, max_val, x_c, y_c):
+    def noise_loop(self, a, r, min_val, max_val, x_c=0, y_c=0):
         """
         Samples 2D Perlin noise in a circle to make smooth noise loops
         Adapted from https://github.com/CodingTrain/website/blob/master/CodingChallenges/CC_136_Polar_Noise_Loop_2/P5/noiseLoop.js
