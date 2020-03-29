@@ -29,13 +29,12 @@ This type of setup works for Mac OSX, Windows, and Linux. I use a Mac, so my set
 The main steps are:
 * Download jdk-8u202-macosx-x64.dmg and install it (must be this version) - [Download link](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)
 * Download the standalone version of Processing.py - [Download link](http://py.processing.org/processing.py-macosx.tgz)
-* Put `processing-py.jar` in ppy_terminal/exec/ 
-* Write a basic Python sketch
-* Run the sketch
+* Unzip and move `processing-py.jar` to ppy_terminal/exec/ 
+* Write a Python Processing sketch and run it
 
 ## Running
 
-As the [tutorial above](https://py.processing.org/tutorials/command-line/) states, you need to call the processing-py.jar file to run your sketches. Once the processing-py.jar lives somewhere (I prefer the exec dir) a sketch can be run like below. Note that you'll have to change the path to processing-py.jar to suite your setup:
+As the [tutorial above](https://py.processing.org/tutorials/command-line/) states, you need to call the processing-py.jar file to run your sketches. Note that you'll have to change the path to processing-py.jar to suit your setup. Once the processing-py.jar lives somewhere (I prefer the exec dir) a sketch can be run like below: 
 
 ```
 java -jar ~/github.com/generative_art/ppy_terminal/exec/processing-py.jar my_sketch.py
@@ -56,23 +55,25 @@ ppy my_sketch.py
 ## Directory structure
 
 Directory structure on my laptop:
-* ppy_terminal/
-    * exec/
-      * processing-py.jar
-      * ffmpeg
-      * jdk-8u202-macosx-x64.dmg
-    * helpers/
-      * <helper scripts>.sh
-    * imports/
-      * <python imports>.py
-    * sketches/
-      * sketch_a
-        * sketch_a.py
-        * config
-        * output
-          * sketch_a_1138_20200101_113328_001.png
-        * images
-          * sketch_a_1138_20200101_113328_001.png
+```
+.../generative_art/ppy_terminal/
+  - exec/
+    - processing-py.jar
+    - ffmpeg
+    - jdk-8u202-macosx-x64.dmg
+  - helpers/
+    - <helper scripts>.sh
+  - imports/
+    - <python imports>.py
+  -  sketches/
+    - sketch_a
+      - sketch_a.py
+        - config
+        - output
+          - sketch_a_1138_20200101_113328_001.png
+        - images
+          - sketch_a_1138_20200101_113328_001.png
+```
 
 ## Writing straight to disk
 
