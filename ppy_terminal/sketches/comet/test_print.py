@@ -5,7 +5,6 @@
 # Released under the MIT license (https://opensource.org/licenses/MIT)
 ################################################################################
 
-
 # Processing mode uses Python 2.7 but I prefer Python 3.x
 from __future__ import absolute_import
 from __future__ import division
@@ -31,39 +30,69 @@ du = DrawUtils(script_path=os.path.abspath(__file__),
                height=args['height'], 
                seed=args['seed'])
 
-
 # Initialize random number generators with seed
 randomSeed(du.seed)
 noiseSeed(du.seed)
 random.seed(du.seed)
 
-def setup(): 
+def setup():
+    """
+    built in Processing function, called once at beginning of program
+    """
+
+    # The graphics buffer which will become the final image
     global pg
     pg = createGraphics(du.width, du.height)
 
+    # Only run draw() function once
     noLoop()
 
-def draw(): 
-    pg.beginDraw()
-    pg.colorMode(HSB, 360, 100, 100, 100)
-    pg.translate(pg.width/2, pg.height/2)
 
+def draw(): 
+    """
+    built in Processing function, called repeatedly unless noLoop() is called in setup()
+    """
+
+    # beginDraw() starts writing to buffer graphic buffer, must be first call on the graphic
+    pg.beginDraw()
+
+    # sets color mode and max values for Hue, Saturation, Brightness, Alpha
+    pg.colorMode(HSB, 360, 100, 100, 100)
+
+    # sets colors
     pg.background(0, 0, 25)
-    pg.stroke(60, 7, 86)
-    pg.strokeWeight(1)
+    pg.stroke(60, 7, 86, 100)
+    pg.strokeWeight(4)
     pg.noFill()
-    
-    angles = du.frange(0, TAU, TAU/100)
+   
+    # gets every point around a circle in given step
+    num_angles = 100
+    angles = du.frange(0, TAU, TAU/num_angles)
+
+    # if using curveVertex, need to add 3 points to complete circle
     angles.extend(angles[0:3])
 
-    for i in range(0, int(pg.width/3)):
+    # each loop makes a new circle-ish shape
+    for i in range(0, 400, 1):
+
+        # Uncomment these 2 lines for wacky mod based effects
+        #pg.stroke(60, 7, 86, map(i%50,0,50,100,0))
+        #pg.strokeWeight(map(i,0,1000,50,1))
+
+        # for each angle, measure a noise value at that angle, and 
+        #   offset the radius by that amount
         pg.beginShape()
         for a in angles:
-            r = du.noise_loop(a, i/10.0, i*4, (pg.width*0.05)+i*4, 0, 0)
-            x, y = du.circle_point(pg.width*0.15, pg.height*0.15, r, r, a)
+            r = du.noise_loop(a, i/40.0, i*10, (pg.width*0.05)+i*10, 0, 0)
+            x, y = du.circle_point(pg.width*0.62, pg.height*0.62, r, r, a)
             pg.curveVertex(x, y)
         pg.endShape()
 
+    # endDraw() closes the graphic buffer, must be called at end
     pg.endDraw()
+
+    # save buffer to image 
     du.save_graphic(pg, 'output', frameCount)
+
+    # close Processing
     exit()
