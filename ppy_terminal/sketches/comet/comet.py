@@ -15,7 +15,7 @@ from __future__ import with_statement
 # Normal Python imports
 import os
 import sys
-import random
+#import random
 
 # Bad way to make our "imports" dir available so we can import modules from it
 sys.path.insert(0, '/Users/apenne/github.com/generative_art/ppy_terminal/imports')
@@ -35,7 +35,7 @@ du = DrawUtils(script_path=os.path.abspath(__file__),
 # Initialize random number generators with seed
 randomSeed(du.seed)
 noiseSeed(du.seed)
-random.seed(du.seed)
+#random.seed(du.seed)
 
 def setup():
 

@@ -1,0 +1,9 @@
+[default]
+seed = 11322
+width = 1080
+height = 1080
+num_objs_ima = 50
+num_folds_ima = 0
+num_objs_imb = 50
+num_folds_imb = 0
+imc = flowers

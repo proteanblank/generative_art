@@ -81,7 +81,11 @@ class OpsUtils(object):
         pg.save(output_path)
         log.info('Saved to {}'.format(output_path))
 
-        
+    def get_ext_agnostic_file(self, directory, name):
+        for f in os.listdir(directory):
+            if os.path.splitext(f)[0] == name:
+                out = os.path.join(directory, f)
+                return out
 
 
 class DrawUtils(OpsUtils):
