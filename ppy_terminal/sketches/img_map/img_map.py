@@ -6,6 +6,12 @@
 ################################################################################
 
 
+#TODO
+# Break away from config files to allow snapshotting of py file
+# Draw white borders on input image
+# Clean up this hot mess of code and modularize/parameterize
+
+
 # Processing mode uses Python 2.7 but I prefer Python 3.x
 from __future__ import absolute_import
 from __future__ import division
@@ -30,7 +36,7 @@ du = DrawUtils(script_path=os.path.abspath(__file__),
                height=args['height'], 
                seed=args['seed'])
 
-print(du.script_path)
+
 # Initialize random number generators with seed
 randomSeed(du.seed)
 noiseSeed(du.seed)
@@ -64,10 +70,10 @@ def draw():
     ima.rectMode(CENTER)
     ima.background(0, 0, 100)
     ima.noStroke()
-    x_min = du.width * 0.2
-    x_max = du.width * 0.8
-    y_min = du.height * 0.2
-    y_max = du.height * 0.8
+    x_min = du.width * 0.3
+    x_max = du.width * 0.7
+    y_min = du.height * 0.3
+    y_max = du.height * 0.7
     for i in range(args['num_objs_ima']):
         x = random(x_min, x_max)
         y = random(y_min, y_max)
@@ -85,13 +91,13 @@ def draw():
         for j in range(int(random(1,args['num_folds_ima']))):
             ima.fill(0, 0, random(100))
             ima.rect(x, y, w-j*du.width*0.01, h-j*du.height*0.01)
-    ima.filter(BLUR,10)
+    ima.filter(BLUR,20)
     ima.strokeWeight(5)
     for i in range(args['num_objs_ima']):
         x1 = random(x_min, x_max)
         ima.stroke(0, 0, random(100))
         ima.line(x1, y_min, x1-x_min, y_max)
-    ima.filter(BLUR, 30)
+    ima.filter(BLUR,20)
     ima.endDraw()
     du.save_graphic(ima, 'output', 1)
 

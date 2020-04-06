@@ -1,9 +1,9 @@
 [default]
-seed = 113
-width = 4320
-height = 4320
-num_objs_ima = 10
+seed = 791513
+width = 2160
+height = 2160
+num_objs_ima = 100
 num_folds_ima = 20
 num_objs_imb = 10
 num_folds_imb = 2
-imc = faucet
+imc = flowers_border
