@@ -30,40 +30,50 @@ from setup_logging import log
 # argparse doesn't work with command line processing, using config files instead
 args = ConfigUtils().config_to_dict('config')
 
-# Instantiate primary drawing class
-du = DrawUtils(script_path=os.path.abspath(__file__),
-               width=args['width'], 
-               height=args['height'], 
-               seed=args['seed'])
 
-
-# Initialize random number generators with seed
-randomSeed(du.seed)
-noiseSeed(du.seed)
 
 def setup():
 
     global ima
-    ima = createGraphics(du.width, du.height)
+    ima = createGraphics(args['width'], args['height'])
 
     global imb
-    imb = createGraphics(du.width, du.height)
+    imb = createGraphics(args['width'], args['height'])
 
     global imc
-    imc_file = du.get_ext_agnostic_file('input', args['imc'])
-    imc = loadImage(imc_file)
-    imc.resize(du.width, du.height)
-    # du.save_graphic(imc, 'output', 3)
-
+    
     global out
-    out = createGraphics(du.width, du.height)
+    out = createGraphics(args['width'], args['height'])
     out.beginDraw()
     out.endDraw()
 
     # Only run draw() function once
-    noLoop()
+    #noLoop()
 
 def draw(): 
+
+
+    if args['seeded']:
+        seed = int(random(0,9999999))
+    else:
+        seed = args['seed']
+
+    # Instantiate primary drawing class
+    du = DrawUtils(script_path=os.path.abspath(__file__),
+                   width=args['width'], 
+                   height=args['height'], 
+                   seed=seed)
+    
+    # Initialize random number generators with seed
+    randomSeed(du.seed)
+    noiseSeed(du.seed)
+
+    global imc
+    imc_file = du.get_ext_agnostic_file('input', args['imc'])
+    imc = loadImage(imc_file)
+    imc.resize(args['width'], args['height'])
+    imc.filter(BLUR, 2)
+    # du.save_graphic(imc, 'output', 3)
 
     ima.beginDraw()
     ima.colorMode(HSB, 360, 100, 100, 100)
@@ -74,32 +84,55 @@ def draw():
     x_max = du.width * 0.7
     y_min = du.height * 0.3
     y_max = du.height * 0.7
-    for i in range(args['num_objs_ima']):
+    for i in range(int(random(200))):
+        if int(random(100))%2==0:
+            shape = 0
+        else:
+            shape = 1
         x = random(x_min, x_max)
         y = random(y_min, y_max)
         w = random(du.width * 0.3)
         h = random(du.height * 0.3)
-        for j in range(int(random(1,args['num_folds_ima']))):
+        for j in range(int(random(10))):
             ima.fill(0, 0, random(100))
-            ima.ellipse(x, y, w-j*du.width*0.01, h-j*du.height*0.01)
-    ima.filter(BLUR,10)
-    for i in range(args['num_objs_ima']):
+            if shape == 0:
+                ima.ellipse(x, y, w-j*du.width*0.01, h-j*du.height*0.01)
+            else:
+                ima.rect(x, y, w-j*du.width*0.01, h-j*du.height*0.01)
+    ima.filter(BLUR,int(random(10,40)))
+    for i in range(int(random(200))):
+        if int(random(100))%2==0:
+            shape = 0
+        else:
+            shape = 1
         x = random(x_min, x_max)
         y = random(y_min, y_max)
         w = random(du.width * 0.3)
         h = random(du.height * 0.3)
-        for j in range(int(random(1,args['num_folds_ima']))):
+        for j in range(int(random(10))):
             ima.fill(0, 0, random(100))
-            ima.rect(x, y, w-j*du.width*0.01, h-j*du.height*0.01)
-    ima.filter(BLUR,20)
-    ima.strokeWeight(5)
-    for i in range(args['num_objs_ima']):
-        x1 = random(x_min, x_max)
-        ima.stroke(0, 0, random(100))
-        ima.line(x1, y_min, x1-x_min, y_max)
-    ima.filter(BLUR,20)
+            if shape == 0:
+                ima.ellipse(x, y, w-j*du.width*0.01, h-j*du.height*0.01)
+            else:
+                ima.rect(x, y, w-j*du.width*0.01, h-j*du.height*0.01)
+    ima.filter(BLUR,int(random(20,40)))
+#    for i in range(int(random(200))):
+#        x = random(x_min, x_max)
+#        y = random(y_min, y_max)
+#        w = random(du.width * 0.3)
+#        h = random(du.height * 0.3)
+#        for j in range(int(random(20))):
+#            ima.fill(0, 0, random(100))
+#            ima.rect(x, y, w-j*du.width*0.01, h-j*du.height*0.01)
+#    ima.filter(BLUR,int(random(2,30)))
+#    for i in range(int(random(200))):
+#        x1 = random(x_min, x_max)
+#        ima.strokeWeight(random(40))
+#        ima.stroke(0, 0, random(100))
+#        ima.line(x1, y_min, x1-x_min/2, y_max)
+#    ima.filter(BLUR,int(random(2,30)))
     ima.endDraw()
-    du.save_graphic(ima, 'output', 1)
+    #du.save_graphic(ima, 'output', 1)
 
 
     imb.beginDraw()
@@ -122,7 +155,7 @@ def draw():
     imb.filter(BLUR, 30)
     imb.endDraw()
 
-    du.save_graphic(imb, 'output', 2)
+    #du.save_graphic(imb, 'output', 2)
 
 
     ima.beginDraw()
@@ -194,4 +227,4 @@ def draw():
     du.save_graphic(out, 'output', 0)
 
     # close Processing
-    exit()
+#    exit()
