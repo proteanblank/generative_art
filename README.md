@@ -1,3 +1,7 @@
+The latest & greatest is in the [ppy_terminal directory](https://github.com/aaronpenne/generative_art/tree/master/ppy_terminal). Using Processing from the termainal with Python. It's fun, and has a thorough readme.
+
+---
+
 **Note:** To run the `.pyde` Python Processing scripts you need the Processing IDE with Python mode enabled. [This will get you started](https://py.processing.org/tutorials/gettingstarted/). The default installation location of Processing has a dir titled `libraries/site-packages` where any further Python scripts/imports live. Be sure to copy/paste this repo's `libraries/site-packages` files into that dir on your system.
 
 ## Dots (animation in source dir) ([source](https://github.com/aaronpenne/generative_art/tree/master/dots))
