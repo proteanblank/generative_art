@@ -1,4 +1,3 @@
-
 ################################################################################
 # Helper and utility functions
 # 
@@ -13,6 +12,7 @@ import logging
 import sys
 from datetime import datetime
 import ConfigParser
+import shutil
 
 from setup_logging import log
 
@@ -80,6 +80,11 @@ class OpsUtils(object):
         output_path = os.path.join(path, output_file)
         pg.save(output_path)
         log.info('Saved to {}'.format(output_path))
+        if counter == 0:
+            self.make_dir('archive')
+            src = self.script_path 
+            dst = os.path.join('archive',output_file + '.txt')
+            shutil.copy(src, dst)
 
     def get_ext_agnostic_file(self, directory, name):
         for f in os.listdir(directory):
@@ -137,3 +142,34 @@ class DrawUtils(OpsUtils):
                 break
             L.append(next)
         return L
+
+    def line_canvas(self, 
+                    bg_color,
+                    fill_color,
+                    stroke_color,
+                    step=10):
+        c = createGraphics(self.width, self.height)
+        c.beginDraw()
+        c.colorMode(HSB, 360, 100, 100, 100)
+        c.background(*bg_color)
+        c.fill(*fill_color)
+        c.stroke(*stroke_color)
+        c.rotate(random(PI))
+        for i in range(-self.width, self.width*2, step):
+            c.strokeWeight(random(4))
+            c.line(i, -self.height, i, self.height*2)
+        c.endDraw()
+        return c
+
+    def mask_ellipse(self):
+        c = createGraphics(self.width, self.height)
+        c.beginDraw()
+        c.noStroke()
+        c.translate(self.width/2, self.height/2)
+        c.rotate(random(PI))
+        c.ellipse(0,
+                  0, 
+                  random(self.width*0.2, self.width*0.9), 
+                  random(self.height*0.2, self.height*0.9))
+        c.endDraw()
+        return c

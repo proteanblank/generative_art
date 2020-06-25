@@ -7,4 +7,4 @@ num_objs_ima = 100
 num_folds_ima = 20
 num_objs_imb = 10
 num_folds_imb = 2
-imc = pink
+imc = red_tide_06
