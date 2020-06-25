@@ -59,14 +59,16 @@ def draw():
     out.stroke(0, 0, 25)
 
     prev_line_img = createGraphics(args['width'], args['height'])
-    for step in [10, 7, 4]:
-        line_img = du.line_canvas(bg_color=(39, 17, 93),
+    for step in [15, 12, 9, 6]:
+        line_img = du.line_canvas(prev_line_img,
+                                  bg_color=(39, 17, 93),
                                   fill_color=(0, 0, 25),
                                   stroke_color=(0, 0, 25),
                                   step=step)
         mask_img = du.mask_ellipse()
         line_img.mask(mask_img)
-        out.image(line_img, 0, 0)
+        prev_line_img = line_img
+        out.image(line_img, random(args['width']/4), random(args['height']/4))
 
     out.endDraw()
 

@@ -144,11 +144,11 @@ class DrawUtils(OpsUtils):
         return L
 
     def line_canvas(self, 
+                    c,
                     bg_color,
                     fill_color,
                     stroke_color,
                     step=10):
-        c = createGraphics(self.width, self.height)
         c.beginDraw()
         c.colorMode(HSB, 360, 100, 100, 100)
         c.background(*bg_color)
@@ -156,7 +156,7 @@ class DrawUtils(OpsUtils):
         c.stroke(*stroke_color)
         c.rotate(random(PI))
         for i in range(-self.width, self.width*2, step):
-            c.strokeWeight(random(4))
+            c.strokeWeight(random(1,step*0.5))
             c.line(i, -self.height, i, self.height*2)
         c.endDraw()
         return c
@@ -169,7 +169,7 @@ class DrawUtils(OpsUtils):
         c.rotate(random(PI))
         c.ellipse(0,
                   0, 
-                  random(self.width*0.2, self.width*0.9), 
-                  random(self.height*0.2, self.height*0.9))
+                  random(self.width*0.3, self.width*0.9), 
+                  random(self.height*0.1, self.height*0.7))
         c.endDraw()
         return c
