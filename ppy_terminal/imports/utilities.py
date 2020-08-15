@@ -83,7 +83,7 @@ class OpsUtils(object):
         if counter == 0:
             self.make_dir('archive')
             src = self.script_path 
-            dst = os.path.join('archive',output_file + '.txt')
+            dst = os.path.join('archive',output_file + '.py')
             shutil.copy(src, dst)
 
     def get_ext_agnostic_file(self, directory, name):
