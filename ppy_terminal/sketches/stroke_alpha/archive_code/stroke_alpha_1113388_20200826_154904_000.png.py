@@ -93,15 +93,13 @@ args = {'seeded':False,
         'seed':1113388,
         'width':1080,
         'height':1080,
-        'alpha':30
+        'alpha':10
         }
 
-colors = [
-          #(0, 0, 0, args['alpha']), #black
-          (180, 100, 100, args['alpha']), #cyan
+colors = [(180, 100, 100, args['alpha']), #cyan
           (300, 100, 100, args['alpha']), #magenta
           (60, 100, 100, args['alpha']), #yellow
-          ]
+          (0, 0, 0, args['alpha'])] #black
 
 
 if args['seeded']:
@@ -116,15 +114,13 @@ def setup():
   pg = createGraphics(args['width'], args['height'])
   pg.beginDraw()
   pg.colorMode(HSB, 360, 100, 100, 100)
-  pg.background(60, 7, 95)
-  pg.blendMode(MULTIPLY)
+  pg.background(60, 7, 86)
   pg.endDraw()
   #  noLoop()
 
 def draw():
 
-  fc = (frameCount - 1) % len(colors)
-  log.info(fc)
+  fc = frameCount - 1
 
   pg.beginDraw()
   pg.noFill()
@@ -137,7 +133,7 @@ def draw():
   
   pg.stroke(colors[fc][0], colors[fc][1], colors[fc][2], args['alpha'])
   #pg.stroke(180, 100, 100, 50)
-  pg.strokeWeight(60)
+  pg.strokeWeight(50)
 
   for a in angles+angles[:3]:
     r = noise_loop(a, 100, 0, args['width']*0.7, x_c, y_c)
@@ -148,7 +144,7 @@ def draw():
   pg.endDraw()
 
  
-  if frameCount == 3*len(colors):
+  if frameCount == len(colors):
     save_graphic(pg, 'output', 0)
     exit()
 

@@ -44,14 +44,6 @@ def save_graphic(pg, path, counter):
     dst = os.path.join('archive_code',output_file + '.py')
     shutil.copy(src, dst)
 
-def circle_point(cx, cy, rx, ry, a):
-  """
-  Translates polar coords to cartesian
-  """
-  x = cx + rx * cos(a)
-  y = cy + ry * sin(a)
-  return x, y
-
 def noise_loop(a, r, min_val, max_val, x_c=0, y_c=0):
   """
   Samples 2D Perlin noise in a circle to make smooth noise loops
@@ -92,16 +84,8 @@ sketch_name = os.path.splitext(script_name)[0]
 args = {'seeded':False,
         'seed':1113388,
         'width':1080,
-        'height':1080,
-        'alpha':30
+        'height':1080
         }
-
-colors = [
-          #(0, 0, 0, args['alpha']), #black
-          (180, 100, 100, args['alpha']), #cyan
-          (300, 100, 100, args['alpha']), #magenta
-          (60, 100, 100, args['alpha']), #yellow
-          ]
 
 
 if args['seeded']:
@@ -116,39 +100,27 @@ def setup():
   pg = createGraphics(args['width'], args['height'])
   pg.beginDraw()
   pg.colorMode(HSB, 360, 100, 100, 100)
-  pg.background(60, 7, 95)
-  pg.blendMode(MULTIPLY)
+  pg.background(0, 0, 25)
+  pg.stroke(60, 7, 86, 100)
+  pg.strokeWeight(50)
   pg.endDraw()
   #  noLoop()
 
 def draw():
 
-  fc = (frameCount - 1) % len(colors)
-  log.info(fc)
-
   pg.beginDraw()
   pg.noFill()
 
-
-  pg.beginShape()
-  angles = frange(0, TAU, TAU/6)
-  x_c = random(100)
-  y_c = random(100)
+  print(frange(0,TAU,TAU/10))
   
-  pg.stroke(colors[fc][0], colors[fc][1], colors[fc][2], args['alpha'])
-  #pg.stroke(180, 100, 100, 50)
-  pg.strokeWeight(60)
 
-  for a in angles+angles[:3]:
-    r = noise_loop(a, 100, 0, args['width']*0.7, x_c, y_c)
-    x, y = circle_point(args['width']/2, args['height']/2, r, r, a)
-    pg.curveVertex(x,y)
-  pg.endShape()
-  
+  #pg.ellipse(random(pg.width), random(pg.height), random(pg.width), random(pg.height))
+  pg.ellipse(100*frameCount, 100*frameCount,100*frameCount,100*frameCount)
+
   pg.endDraw()
 
  
-  if frameCount == 3*len(colors):
+  if frameCount == 3:
     save_graphic(pg, 'output', 0)
     exit()
 
