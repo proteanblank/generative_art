@@ -117,7 +117,6 @@ def setup():
   pg.beginDraw()
   pg.colorMode(HSB, 360, 100, 100, 100)
   pg.background(60, 7, 95)
-  pg.blendMode(MULTIPLY)
   pg.endDraw()
   #  noLoop()
 
@@ -148,7 +147,7 @@ def draw():
   pg.endDraw()
 
  
-  if frameCount == 3*len(colors):
+  if frameCount == len(colors):
     save_graphic(pg, 'output', 0)
     exit()
 

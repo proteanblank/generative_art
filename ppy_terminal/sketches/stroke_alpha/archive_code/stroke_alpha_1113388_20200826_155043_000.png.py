@@ -97,7 +97,7 @@ args = {'seeded':False,
         }
 
 colors = [
-          #(0, 0, 0, args['alpha']), #black
+          (0, 0, 0, args['alpha']), #black
           (180, 100, 100, args['alpha']), #cyan
           (300, 100, 100, args['alpha']), #magenta
           (60, 100, 100, args['alpha']), #yellow
@@ -117,14 +117,12 @@ def setup():
   pg.beginDraw()
   pg.colorMode(HSB, 360, 100, 100, 100)
   pg.background(60, 7, 95)
-  pg.blendMode(MULTIPLY)
   pg.endDraw()
   #  noLoop()
 
 def draw():
 
-  fc = (frameCount - 1) % len(colors)
-  log.info(fc)
+  fc = frameCount - 1
 
   pg.beginDraw()
   pg.noFill()
@@ -148,7 +146,7 @@ def draw():
   pg.endDraw()
 
  
-  if frameCount == 3*len(colors):
+  if frameCount == len(colors):
     save_graphic(pg, 'output', 0)
     exit()
 
