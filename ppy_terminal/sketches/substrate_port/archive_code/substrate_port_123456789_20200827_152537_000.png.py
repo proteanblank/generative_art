@@ -156,7 +156,7 @@ def extract_colors(img_filename, max_colors=100, randomize=True):
 
   If randomize=False then the image is sampled left to right, then top to bottom. 
   """
-  colors_list = []
+  global good_colors
 
   img = loadImage(img_filename)
   img.loadPixels()
@@ -167,23 +167,21 @@ def extract_colors(img_filename, max_colors=100, randomize=True):
   num_colors = 0
   for i,c in enumerate(img.pixels):
     # only grab new colors (no repeats)
-    if color_tuple(c) not in [color_tuple(gc) for gc in colors_list]:
-      colors_list.append(c)
+    if color_tuple(c) not in [color_tuple(gc) for gc in good_colors]:
+      good_colors.append(c)
       num_colors += 1
     if num_colors == max_colors:
       break
 
-  return colors_list
-
-
-def sort_color_hues(colors_list, sort_on='hsb'):
+def sort_color_hues(colors_list):
   """Takes list of colors (Processing datatype) and sorts the list on hue"""
   colors_tuples = [color_tuple(c) for c in colors_list]
-  if sort_on == 'hsb':
-    colors = sorted(zip(colors_tuples, colors_list), key=lambda x: (x[0][0], x[0][1], x[0][2]))
-  if sort_on == 'bsh':
-    colors = sorted(zip(colors_tuples, colors_list), key=lambda x: (x[0][2], x[0][1], x[0][0]))
-  return [c for _,c in colors]
+  colors = sorted(zip(colors_tuples, colors_list))
+
+  for c in colors:
+    print(c)
+
+
   
 
 
@@ -208,16 +206,9 @@ def setup():
 ################################################################################
 
 def draw():
+  extract_colors('flowersA.jpg')
 
-  global good_colors
-
-  good_colors = extract_colors('flowersA.jpg')
-
-  good_colors = sort_color_hues(good_colors)
-
-  colors_tuples = [color_tuple(c) for c in good_colors]
-  for c in colors_tuples:
-    print(c)
+  sort_color_hues(good_colors)
 
   out = createGraphics(10, 10)
   out.beginDraw()

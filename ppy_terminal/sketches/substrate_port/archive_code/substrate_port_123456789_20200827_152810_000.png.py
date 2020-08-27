@@ -176,13 +176,10 @@ def extract_colors(img_filename, max_colors=100, randomize=True):
   return colors_list
 
 
-def sort_color_hues(colors_list, sort_on='hsb'):
+def sort_color_hues(colors_list):
   """Takes list of colors (Processing datatype) and sorts the list on hue"""
   colors_tuples = [color_tuple(c) for c in colors_list]
-  if sort_on == 'hsb':
-    colors = sorted(zip(colors_tuples, colors_list), key=lambda x: (x[0][0], x[0][1], x[0][2]))
-  if sort_on == 'bsh':
-    colors = sorted(zip(colors_tuples, colors_list), key=lambda x: (x[0][2], x[0][1], x[0][0]))
+  colors = sorted(zip(colors_tuples, colors_list))
   return [c for _,c in colors]
   
 
@@ -214,10 +211,6 @@ def draw():
   good_colors = extract_colors('flowersA.jpg')
 
   good_colors = sort_color_hues(good_colors)
-
-  colors_tuples = [color_tuple(c) for c in good_colors]
-  for c in colors_tuples:
-    print(c)
 
   out = createGraphics(10, 10)
   out.beginDraw()
