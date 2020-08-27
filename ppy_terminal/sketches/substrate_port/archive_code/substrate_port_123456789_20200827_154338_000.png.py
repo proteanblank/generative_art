@@ -176,12 +176,12 @@ def extract_colors(img_filename, max_colors=100, randomize=True):
   return colors_list
 
 
-def sort_color_hues(colors_list, sort_on='hsb'):
+def sort_color_hues(colors_list, sort_on='hue'):
   """Takes list of colors (Processing datatype) and sorts the list on hue"""
   colors_tuples = [color_tuple(c) for c in colors_list]
-  if sort_on == 'hsb':
-    colors = sorted(zip(colors_tuples, colors_list), key=lambda x: (x[0][0], x[0][1], x[0][2]))
-  if sort_on == 'bsh':
+  if sort_on == 'hue':
+    colors = sorted(zip(colors_tuples, colors_list), key=lambda x: (x[0][0], x[0][2], x[0][1]))
+  if sort_on == 'brightness':
     colors = sorted(zip(colors_tuples, colors_list), key=lambda x: (x[0][2], x[0][1], x[0][0]))
   return [c for _,c in colors]
   
