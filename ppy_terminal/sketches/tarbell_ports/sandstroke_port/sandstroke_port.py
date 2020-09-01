@@ -1,6 +1,6 @@
 ################################################################################
 # porting Jared Tarbell's Substrate to Python Processing
-# all credit goes to them
+# all credit for the algorithm goes to them
 #
 # code and images by Aaron Penne
 # https://github.com/aaronpenne
