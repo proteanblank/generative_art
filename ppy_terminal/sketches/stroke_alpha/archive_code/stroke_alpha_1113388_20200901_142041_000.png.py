@@ -117,7 +117,7 @@ def setup():
   pg.beginDraw()
   pg.colorMode(HSB, 360, 100, 100, 100)
   pg.background(60, 7, 95)
-  pg.blendMode(MULTIPLY)
+  # pg.blendMode(MULTIPLY)
   pg.endDraw()
   #  noLoop()
 

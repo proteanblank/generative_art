@@ -140,7 +140,7 @@ def draw():
   pg.strokeWeight(60)
 
   for a in angles+angles[:3]:
-    r = noise_loop(a, 100, -1*args['width']*0.2, args['width']*0.8, x_c, y_c)
+    r = noise_loop(a, 100, -1*args['width']*0.7, args['width']*0.7, x_c, y_c)
     x, y = circle_point(args['width']/2, args['height']/2, r, r, a)
     pg.curveVertex(x,y)
   pg.endShape()
@@ -148,7 +148,7 @@ def draw():
   pg.endDraw()
 
  
-  if frameCount == 10*len(colors):
+  if frameCount == 3*len(colors):
     save_graphic(pg, 'output', 0)
     exit()
 
