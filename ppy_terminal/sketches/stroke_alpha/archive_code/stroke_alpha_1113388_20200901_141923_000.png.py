@@ -148,7 +148,7 @@ def draw():
   pg.endDraw()
 
  
-  if frameCount == 10*len(colors):
+  if frameCount == 3*len(colors):
     save_graphic(pg, 'output', 0)
     exit()
 
