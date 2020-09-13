@@ -200,7 +200,7 @@ def setup():
   print(len(friends))
   reset_all()
   
-  #noLoop()
+  noLoop()
 
 
 
@@ -214,20 +214,16 @@ def draw():
   #  print(color_tuple(c))
 
   for f in friends:
-    f.move()
-    #f.expose()
+    print(color_tuple(f.myc))
+    f.expose()
     f.expose_connections()
-    f.find_happy_place()
+  
+  save_graphic()
 
-  #save_graphic(None, 'output', frameCount)
-
-  #exit()
-
-
-def mousePressed():
-  save_graphic(None, 'output', frameCount)
+  exit()
 
 
+#  exit()
 class Friend:
   def __init__(self, x=0, y=0, identifier=0):
     self.x = x
@@ -274,14 +270,3 @@ class Friend:
       oy = friends[self.connections[i]].y
 
       line(self.x, self.y, ox, oy)
-
-  def find_happy_place(self):
-    self.vx += random(-w*0.001, w*0.001)
-    self.vy += random(-h*0.001, h*0.001)
-
-  def move(self):
-    self.x += self.vx
-    self.y += self.vy
-
-    self.vx *= 0.92
-    self.vy *= 0.92
