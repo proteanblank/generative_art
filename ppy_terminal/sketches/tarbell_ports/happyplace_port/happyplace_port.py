@@ -76,6 +76,7 @@ def get_filename(counter):
   """
   return '{}_{}_{}_{:03d}.png'.format(sketch_name, rand_seed, timestamp, counter)
 
+
 def make_dir(path):
   """Creates dir if it does not exist"""
   try:
@@ -83,6 +84,7 @@ def make_dir(path):
   except OSError:
     if not os.path.isdir(path):
       raise
+
 
 def save_graphic(pg, path, counter):
   """Saves image and creates copy of this script"""
@@ -98,47 +100,6 @@ def save_graphic(pg, path, counter):
     src = script_path
     dst = os.path.join('archive_code', output_file + script_ext)
     shutil.copy(src, dst)
-
-def circle_point(cx, cy, rx, ry, a):
-  """Translates polar coords to cartesian"""
-  x = cx + rx * cos(a)
-  y = cy + ry * sin(a)
-  return x, y
-
-def noise_loop(a, r, min_val, max_val, x_c=0, y_c=0):
-  """Samples 2D Perlin noise in a circle to make smooth noise loops
-
-  Effectively places a circle on a 2D perlin noise field. Circle has radius r, and
-  center at (x_c,y_c). Point on the edge of the circle is selected at angle a, the 
-  noise value at that point is grabbed and mapped between min_val and max_val
-  
-  Adapted from https://github.com/CodingTrain/website/blob/master/CodingChallenges/CC_136_Polar_Noise_Loop_2/P5/noiseLoop.js
-  """
-  xoff = map(cos(a), -1, 1, x_c, x_c + 2*r)
-  yoff = map(sin(a), -1, 1, y_c, y_c + 2*r)
-  r = noise(xoff, yoff)
-  return map(r, 0, 1, min_val, max_val)
-
-
-def frange(min_val, max_val=None, increment=None):
-  """Allows range() with floats
-
-  Adapted from http://code.activestate.com/recipes/66472
-  """
-  if max_val == None:
-    max_val = min_val + 0.0
-    min_val = 0.0
-  if increment == None:
-    increment = 1.0
-  range_list = []
-  while 1:
-    next = min_val + len(range_list) * increment
-    if increment > 0 and next >= max_val:
-      break
-    elif increment < 0 and next <= max_val:
-      break
-    range_list.append(next)
-  return range_list
 
 
 def color_tuple(c, color_space='HSB', rounded=True):
@@ -189,29 +150,12 @@ def sort_color_hues(colors_list, sort_on='hsb'):
   return [c for _,c in colors]
   
 
-def show_good_colors():
-  # FIXME explore https://stackoverflow.com/a/6800214/9526925 to get factors
-  out = createGraphics(10, 10)
-  out.beginDraw()
-  out.strokeWeight(1)
-  i = 0
-  for x in range(10):
-    for y in range(10):
-      out.stroke(good_colors[i])
-      out.point(x,y)
-      i += 1
-  out.endDraw()
-  
-  save_graphic(out, 'output', 0) 
-
-  print(len(good_colors))
-
 ################################################################################
 # Setup
 ################################################################################
 
 def setup():
-  size(w, h, P3D)
+  size(w, h)
   
   colorMode(HSB, 360, 100, 100, 100)
 
@@ -219,9 +163,9 @@ def setup():
   good_colors = extract_colors('flowersA.jpg')
 
   background(60, 7, 95)
-  framerate(30)
+  frameRate(30)
 
-  noLoop()
+  #noLoop()
 
 
 
@@ -231,6 +175,8 @@ def setup():
 ################################################################################
 
 def draw():
+  for c in good_colors:
+    print(color_tuple(c))
   
 
 
