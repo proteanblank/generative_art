@@ -37,7 +37,10 @@ h = 1080
 use_rand_seed = False
 rand_seed = 123456789
 
+num = 10 # number of friends
+numpal = 20 # number of colors in palette
 good_colors = []
+friends = []
 
 # Utility variables
 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -148,7 +151,31 @@ def sort_color_hues(colors_list, sort_on='hsb'):
   if sort_on == 'bsh':
     colors = sorted(zip(colors_tuples, colors_list), key=lambda x: (x[0][2], x[0][1], x[0][0]))
   return [c for _,c in colors]
-  
+
+
+def some_color():
+  return good_colors[int(random(numpal))]
+
+
+def reset_all():
+
+  global friends
+
+  for i in range(num):
+    fx = w/2 + 0.4*w*cos(TAU*i/num)
+    fy = h/2 + 0.4*h*sin(TAU*i/num)
+    friends[i] = Friend(fx, fy, i)
+
+  for i in range(int(num*2.2)):
+    a = int(floor(random(num)))
+    b = int(floor(a+random(22))%num)
+    if (b >= num) or (b < 0):
+      b = 0
+      print('+')
+    if a != b:
+      friends[a].connect_to(b)
+      friends[b].connect_to(a)
+      print('{} made friends with {}'.format(a,b))
 
 ################################################################################
 # Setup
@@ -160,12 +187,17 @@ def setup():
   colorMode(HSB, 360, 100, 100, 100)
 
   global good_colors
-  good_colors = extract_colors('flowersA.jpg')
+  good_colors = extract_colors('flowersA.jpg', numpal)
 
   background(60, 7, 95)
   frameRate(30)
 
-  #noLoop()
+  global friends
+  friends = [Friend() for i in range(num)]
+  print(len(friends))
+  reset_all()
+  
+  noLoop()
 
 
 
@@ -175,10 +207,45 @@ def setup():
 ################################################################################
 
 def draw():
-  for c in good_colors:
-    print(color_tuple(c))
+  #for c in good_colors:
+  #  print(color_tuple(c))
+
+  for f in friends:
+    print(color_tuple(f.myc))
   
+  exit()
 
 
 #  exit()
+class Friend:
+  def __init__(self, x=0, y=0, identifier=0):
+    self.x = x
+    self.y = y
+    self.dx = x
+    self.dy = y
+    self.vx = 0
+    self.vy = 0
+   
+    self.id = identifier
+   
+    self.numcon = 0
+    self.maxcon = 10+int(random(50))  
+    self.connections = [0 for i in range(self.maxcon)]
+  
+    self.myc = some_color()
+    #self.numsands = 3
+    #sands = [SandPainter() for i in range(self.numsands)]
 
+  def connect_to(self, f):
+    if (self.numcon < self.maxcon):
+      if not self.friend_of(f):
+        self.connections[self.numcon] = f
+        self.numcon += 1
+
+  def friend_of(self, f):
+    #FIXME possibly replace with simple is in?
+    is_friend = False
+    for i in range(self.numcon):
+      if self.connections[i] == f:
+        is_friend = True
+    return is_friend
