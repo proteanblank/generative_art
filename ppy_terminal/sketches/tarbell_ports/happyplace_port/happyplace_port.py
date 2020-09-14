@@ -32,12 +32,12 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 1080
-h = 1080
+w = 900
+h = 900
 use_rand_seed = False
-rand_seed = 123456789
+rand_seed = 3802806
 
-num = 10 # number of friends
+num = 50 # number of friends
 numpal = 20 # number of colors in palette
 good_colors = []
 friends = []
@@ -165,8 +165,8 @@ def reset_all():
   global friends
 
   for i in range(num):
-    fx = w/2 + 0.4*w*cos(TAU*i/num)
-    fy = h/2 + 0.4*h*sin(TAU*i/num)
+    fx = w/2 + 0.2*w*cos(TAU*i/num)
+    fy = h/2 + 0.2*h*sin(TAU*i/num)
     friends[i] = Friend(fx, fy, i)
 
   for i in range(int(num*2.2)):
@@ -215,7 +215,7 @@ def draw():
 
   for f in friends:
     f.move()
-    #f.expose()
+    f.expose()
     f.expose_connections()
     f.find_happy_place()
 
@@ -244,6 +244,7 @@ class Friend:
     self.connections = [0 for i in range(self.maxcon)]
   
     self.myc = some_color()
+    self.myc = color(hue(self.myc), saturation(self.myc), brightness(self.myc), 5)
     #self.numsands = 3
     #sands = [SandPainter() for i in range(self.numsands)]
 
