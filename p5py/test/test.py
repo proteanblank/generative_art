@@ -17,6 +17,6 @@ def draw():
     circle(circle_coords, circle_size)
 
 def key_pressed(event):
-    backgroun(200)
+    background(200)
 
 run()

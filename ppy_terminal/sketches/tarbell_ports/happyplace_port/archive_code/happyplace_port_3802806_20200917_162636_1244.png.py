@@ -34,11 +34,11 @@ from random import seed, shuffle, sample
 # Knobs to turn
 w = 900
 h = 900
-use_rand_seed = True
+use_rand_seed = False
 rand_seed = 3802806
 
 num = 140 # number of friends
-numpal = 512 # number of colors in palette
+numpal = 212 # number of colors in palette
 good_colors = []
 friends = []
 
@@ -89,16 +89,6 @@ def make_dir(path):
       raise
 
 
-def save_code(pg=None, path='output', counter=0):
-  """Saves image and creates copy of this script"""
-  make_dir(path)
-  output_file = get_filename(counter)
-  output_path = os.path.join(path, output_file)
-  make_dir('archive_code')
-  src = script_path
-  dst = os.path.join('archive_code', output_file + script_ext)
-  shutil.copy(src, dst)
-
 def save_graphic(pg=None, path='output', counter=0):
   """Saves image and creates copy of this script"""
   make_dir(path)
@@ -109,6 +99,13 @@ def save_graphic(pg=None, path='output', counter=0):
   else:
     save(output_path)
   log.info('Saved to {}'.format(output_path))
+
+  # If first run through draw() then save copy of this script to enable easy reproduction
+  #if counter == 0:
+  make_dir('archive_code')
+  src = script_path
+  dst = os.path.join('archive_code', output_file + script_ext)
+  shutil.copy(src, dst)
 
 
 def color_tuple(c, color_space='HSB', rounded=True):
@@ -168,7 +165,7 @@ def reset_all():
   global friends
 
   for i in range(num):
-    fx = w/2 + random(0.01,0.5)*w*cos(TAU*i/num)
+    fx = w/2 + 0.4*w*cos(TAU*i/num)
     fy = h/2 + 0.4*h*sin(TAU*i/num)
     friends[i] = Friend(fx, fy, i)
 
@@ -191,7 +188,6 @@ def setup():
   size(w, h)
   
   colorMode(HSB, 360, 100, 100, 100)
-  #colorMode(HSB)
 
   global good_colors
   good_colors = extract_colors('flowersA.jpg', numpal)
@@ -203,8 +199,7 @@ def setup():
   friends = [Friend() for i in range(num)]
   print(len(friends))
   reset_all()
-
-  save_code(None, 'output', frameCount)
+  
   #noLoop()
 
 
@@ -270,16 +265,16 @@ class Friend:
 
   def expose(self):
     for dx in range(-2,3):
-      a = 0.5-abs(dx)/5
-      stroke(random(0,10),100*a)
+      a = 0.5-abs(dx)/5.0
+      stroke(0,100*a)
       point(self.x+dx, self.y)
-      stroke(random(90,100),100*a)
+      stroke(100,100*a)
       point(self.x+dx-1, self.y-1)
     for dy in range(-2,3):
-      a = 0.5-abs(dy)/5
-      stroke(random(0,10),100*a)
+      a = 0.5-abs(dy)/5.0
+      stroke(0,100*a)
       point(self.x, self.y+dy)
-      stroke(random(90,100),100*a)
+      stroke(100,100*a)
       point(self.x-1, self.y+dy-1)
 
   def expose_connections(self):

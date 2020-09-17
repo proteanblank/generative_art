@@ -12,11 +12,7 @@
 # Imports
 ################################################################################
 
-# Processing mode uses Python 2.7 but I prefer Python 3.x, pull in future tools
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import with_statement
+from p5 import *
 
 # Normal Python imports
 import os
@@ -34,11 +30,11 @@ from random import seed, shuffle, sample
 # Knobs to turn
 w = 900
 h = 900
-use_rand_seed = True
+use_rand_seed = False
 rand_seed = 3802806
 
-num = 140 # number of friends
-numpal = 512 # number of colors in palette
+num = 50 # number of friends
+numpal = 20 # number of colors in palette
 good_colors = []
 friends = []
 
@@ -51,9 +47,9 @@ sketch_name = os.path.splitext(script_name)[0]
 
 # Initialize random number generators with seed
 if use_rand_seed:
-    rand_seed = int(random(99999,9999999))
-randomSeed(rand_seed)
-noiseSeed(rand_seed)
+    rand_seed = int(random_uniform(99999,9999999))
+random_seed(rand_seed)
+noise_seed(rand_seed)
 seed(rand_seed)
 
 ################################################################################
@@ -89,16 +85,6 @@ def make_dir(path):
       raise
 
 
-def save_code(pg=None, path='output', counter=0):
-  """Saves image and creates copy of this script"""
-  make_dir(path)
-  output_file = get_filename(counter)
-  output_path = os.path.join(path, output_file)
-  make_dir('archive_code')
-  src = script_path
-  dst = os.path.join('archive_code', output_file + script_ext)
-  shutil.copy(src, dst)
-
 def save_graphic(pg=None, path='output', counter=0):
   """Saves image and creates copy of this script"""
   make_dir(path)
@@ -109,6 +95,13 @@ def save_graphic(pg=None, path='output', counter=0):
   else:
     save(output_path)
   log.info('Saved to {}'.format(output_path))
+
+  # If first run through draw() then save copy of this script to enable easy reproduction
+  if counter == 0:
+    make_dir('archive_code')
+    src = script_path
+    dst = os.path.join('archive_code', output_file + script_ext)
+    shutil.copy(src, dst)
 
 
 def color_tuple(c, color_space='HSB', rounded=True):
@@ -131,14 +124,25 @@ def extract_colors(img_filename, max_colors=100, randomize=True):
   """
   colors_list = []
 
-  img = loadImage(img_filename)
-  img.loadPixels()
+  img = load_image(img_filename)
+  print(img._data.shape)
+  print(type(img))
+  print(img._get_pixel((0,0))) # you just operate on img directly, like a 2d list, or on the _data like a numpy array
+  print(type(img._data))
+
+  attrs = vars(img)
+  print(', '.join("%s: %s" % item for item in attrs.items()))
+
+  #img.load_pixels()
+  print(img.width)
+  print(img.height)
+  print(img.pixels[0])
 
   if randomize:
-    shuffle(img.pixels)
+    shuffle(pixels)
 
   num_colors = 0
-  for i,c in enumerate(img.pixels):
+  for i,c in enumerate(pixels):
     # only grab new colors (no repeats)
     if color_tuple(c) not in [color_tuple(gc) for gc in colors_list]:
       colors_list.append(c)
@@ -160,7 +164,7 @@ def sort_color_hues(colors_list, sort_on='hsb'):
 
 
 def some_color():
-  return good_colors[int(random(numpal))]
+  return good_colors[int(random_uniform(numpal))]
 
 
 def reset_all():
@@ -168,13 +172,13 @@ def reset_all():
   global friends
 
   for i in range(num):
-    fx = w/2 + random(0.01,0.5)*w*cos(TAU*i/num)
-    fy = h/2 + 0.4*h*sin(TAU*i/num)
+    fx = w/2 + 0.2*w*cos(TAU*i/num)
+    fy = h/2 + 0.2*h*sin(TAU*i/num)
     friends[i] = Friend(fx, fy, i)
 
   for i in range(int(num*2.2)):
-    a = int(floor(random(num)))
-    b = int(floor(a+random(22))%num)
+    a = int(floor(random_uniform(num)))
+    b = int(floor(a+random_uniform(22))%num)
     if (b >= num) or (b < 0):
       b = 0
       print('+')
@@ -190,22 +194,20 @@ def reset_all():
 def setup():
   size(w, h)
   
-  colorMode(HSB, 360, 100, 100, 100)
-  #colorMode(HSB)
+  #colorMode(HSB, 360, 100, 100, 100)
 
   global good_colors
   good_colors = extract_colors('flowersA.jpg', numpal)
 
   background(60, 7, 95)
-  frameRate(30)
+  #frameRate(30)
 
   global friends
   friends = [Friend() for i in range(num)]
   print(len(friends))
   reset_all()
-
-  save_code(None, 'output', frameCount)
-  #noLoop()
+  
+  noLoop()
 
 
 
@@ -220,15 +222,13 @@ def draw():
 
   for f in friends:
     f.move()
-  for f in friends:
     f.expose()
-    f.expose_connections()
-  for f in friends:
+#    f.expose_connections()
     f.find_happy_place()
 
   #save_graphic(None, 'output', frameCount)
 
-  #exit()
+  exit()
 
 
 def mousePressed():
@@ -239,20 +239,21 @@ class Friend:
   def __init__(self, x=0, y=0, identifier=0):
     self.x = x
     self.y = y
+    self.dx = x
+    self.dy = y
     self.vx = 0
     self.vy = 0
    
     self.id = identifier
    
     self.numcon = 0
-    self.maxcon = 10
-    self.lencon = 10+int(random(50))  
+    self.maxcon = 10+int(random_uniform(50))  
     self.connections = [0 for i in range(self.maxcon)]
   
     self.myc = some_color()
     self.myc = color(hue(self.myc), saturation(self.myc), brightness(self.myc), 5)
-    self.numsands = 3
-    self.sands = [SandPainter() for i in range(self.numsands)]
+    #self.numsands = 3
+    #sands = [SandPainter() for i in range(self.numsands)]
 
   def connect_to(self, f):
     if (self.numcon < self.maxcon):
@@ -269,54 +270,22 @@ class Friend:
     return is_friend
 
   def expose(self):
-    for dx in range(-2,3):
-      a = 0.5-abs(dx)/5
-      stroke(random(0,10),100*a)
-      point(self.x+dx, self.y)
-      stroke(random(90,100),100*a)
-      point(self.x+dx-1, self.y-1)
-    for dy in range(-2,3):
-      a = 0.5-abs(dy)/5
-      stroke(random(0,10),100*a)
-      point(self.x, self.y+dy)
-      stroke(random(90,100),100*a)
-      point(self.x-1, self.y+dy-1)
+    stroke(self.myc)
+    stroke_weight(10)
+    point(self.x,self.y)
 
   def expose_connections(self):
     stroke(self.myc)
+    stroke_weight(2)
     for i in range(self.numcon):
       ox = friends[self.connections[i]].x
       oy = friends[self.connections[i]].y
 
-      #line(self.x, self.y, ox, oy)
-      for s in range(self.numsands):
-        self.sands[s].render(self.x, self.y, ox, oy)
+      line(self.x, self.y, ox, oy)
 
   def find_happy_place(self):
-#    self.vx += random(-w*0.001, w*0.001)
- #   self.vy += random(-h*0.001, h*0.001)
-
-    ax = 0
-    ay = 0
-    for n in range(num):
-      if friends[n] <> this:
-        ddx = friends[n].x - self.x
-        ddy = friends[n].y - self.y
-        d = sqrt(ddx*ddx + ddy*ddy)
-        t = atan2(ddy, ddx)
-
-        friend = False
-        for j in range(self.numcon):
-          if self.connections[j]==n:
-            friend=True
-        if friend:
-          # attract
-          if (d>self.lencon):
-            ax += 4*cos(t)
-            ay += 4*sin(t)
-    self.vx += ax/42.22
-    self.vy += ay/42.22
-
+    self.vx += random_uniform(-w*0.001, w*0.001)
+    self.vy += random_uniform(-h*0.001, h*0.001)
 
   def move(self):
     self.x += self.vx
@@ -325,27 +294,5 @@ class Friend:
     self.vx *= 0.92
     self.vy *= 0.92
 
-class SandPainter:
-  def __init__(self):
-    self.p = random(1)
-    self.c = some_color()
-    self.g = random(0.01, 0.1)
-
-  def render(self, x, y, ox, oy):
-    stroke(hue(self.c), saturation(self.c), brightness(self.c), 10)
-    point(ox + (x-ox)*sin(self.p), oy+(y-oy)*sin(self.p))
-
-    self.g += random(-0.05, 0.05)
-    maxg = 0.22
-    if (self.g < -maxg):
-      self.g = -maxg
-    if (self.g > maxg):
-      self.g = maxg
-
-    w = self.g/10
-    for i in range(11):
-      a = 0.1 - i/110
-      stroke(hue(self.c), saturation(self.c), brightness(self.c), 100*a)
-      point(ox+(x-ox)*sin(self.p+sin(i*w)), oy+(y-oy)*sin(self.p+sin(i*w)))
-      point(ox+(x-ox)*sin(self.p-sin(i*w)), oy+(y-oy)*sin(self.p-sin(i*w)))
-
+if __name__ == '__main__':
+  run()
