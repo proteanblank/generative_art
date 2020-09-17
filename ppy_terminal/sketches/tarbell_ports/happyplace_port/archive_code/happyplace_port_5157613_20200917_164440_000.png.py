@@ -168,7 +168,7 @@ def reset_all():
   global friends
 
   for i in range(num):
-    fx = w/2 + random(0.01,0.5)*w*cos(TAU*i/num)
+    fx = w/2 + random(0.1,0.5)*w*cos(TAU*i/num)
     fy = h/2 + 0.4*h*sin(TAU*i/num)
     friends[i] = Friend(fx, fy, i)
 
@@ -221,7 +221,7 @@ def draw():
   for f in friends:
     f.move()
   for f in friends:
-    f.expose()
+    #f.expose()
     f.expose_connections()
   for f in friends:
     f.find_happy_place()
@@ -332,7 +332,7 @@ class SandPainter:
     self.g = random(0.01, 0.1)
 
   def render(self, x, y, ox, oy):
-    stroke(hue(self.c), saturation(self.c), brightness(self.c), 10)
+    stroke(hue(self.c), saturation(self.c), brightness(self.c), 28)
     point(ox + (x-ox)*sin(self.p), oy+(y-oy)*sin(self.p))
 
     self.g += random(-0.05, 0.05)
