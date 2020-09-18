@@ -35,11 +35,11 @@ from random import seed, shuffle, sample
 w = 900
 h = 900
 use_seed = False
-rand_seed = 3802806
-image_file_name = 'wyeth.jpg'
+rand_seed = 2880275
+img_filename = 'input/flowersA.jpg'
 
-num = 150 # number of friends
-numpal = 212 # number of colors in palette
+num = 240 # number of friends
+numpal = 512 # number of colors in palette
 good_colors = []
 friends = []
 
@@ -169,8 +169,8 @@ def reset_all():
   global friends
 
   for i in range(num):
-    fx = w/2 + 0.4*w*cos(TAU*i/num)
-    fy = h/2 + 0.4*h*sin(TAU*i/num)
+    fx = w/2 + 0.3*w*cos(TAU*i/num)
+    fy = h/2 + 0.3*h*sin(TAU*i/num)
     friends[i] = Friend(fx, fy, i)
 
   for i in range(int(num*2.2)):
@@ -196,7 +196,7 @@ def setup():
   strokeWeight(2)
 
   global good_colors
-  good_colors = extract_colors(image_file_name, numpal)
+  good_colors = extract_colors(img_filename, numpal)
 
   background(0, 0, 100)
   frameRate(30)
@@ -252,7 +252,7 @@ class Friend:
     self.id = identifier
    
     self.numcon = 0
-    self.maxcon = int(random(20))
+    self.maxcon = 10
     self.lencon = 10+int(random(w*0.1))  
     self.connections = [0 for i in range(self.maxcon)]
   
@@ -277,13 +277,13 @@ class Friend:
 
   def expose(self):
     for dx in range(-2,3):
-      a = 0.5-abs(dx)/5
+      a = 0.3-abs(dx)/5
       stroke(0, 0, 0, 100*a)
       point(self.x+dx, self.y)
-      stroke(0, 0, 100, 100*a)
+      stroke(0, 0, 100,100*a)
       point(self.x+dx-1, self.y-1)
     for dy in range(-2,3):
-      a = 0.5-abs(dy)/5
+      a = 0.3-abs(dy)/5
       stroke(0, 0, 0, 100*a)
       point(self.x, self.y+dy)
       stroke(0, 0, 100, 100*a)
@@ -318,9 +318,13 @@ class Friend:
             friend=True
         if friend:
           # attract
-          if (d>self.lencon):
+          if d>self.lencon:
             ax += 4*cos(t)
             ay += 4*sin(t)
+          elif d<self.lencon:
+            ax += (self.lencon-d)*cos(t+PI)*0.1
+            ay += (self.lencon-d)*sin(t+PI)*0.1
+
     self.vx += ax/80
     self.vy += ay/80
 
@@ -329,8 +333,8 @@ class Friend:
     self.x += self.vx
     self.y += self.vy
 
-    self.vx *= 0.97
-    self.vy *= 0.97
+    self.vx *= 0.96
+    self.vy *= 0.96
 
 class SandPainter:
   def __init__(self):
