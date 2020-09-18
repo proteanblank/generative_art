@@ -36,7 +36,7 @@ w = 900
 h = 900
 use_seed = True
 rand_seed = 578919
-img_filename = 'input/flowersA.jpg'
+img_filename = 'input/scribbles.png'
 num = 240 # number of friends
 numpal = 512 # number of colors in palette
 good_colors = []
@@ -173,27 +173,10 @@ def reset_all():
 
   global friends
 
-  # connect in a circle
-  #for i in range(num):
-  #  fx = w/2 + 0.4*w*cos(TAU*i/num)
-  #  fy = h/2 + 0.4*h*sin(TAU*i/num)
-  #  friends[i] = Friend(fx, fy, i)
-
-  pad_pct = 0.1
-  i = 0
-  num_steps = 16
-  x_min = int(w*pad_pct)
-  x_max = int(w*(1-pad_pct))
-  x_step = int((x_max - x_min)/num_steps)
-  y_min = int(h*pad_pct)
-  y_max = int(h*(1-pad_pct))
-  y_step = int((y_max - y_min)/num_steps)
-  for x in range(x_min, x_max+x_step, x_step):
-    for y in range(y_min, y_max+y_step, y_step):
-      friends.append(Friend(x, y, i))
-      i += 1
-  global num
-  num = i
+  for i in range(num):
+    fx = w/2 + 0.4*w*cos(TAU*i/num)
+    fy = h/2 + 0.4*h*sin(TAU*i/num)
+    friends[i] = Friend(fx, fy, i)
 
   for i in range(int(num*2.2)):
     a = int(floor(random(num)))
@@ -215,7 +198,7 @@ def setup():
   
   colorMode(HSB, 360, 100, 100, 100)
   #colorMode(HSB)
-  #strokeWeight(2)
+  strokeWeight(2)
 
   global good_colors
   good_colors = extract_colors(img_filename, numpal)
@@ -223,6 +206,9 @@ def setup():
   background(0, 0, 100)
   frameRate(30)
 
+  global friends
+  friends = [Friend() for i in range(num)]
+  print(len(friends))
   reset_all()
 
   save_code(None, 'output', frameCount)
@@ -243,9 +229,9 @@ def draw():
   for f in friends:
     f.move()
   for f in friends:
-    #f.expose()
-    #f.expose_connections()
-    f.draw_lines()
+    f.expose()
+    f.expose_connections()
+    #f.draw_lines()
   for f in friends:
     f.find_happy_place()
 
@@ -273,7 +259,7 @@ class Friend:
    
     self.numcon = 0
     self.maxcon = 10
-    self.lencon = 10+int(random(w*0.02))  
+    self.lencon = 10+int(random(50))  
     self.connections = [0 for i in range(self.maxcon)]
   
     self.myc = some_color()
