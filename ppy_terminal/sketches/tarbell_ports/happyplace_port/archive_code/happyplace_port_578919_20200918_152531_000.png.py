@@ -181,7 +181,7 @@ def reset_all():
 
   pad_pct = 0.1
   i = 0
-  num_steps = 16
+  num_steps = 100
   x_min = int(w*pad_pct)
   x_max = int(w*(1-pad_pct))
   x_step = int((x_max - x_min)/num_steps)
@@ -215,7 +215,7 @@ def setup():
   
   colorMode(HSB, 360, 100, 100, 100)
   #colorMode(HSB)
-  #strokeWeight(2)
+  strokeWeight(2)
 
   global good_colors
   good_colors = extract_colors(img_filename, numpal)
@@ -244,8 +244,8 @@ def draw():
     f.move()
   for f in friends:
     #f.expose()
-    #f.expose_connections()
-    f.draw_lines()
+    f.expose_connections()
+    #f.draw_lines()
   for f in friends:
     f.find_happy_place()
 

@@ -34,9 +34,10 @@ from random import seed, shuffle, sample
 # Knobs to turn
 w = 900
 h = 900
-use_seed = True
-rand_seed = 578919
+use_seed = False
+rand_seed = 2880275
 img_filename = 'input/flowersA.jpg'
+
 num = 240 # number of friends
 numpal = 512 # number of colors in palette
 good_colors = []
@@ -146,12 +147,6 @@ def extract_colors(img_filename, max_colors=100, randomize=True):
     if num_colors == max_colors:
       break
 
-  for i in range(int(max_colors*0.1)):
-    colors_list.append(color(0, 0, 0))
-  for i in range(int(max_colors*0.1)):
-    colors_list.append(color(0, 0, 100))
-
-
   return colors_list
 
 
@@ -173,27 +168,10 @@ def reset_all():
 
   global friends
 
-  # connect in a circle
-  #for i in range(num):
-  #  fx = w/2 + 0.4*w*cos(TAU*i/num)
-  #  fy = h/2 + 0.4*h*sin(TAU*i/num)
-  #  friends[i] = Friend(fx, fy, i)
-
-  pad_pct = 0.1
-  i = 0
-  num_steps = 16
-  x_min = int(w*pad_pct)
-  x_max = int(w*(1-pad_pct))
-  x_step = int((x_max - x_min)/num_steps)
-  y_min = int(h*pad_pct)
-  y_max = int(h*(1-pad_pct))
-  y_step = int((y_max - y_min)/num_steps)
-  for x in range(x_min, x_max+x_step, x_step):
-    for y in range(y_min, y_max+y_step, y_step):
-      friends.append(Friend(x, y, i))
-      i += 1
-  global num
-  num = i
+  for i in range(num):
+    fx = w/2 + random(0,0.4)*w*cos(TAU*i/num)
+    fy = h/2 + 0.3*h*sin(TAU*i/num)
+    friends[i] = Friend(fx, fy, i)
 
   for i in range(int(num*2.2)):
     a = int(floor(random(num)))
@@ -223,6 +201,9 @@ def setup():
   background(0, 0, 100)
   frameRate(30)
 
+  global friends
+  friends = [Friend() for i in range(num)]
+  print(len(friends))
   reset_all()
 
   save_code(None, 'output', frameCount)
@@ -243,9 +224,8 @@ def draw():
   for f in friends:
     f.move()
   for f in friends:
-    #f.expose()
-    #f.expose_connections()
-    f.draw_lines()
+    f.expose()
+    f.expose_connections()
   for f in friends:
     f.find_happy_place()
 
@@ -272,15 +252,12 @@ class Friend:
     self.id = identifier
    
     self.numcon = 0
-    self.maxcon = 10
-    self.lencon = 10+int(random(w*0.02))  
+    self.maxcon = int(random(10,20))
+    self.lencon = 10+int(random(w*0.1))  
     self.connections = [0 for i in range(self.maxcon)]
   
     self.myc = some_color()
     self.myc = color(hue(self.myc), saturation(self.myc), brightness(self.myc), 5)
-    self.h = hue(self.myc)
-    self.s = saturation(self.myc)
-    self.b = brightness(self.myc)
     self.numsands = 3
     self.sands = [SandPainter() for i in range(self.numsands)]
 
@@ -298,25 +275,18 @@ class Friend:
         is_friend = True
     return is_friend
 
-  def draw_lines(self):
-    stroke(self.h, self.s, self.b, 70)
-    for i in range(self.numcon):
-      ox = friends[self.connections[i]].x
-      oy = friends[self.connections[i]].y
-      line(self.x, self.y, ox, oy)
-
   def expose(self):
     for dx in range(-2,3):
       a = 0.3-abs(dx)/5
-      stroke(10,100*a)
+      stroke(0, 0, 0, 100*a)
       point(self.x+dx, self.y)
-      stroke(100,100*a)
+      stroke(0, 0, 100,100*a)
       point(self.x+dx-1, self.y-1)
     for dy in range(-2,3):
       a = 0.3-abs(dy)/5
-      stroke(0,100*a)
+      stroke(0, 0, 0, 100*a)
       point(self.x, self.y+dy)
-      stroke(100,100*a)
+      stroke(0, 0, 100, 100*a)
       point(self.x-1, self.y+dy-1)
 
   def expose_connections(self):
@@ -348,12 +318,12 @@ class Friend:
             friend=True
         if friend:
           # attract
-          if (d>self.lencon):
+          if d>self.lencon:
             ax += 4*cos(t)
-            ay += 3.5*sin(t)
+            ay += 4*sin(t)
           elif d<self.lencon:
             ax += (self.lencon-d)*cos(t+PI)*0.1
-            ay += (self.lencon-d)*sin(t+PI)*0.2
+            ay += (self.lencon-d)*sin(t+PI)*0.1
 
     self.vx += ax/80
     self.vy += ay/80
@@ -363,20 +333,17 @@ class Friend:
     self.x += self.vx
     self.y += self.vy
 
-    self.vx *= 0.95
-    self.vy *= 0.95
+    self.vx *= 0.96
+    self.vy *= 0.96
 
 class SandPainter:
   def __init__(self):
     self.p = random(1)
     self.c = some_color()
-    self.h = hue(self.c) 
-    self.s = saturation(self.c)
-    self.b = brightness(self.c)
     self.g = random(0.01, 0.1)
 
   def render(self, x, y, ox, oy):
-    stroke(self.h, self.s, self.b, 10)
+    stroke(hue(self.c), saturation(self.c), brightness(self.c), 10)
     point(ox + (x-ox)*sin(self.p), oy+(y-oy)*sin(self.p))
 
     self.g += random(-0.05, 0.05)
@@ -389,7 +356,7 @@ class SandPainter:
     w = self.g/10
     for i in range(11):
       a = 0.1 - i/110
-      stroke(self.h, self.s, self.b, 100*a)
+      stroke(hue(self.c), saturation(self.c), brightness(self.c), 100*a)
       point(ox+(x-ox)*sin(self.p+sin(i*w)), oy+(y-oy)*sin(self.p+sin(i*w)))
       point(ox+(x-ox)*sin(self.p-sin(i*w)), oy+(y-oy)*sin(self.p-sin(i*w)))
 
