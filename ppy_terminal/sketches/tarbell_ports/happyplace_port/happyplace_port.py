@@ -34,11 +34,12 @@ from random import seed, shuffle, sample
 # Knobs to turn
 w = 900
 h = 900
-use_rand_seed = True
+use_seed = False
 rand_seed = 3802806
+image_file_name = 'wyeth.jpg'
 
-num = 140 # number of friends
-numpal = 512 # number of colors in palette
+num = 150 # number of friends
+numpal = 212 # number of colors in palette
 good_colors = []
 friends = []
 
@@ -50,7 +51,7 @@ script_ext = os.path.splitext(script_name)[1]
 sketch_name = os.path.splitext(script_name)[0]
 
 # Initialize random number generators with seed
-if use_rand_seed:
+if not use_seed:
     rand_seed = int(random(99999,9999999))
 randomSeed(rand_seed)
 noiseSeed(rand_seed)
@@ -168,7 +169,7 @@ def reset_all():
   global friends
 
   for i in range(num):
-    fx = w/2 + random(0.01,0.5)*w*cos(TAU*i/num)
+    fx = w/2 + 0.4*w*cos(TAU*i/num)
     fy = h/2 + 0.4*h*sin(TAU*i/num)
     friends[i] = Friend(fx, fy, i)
 
@@ -192,11 +193,12 @@ def setup():
   
   colorMode(HSB, 360, 100, 100, 100)
   #colorMode(HSB)
+  strokeWeight(2)
 
   global good_colors
-  good_colors = extract_colors('flowersA.jpg', numpal)
+  good_colors = extract_colors(image_file_name, numpal)
 
-  background(60, 7, 95)
+  background(0, 0, 100)
   frameRate(30)
 
   global friends
@@ -218,6 +220,7 @@ def draw():
   #for c in good_colors:
   #  print(color_tuple(c))
 
+
   for f in friends:
     f.move()
   for f in friends:
@@ -226,7 +229,11 @@ def draw():
   for f in friends:
     f.find_happy_place()
 
-  #save_graphic(None, 'output', frameCount)
+  if frameCount % 200 == 0:
+    save_graphic(None, 'output', frameCount)
+
+  if frameCount % 20 == 0:
+    print(frameCount, frameRate)
 
   #exit()
 
@@ -245,8 +252,8 @@ class Friend:
     self.id = identifier
    
     self.numcon = 0
-    self.maxcon = 10
-    self.lencon = 10+int(random(50))  
+    self.maxcon = int(random(20))
+    self.lencon = 10+int(random(w*0.1))  
     self.connections = [0 for i in range(self.maxcon)]
   
     self.myc = some_color()
@@ -271,15 +278,15 @@ class Friend:
   def expose(self):
     for dx in range(-2,3):
       a = 0.5-abs(dx)/5
-      stroke(random(0,10),100*a)
+      stroke(0, 0, 0, 100*a)
       point(self.x+dx, self.y)
-      stroke(random(90,100),100*a)
+      stroke(0, 0, 100, 100*a)
       point(self.x+dx-1, self.y-1)
     for dy in range(-2,3):
       a = 0.5-abs(dy)/5
-      stroke(random(0,10),100*a)
+      stroke(0, 0, 0, 100*a)
       point(self.x, self.y+dy)
-      stroke(random(90,100),100*a)
+      stroke(0, 0, 100, 100*a)
       point(self.x-1, self.y+dy-1)
 
   def expose_connections(self):
@@ -314,16 +321,16 @@ class Friend:
           if (d>self.lencon):
             ax += 4*cos(t)
             ay += 4*sin(t)
-    self.vx += ax/42.22
-    self.vy += ay/42.22
+    self.vx += ax/80
+    self.vy += ay/80
 
 
   def move(self):
     self.x += self.vx
     self.y += self.vy
 
-    self.vx *= 0.92
-    self.vy *= 0.92
+    self.vx *= 0.97
+    self.vy *= 0.97
 
 class SandPainter:
   def __init__(self):
