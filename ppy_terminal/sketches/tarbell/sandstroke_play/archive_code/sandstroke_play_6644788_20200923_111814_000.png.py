@@ -1,5 +1,5 @@
 ################################################################################
-# porting Jared Tarbell's Happy Place to Python Processing
+# porting Jared Tarbell's sand painter to Python Processing
 # all credit for the algorithm goes to them
 #
 # code and images by Aaron Penne
@@ -32,12 +32,12 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 1080
-h = 1080
+w = 800
+h = 800
 use_seed = False
 rand_seed = 578919
-img_filename = 'input/berries_crop.jpg'
-num = 240 # number of friends
+img_filename = 'input/flowersA.jpg'
+num = 2 # number of friends
 numpal = 512 # number of colors in palette
 good_colors = []
 friends = []
@@ -174,28 +174,28 @@ def reset_all():
   global friends
 
   # connect in a circle
-  # for i in range(num):
-  #   fx = w/2 + 0.4*w*cos(TAU*i/num)
-  #   fy = h/2 + 0.4*h*sin(TAU*i/num)
-  #   friends.append(Friend(fx, fy, i))
+  for i in range(num):
+    fx = w/2 + 0.4*w*cos(TAU*i/num)
+    fy = h/2 + 0.4*h*sin(TAU*i/num)
+    friends.append(Friend(fx, fy, i))
 
   # connect in a grid
-  pad_pct = 0.1
-  i = 0
-  num_steps = 18
-  x_min = int(w*pad_pct)
-  x_max = int(w*(1-pad_pct))
-  x_step = int((x_max - x_min)/num_steps)
-  y_min = int(h*pad_pct)
-  y_max = int(h*(1-pad_pct))
-  y_step = int((y_max - y_min)/num_steps)
-  for x in range(x_min, x_max+x_step, x_step):
-    for y in range(y_min, y_max+y_step, y_step):
-      friends.append(Friend(x, y, i))
-      i += 1
-  global num
-  num = i
-
+#  pad_pct = 0.1
+#  i = 0
+#  num_steps = 18
+#  x_min = int(w*pad_pct)
+#  x_max = int(w*(1-pad_pct))
+#  x_step = int((x_max - x_min)/num_steps)
+#  y_min = int(h*pad_pct)
+#  y_max = int(h*(1-pad_pct))
+#  y_step = int((y_max - y_min)/num_steps)
+#  for x in range(x_min, x_max+x_step, x_step):
+#    for y in range(y_min, y_max+y_step, y_step):
+#      friends.append(Friend(x, y, i))
+#      i += 1
+#  global num
+#  num = i
+#
   for i in range(int(num*2.2)):
     a = int(floor(random(num)))
     b = int(floor(a+random(22))%num)
@@ -222,7 +222,7 @@ def setup():
   good_colors = extract_colors(img_filename, numpal)
 
   background(0, 0, 100)
-  frameRate(30)
+  frameRate(10)
 
   reset_all()
 
@@ -237,18 +237,27 @@ def setup():
 ################################################################################
 
 def draw():
-  #for c in good_colors:
-  #  print(color_tuple(c))
 
 
-  for f in friends:
-    f.move()
-  for f in friends:
-    f.expose()
-    f.expose_connections()
-    #f.draw_lines()
-  for f in friends:
-    f.find_happy_place()
+  p1 = PVector(0, h/2)
+  p2 = PVector(w/2, 0)
+
+  p1.add(PVector(frameCount, frameCount))
+  p2.add(PVector(frameCount, frameCount))
+
+  pushStyle()
+  strokeWeight(10)
+  stroke(100, 50, 20)
+  s = SandPainter()
+  s.render(p1.x, p1.y, p2.x, p2.y)
+  popStyle()
+
+  pushStyle()
+  strokeWeight(20)
+  stroke(50, 50, 60)
+  point(p1.x, p1.y)
+  point(p2.x, p2.y)
+  popStyle()
 
   if frameCount % 200 == 0:
     save_graphic(None, 'output', frameCount)
@@ -282,7 +291,7 @@ class Friend:
     self.h = hue(self.myc)
     self.s = saturation(self.myc)
     self.b = brightness(self.myc)
-    self.numsands = 3
+    self.numsands = 1
     self.sands = [SandPainter() for i in range(self.numsands)]
 
   def connect_to(self, f):
@@ -331,35 +340,8 @@ class Friend:
         self.sands[s].render(self.x, self.y, ox, oy)
 
   def find_happy_place(self):
-#    self.vx += random(-w*0.001, w*0.001)
- #   self.vy += random(-h*0.001, h*0.001)
-
-    ax = 0
-    ay = 0
-    for n in range(num):
-      if friends[n] <> this:
-        ddx = friends[n].x - self.x
-        ddy = friends[n].y - self.y
-        d = sqrt(ddx*ddx + ddy*ddy)
-        t = atan2(ddy, ddx)
-
-        friend = False
-        for j in range(self.numcon):
-          if self.connections[j]==n:
-            friend=True
-        if friend:
-          # attract
-          if (d>self.lencon):
-            ax += 2*cos(t)
-            ay += 0.1*sin(t)
-          # repel
-          elif d<self.lencon:
-            ax += (self.lencon-d)*cos(t+PI)*2
-            ay += (self.lencon-d)*sin(t+PI)*4
-
-    self.vx += ax/80
-    self.vy += ay/80
-
+    self.vx += random(-w*0.001, w*0.001)
+    self.vy += random(-h*0.001, h*0.001)
 
   def move(self):
     self.x += self.vx
@@ -378,20 +360,30 @@ class SandPainter:
     self.g = random(0.01, 0.1)
 
   def render(self, x, y, ox, oy):
-    stroke(self.h, self.s, self.b, 10)
-    point(ox + (x-ox)*sin(self.p), oy+(y-oy)*sin(self.p))
+    pushStyle()
+    strokeWeight(20)
+    stroke(self.h, 100, 80, 100)
+    point((x+ox)/2, (y+oy)/2)
+    #point(ox + (x-ox)*sin(self.p), oy+(y-oy)*sin(self.p))
+    popStyle()
 
-    self.g += random(-0.05, 0.05)
+    self.g += random(-0.5, 0.5)
     maxg = 0.22
     if (self.g < -maxg):
       self.g = -maxg
     if (self.g > maxg):
       self.g = maxg
 
-    w = self.g/10
-    for i in range(11):
-      a = 0.1 - i/110
-      stroke(self.h, self.s, self.b, 100*a)
-      point(ox+(x-ox)*sin(self.p+sin(i*w)), oy+(y-oy)*sin(self.p+sin(i*w)))
-      point(ox+(x-ox)*sin(self.p-sin(i*w)), oy+(y-oy)*sin(self.p-sin(i*w)))
+    stroke(self.h, self.s, self.b, 10) #*a
+    for i in range(5):
+      amt = noise((x+y+frameCount)*0.02)
+      line((x+ox)/2, (y+oy)/2, lerp(x, (x+ox)/2, amt), lerp(y, (y+oy)/2, amt))
+      line((x+ox)/2, (y+oy)/2, lerp(ox, (x+ox)/2, amt), lerp(oy, (y+oy)/2, amt))
 
+#     w = self.g/10
+#     for i in range(11):
+#       a = 0.1 - i/110
+#       stroke(self.h, self.s, self.b, 100) #*a
+#       point(ox+(x-ox)*sin(self.p+sin(i*w)), oy+(y-oy)*sin(self.p+sin(i*w)))
+#       point(ox+(x-ox)*sin(self.p-sin(i*w)), oy+(y-oy)*sin(self.p-sin(i*w)))
+# 

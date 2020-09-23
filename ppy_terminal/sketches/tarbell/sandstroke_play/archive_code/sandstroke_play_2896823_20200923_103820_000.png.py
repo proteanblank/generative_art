@@ -1,5 +1,5 @@
 ################################################################################
-# porting Jared Tarbell's Happy Place to Python Processing
+# porting Jared Tarbell's sand painter to Python Processing
 # all credit for the algorithm goes to them
 #
 # code and images by Aaron Penne
@@ -32,11 +32,11 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 1080
-h = 1080
+w = 800
+h = 800
 use_seed = False
 rand_seed = 578919
-img_filename = 'input/berries_crop.jpg'
+img_filename = 'input/flowersA.jpg'
 num = 240 # number of friends
 numpal = 512 # number of colors in palette
 good_colors = []
@@ -244,7 +244,7 @@ def draw():
   for f in friends:
     f.move()
   for f in friends:
-    f.expose()
+    # f.expose()
     f.expose_connections()
     #f.draw_lines()
   for f in friends:
@@ -282,7 +282,7 @@ class Friend:
     self.h = hue(self.myc)
     self.s = saturation(self.myc)
     self.b = brightness(self.myc)
-    self.numsands = 3
+    self.numsands = 1
     self.sands = [SandPainter() for i in range(self.numsands)]
 
   def connect_to(self, f):
@@ -331,35 +331,8 @@ class Friend:
         self.sands[s].render(self.x, self.y, ox, oy)
 
   def find_happy_place(self):
-#    self.vx += random(-w*0.001, w*0.001)
- #   self.vy += random(-h*0.001, h*0.001)
-
-    ax = 0
-    ay = 0
-    for n in range(num):
-      if friends[n] <> this:
-        ddx = friends[n].x - self.x
-        ddy = friends[n].y - self.y
-        d = sqrt(ddx*ddx + ddy*ddy)
-        t = atan2(ddy, ddx)
-
-        friend = False
-        for j in range(self.numcon):
-          if self.connections[j]==n:
-            friend=True
-        if friend:
-          # attract
-          if (d>self.lencon):
-            ax += 2*cos(t)
-            ay += 0.1*sin(t)
-          # repel
-          elif d<self.lencon:
-            ax += (self.lencon-d)*cos(t+PI)*2
-            ay += (self.lencon-d)*sin(t+PI)*4
-
-    self.vx += ax/80
-    self.vy += ay/80
-
+    self.vx += random(-w*0.001, w*0.001)
+    self.vy += random(-h*0.001, h*0.001)
 
   def move(self):
     self.x += self.vx
