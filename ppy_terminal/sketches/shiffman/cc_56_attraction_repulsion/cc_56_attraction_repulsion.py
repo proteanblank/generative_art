@@ -8,14 +8,13 @@ particles = []
 class Particle:
   def __init__(self, x, y, r=5):
     self.pos = PVector(x, y)
-    self.vel = PVector(-0.5, 5)
+    self.vel = PVector()
     self.vel_limit = 30
-    self.acc = PVector(0.5, -0.5)
+    self.acc = PVector()
     self.r = r
     self.c = color(255)
 
   def move(self):
-
     self.pos.add(self.vel)
 
     # limits
@@ -40,6 +39,9 @@ class Particle:
     strokeWeight(self.r)
     point(self.pos.x, self.pos.y)
     popStyle()
+
+  def attracted(self, target):
+    direction = target.sub(self.pos)
 
 def setup():
   size(w, h)

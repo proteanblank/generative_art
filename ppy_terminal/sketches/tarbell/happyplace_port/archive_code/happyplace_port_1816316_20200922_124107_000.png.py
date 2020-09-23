@@ -32,8 +32,8 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 1080
-h = 1080
+w = 900
+h = 900
 use_seed = False
 rand_seed = 578919
 img_filename = 'input/berries_crop.jpg'
@@ -146,8 +146,8 @@ def extract_colors(img_filename, max_colors=100, randomize=True):
     if num_colors == max_colors:
       break
 
-  # for i in range(int(max_colors*0.1)):
-  #   colors_list.append(color(0, 0, 0))
+  for i in range(int(max_colors*0.1)):
+    colors_list.append(color(0, 0, 0))
   for i in range(int(max_colors*0.1)):
     colors_list.append(color(0, 0, 100))
 
@@ -182,7 +182,7 @@ def reset_all():
   # connect in a grid
   pad_pct = 0.1
   i = 0
-  num_steps = 18
+  num_steps = 24
   x_min = int(w*pad_pct)
   x_max = int(w*(1-pad_pct))
   x_step = int((x_max - x_min)/num_steps)
@@ -216,7 +216,7 @@ def setup():
   
   colorMode(HSB, 360, 100, 100, 100)
   #colorMode(HSB)
-  strokeWeight(1)
+  #strokeWeight(2)
 
   global good_colors
   good_colors = extract_colors(img_filename, numpal)
@@ -308,13 +308,13 @@ class Friend:
 
   def expose(self):
     for dx in range(-2,3):
-      a = 0.6-abs(dx)/5
+      a = 0.3-abs(dx)/5
       stroke(0, 0, 0, 100*a)
       point(self.x+dx, self.y)
       stroke(0, 0, 100, 100*a)
       point(self.x+dx-1, self.y-1)
     for dy in range(-2,3):
-      a = 0.6-abs(dy)/5
+      a = 0.3-abs(dy)/5
       stroke(0, 0, 0, 100*a)
       point(self.x, self.y+dy)
       stroke(0, 0, 100, 100*a)
@@ -351,22 +351,22 @@ class Friend:
           # attract
           if (d>self.lencon):
             ax += 2*cos(t)
-            ay += 0.1*sin(t)
+            ay += 2*sin(t)
           # repel
           elif d<self.lencon:
             ax += (self.lencon-d)*cos(t+PI)*2
-            ay += (self.lencon-d)*sin(t+PI)*4
+            ay += (self.lencon-d)*sin(t+PI)*2
 
-    self.vx += ax/80
-    self.vy += ay/80
+    self.vx += ax/100
+    self.vy += ay/100
 
 
   def move(self):
     self.x += self.vx
     self.y += self.vy
 
-    self.vx *= 0.97
-    self.vy *= 0.97
+    self.vx *= 0.98
+    self.vy *= 0.98
 
 class SandPainter:
   def __init__(self):

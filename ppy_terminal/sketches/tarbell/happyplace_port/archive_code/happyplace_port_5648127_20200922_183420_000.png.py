@@ -182,7 +182,7 @@ def reset_all():
   # connect in a grid
   pad_pct = 0.1
   i = 0
-  num_steps = 18
+  num_steps = 24
   x_min = int(w*pad_pct)
   x_max = int(w*(1-pad_pct))
   x_step = int((x_max - x_min)/num_steps)
@@ -351,7 +351,7 @@ class Friend:
           # attract
           if (d>self.lencon):
             ax += 2*cos(t)
-            ay += 0.1*sin(t)
+            ay += 4*sin(t)
           # repel
           elif d<self.lencon:
             ax += (self.lencon-d)*cos(t+PI)*2
@@ -363,7 +363,7 @@ class Friend:
 
   def move(self):
     self.x += self.vx
-    self.y += self.vy
+    self.y += self.vy*1.5
 
     self.vx *= 0.97
     self.vy *= 0.97

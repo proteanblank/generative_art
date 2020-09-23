@@ -216,7 +216,7 @@ def setup():
   
   colorMode(HSB, 360, 100, 100, 100)
   #colorMode(HSB)
-  strokeWeight(1)
+  strokeWeight(2)
 
   global good_colors
   good_colors = extract_colors(img_filename, numpal)
