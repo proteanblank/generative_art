@@ -32,11 +32,11 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 1080
-h = 1080
-use_seed = False
+w = 900
+h = 900
+use_seed = True
 rand_seed = 578919
-img_filename = 'input/berries_crop.jpg'
+img_filename = 'input/mojave.png'
 num = 240 # number of friends
 numpal = 512 # number of colors in palette
 good_colors = []
@@ -146,8 +146,8 @@ def extract_colors(img_filename, max_colors=100, randomize=True):
     if num_colors == max_colors:
       break
 
-  # for i in range(int(max_colors*0.1)):
-  #   colors_list.append(color(0, 0, 0))
+  for i in range(int(max_colors*0.1)):
+    colors_list.append(color(0, 0, 0))
   for i in range(int(max_colors*0.1)):
     colors_list.append(color(0, 0, 100))
 
@@ -174,15 +174,14 @@ def reset_all():
   global friends
 
   # connect in a circle
-  # for i in range(num):
-  #   fx = w/2 + 0.4*w*cos(TAU*i/num)
-  #   fy = h/2 + 0.4*h*sin(TAU*i/num)
-  #   friends.append(Friend(fx, fy, i))
+  #for i in range(num):
+  #  fx = w/2 + 0.4*w*cos(TAU*i/num)
+  #  fy = h/2 + 0.4*h*sin(TAU*i/num)
+  #  friends[i] = Friend(fx, fy, i)
 
-  # connect in a grid
   pad_pct = 0.1
   i = 0
-  num_steps = 18
+  num_steps = 16
   x_min = int(w*pad_pct)
   x_max = int(w*(1-pad_pct))
   x_step = int((x_max - x_min)/num_steps)
@@ -216,7 +215,7 @@ def setup():
   
   colorMode(HSB, 360, 100, 100, 100)
   #colorMode(HSB)
-  strokeWeight(1)
+  strokeWeight(2)
 
   global good_colors
   good_colors = extract_colors(img_filename, numpal)
@@ -244,7 +243,7 @@ def draw():
   for f in friends:
     f.move()
   for f in friends:
-    f.expose()
+    #f.expose()
     f.expose_connections()
     #f.draw_lines()
   for f in friends:
@@ -274,7 +273,7 @@ class Friend:
    
     self.numcon = 0
     self.maxcon = 10
-    self.lencon = 10+int(random(w*0.03))  
+    self.lencon = 10+int(random(w*0.02))  
     self.connections = [0 for i in range(self.maxcon)]
   
     self.myc = some_color()
@@ -308,16 +307,16 @@ class Friend:
 
   def expose(self):
     for dx in range(-2,3):
-      a = 0.6-abs(dx)/5
-      stroke(0, 0, 0, 100*a)
+      a = 0.3-abs(dx)/5
+      stroke(10,100*a)
       point(self.x+dx, self.y)
-      stroke(0, 0, 100, 100*a)
+      stroke(100,100*a)
       point(self.x+dx-1, self.y-1)
     for dy in range(-2,3):
-      a = 0.6-abs(dy)/5
-      stroke(0, 0, 0, 100*a)
+      a = 0.3-abs(dy)/5
+      stroke(0,100*a)
       point(self.x, self.y+dy)
-      stroke(0, 0, 100, 100*a)
+      stroke(100,100*a)
       point(self.x-1, self.y+dy-1)
 
   def expose_connections(self):
@@ -350,23 +349,22 @@ class Friend:
         if friend:
           # attract
           if (d>self.lencon):
-            ax += 2*cos(t)
-            ay += 0.1*sin(t)
-          # repel
+            ax += 4*cos(t)
+            ay += 3.5*sin(t)
           elif d<self.lencon:
-            ax += (self.lencon-d)*cos(t+PI)*2
-            ay += (self.lencon-d)*sin(t+PI)*4
+            ax += (self.lencon-d)*cos(t+PI)*0.1
+            ay += (self.lencon-d)*sin(t+PI)*0.5
 
-    self.vx += ax/80
-    self.vy += ay/80
+    self.vx += ax/40
+    self.vy += ay/40
 
 
   def move(self):
     self.x += self.vx
     self.y += self.vy
 
-    self.vx *= 0.97
-    self.vy *= 0.97
+    self.vx *= 0.95
+    self.vy *= 0.95
 
 class SandPainter:
   def __init__(self):

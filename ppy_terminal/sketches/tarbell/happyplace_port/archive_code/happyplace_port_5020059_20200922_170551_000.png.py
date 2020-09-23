@@ -32,8 +32,8 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 1080
-h = 1080
+w = 7200
+h = 7200
 use_seed = False
 rand_seed = 578919
 img_filename = 'input/berries_crop.jpg'
@@ -182,7 +182,7 @@ def reset_all():
   # connect in a grid
   pad_pct = 0.1
   i = 0
-  num_steps = 18
+  num_steps = 24
   x_min = int(w*pad_pct)
   x_max = int(w*(1-pad_pct))
   x_step = int((x_max - x_min)/num_steps)
@@ -216,7 +216,7 @@ def setup():
   
   colorMode(HSB, 360, 100, 100, 100)
   #colorMode(HSB)
-  strokeWeight(1)
+  strokeWeight(4)
 
   global good_colors
   good_colors = extract_colors(img_filename, numpal)
@@ -351,7 +351,7 @@ class Friend:
           # attract
           if (d>self.lencon):
             ax += 2*cos(t)
-            ay += 0.1*sin(t)
+            ay += 4*sin(t)
           # repel
           elif d<self.lencon:
             ax += (self.lencon-d)*cos(t+PI)*2

@@ -216,7 +216,7 @@ def setup():
   
   colorMode(HSB, 360, 100, 100, 100)
   #colorMode(HSB)
-  strokeWeight(1)
+  strokeWeight(2)
 
   global good_colors
   good_colors = extract_colors(img_filename, numpal)
@@ -351,11 +351,11 @@ class Friend:
           # attract
           if (d>self.lencon):
             ax += 2*cos(t)
-            ay += 0.1*sin(t)
+            ay += 8*sin(t)
           # repel
           elif d<self.lencon:
             ax += (self.lencon-d)*cos(t+PI)*2
-            ay += (self.lencon-d)*sin(t+PI)*4
+            ay += (self.lencon-d)*sin(t+PI)*8
 
     self.vx += ax/80
     self.vy += ay/80
