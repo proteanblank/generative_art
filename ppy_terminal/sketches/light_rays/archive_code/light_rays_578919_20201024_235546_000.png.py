@@ -28,14 +28,14 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 500
-h = 500
+w = 1080
+h = 1080
 max_frames = 10000
 
 attractor = None
 particles = []
 
-use_seed = False
+use_seed = True
 rand_seed = 578919
 
 # Utility variables
@@ -185,7 +185,9 @@ def setup():
   global particles
   for n in range(10):
     #particles.append(Particle(random(w), random(h)))
-    particles.append(Particle(w/2+random(20,-20), h/2+random(-20,20)))
+    particles.append(Particle(w/2+random(20,-20), 
+                              h/2+random(-20,20),
+                              1))
 
   save_code(None, 'output', frameCount)
 
