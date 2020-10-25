@@ -38,10 +38,6 @@ particles = []
 use_seed = True
 rand_seed = 578919
 
-img_filename = 'input/berries_crop.jpg'
-numpal = 512 # number of colors in palette
-good_colors = []
-
 # Utility variables
 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
 script_path = os.path.abspath(__file__)
@@ -111,49 +107,6 @@ def save_code(pg=None, path='output', counter=0):
 def mousePressed():
   save_graphic(None, 'output', frameCount)
 
-def some_color():
-  return good_colors[int(random(numpal))]
-
-def color_tuple(c, color_space='HSB', rounded=True):
-  """Takes color (Processing datatype) and returns human readable tuple."""
-  if color_space == 'HSB':
-    c_tuple = (hue(c), saturation(c), brightness(c), alpha(c))
-  if color_space == 'RGB':
-    c_tuple = (red(c), green(c), blue(c), alpha(c))
-
-  if rounded:
-    c_tuple = (round(c_tuple[0]), round(c_tuple[1]), round(c_tuple[2]), round(c_tuple[3]))
-
-  return c_tuple
-
-def extract_colors(img_filename, max_colors=100, randomize=True):
-  """Extracts unique pixels from a source image to create a color palette. 
-  If randomize=False then the image is sampled left to right, then top to bottom. 
-  """
-  colors_list = []
-
-  img = loadImage(img_filename)
-  img.loadPixels()
-
-  if randomize:
-    shuffle(img.pixels)
-
-  num_colors = 0
-  for i,c in enumerate(img.pixels):
-    # only grab new colors (no repeats)
-    if color_tuple(c) not in [color_tuple(gc) for gc in colors_list]:
-      colors_list.append(c)
-      num_colors += 1
-    if num_colors == max_colors:
-      break
-
-  # for i in range(int(max_colors*0.1)):
-  #   colors_list.append(color(0, 0, 0))
-  for i in range(int(max_colors*0.1)):
-    colors_list.append(color(0, 0, 100))
-
-  return colors_list
-
 
 ################################################################################
 # Artwork methods
@@ -168,11 +121,8 @@ class Particle:
     self.acc = PVector()
     self.vel_limit = 3000
     self.r = r
-    self.c = some_color()
-    self.c = color(hue(self.c), saturation(self.c), brightness(self.c), 10)
-    if random(100)>90:
-      self.c = color(0, 0, 0, 10)
-    if random(100)>95:
+    self.c = color(0, 0, random(0,25), 10)
+    if random(100)>80:
       self.c = color(0, 0, 100, 10)
 
   def move(self):
@@ -214,8 +164,8 @@ class Particle:
     force = PVector.sub(target, self.pos)
     dsquared = force.magSq()
     dsquared = constrain(dsquared, 25, 100)
-    G = 0.01
-    strength = 0.1 # G / dsquared
+    G = 80
+    strength = G / dsquared
     force.setMag(strength)
     self.acc = force
 
@@ -231,18 +181,15 @@ def setup():
   background(44, 6, 97)
   #frameRate(30)
 
-  global good_colors
-  good_colors = extract_colors(img_filename, numpal)
-
   global attractor
   attractor = PVector(w/2 + w*0.2*cos(0), h/2 + h*0.2*sin(0))
 
   global particles
-  for n in range(100):
+  for n in range(10):
     #particles.append(Particle(random(w), random(h)))
     particles.append(Particle(w/2+random(-20,20), 
                               h/2+random(-20,20),
-                              5))
+                              1))
 
   save_code(None, 'output', frameCount)
 
@@ -260,11 +207,10 @@ def draw():
   strokeWeight(10)
   
   # circle attractor
-  attractor = PVector(w/2 + w*0.2*cos(frameCount*TAU/w/2), 
-                      h/2 + h*0.2*sin(frameCount*TAU/h/2))
+  #attractor = PVector(w/2 + w*0.2*cos(frameCount*TAU/w), 
+                      #h/2 + h*0.2*sin(frameCount*TAU/h))
 
-  # sin attractor
-  #attractor = PVector(frameCount, h/2 + h*0.1 * sin(frameCount*TAU/h*10))
+  attractor = PVector(frameCount, h/2 + h*0.1 * sin(frameCount*TAU/h*0.1))
 
   #point(attractor.x, attractor.y)
   popStyle()
@@ -273,8 +219,6 @@ def draw():
     p.attracted(attractor)
     p.move()
     #p.render_points()
-    #if idx>0:
-      #p.render_lines(particles[idx-1].pos)
     p.render_lines(attractor)
 
   if frameCount % 20 == 0:

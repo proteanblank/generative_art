@@ -170,10 +170,10 @@ class Particle:
     self.r = r
     self.c = some_color()
     self.c = color(hue(self.c), saturation(self.c), brightness(self.c), 10)
+    if random(100)>80:
+      self.c = color(0, 0, 0, 20)
     if random(100)>90:
-      self.c = color(0, 0, 0, 10)
-    if random(100)>95:
-      self.c = color(0, 0, 100, 10)
+      self.c = color(0, 0, 100, 20)
 
   def move(self):
     self.pos.add(self.vel)
@@ -214,8 +214,8 @@ class Particle:
     force = PVector.sub(target, self.pos)
     dsquared = force.magSq()
     dsquared = constrain(dsquared, 25, 100)
-    G = 0.01
-    strength = 0.1 # G / dsquared
+    G = 1
+    strength = G / dsquared
     force.setMag(strength)
     self.acc = force
 
@@ -242,7 +242,7 @@ def setup():
     #particles.append(Particle(random(w), random(h)))
     particles.append(Particle(w/2+random(-20,20), 
                               h/2+random(-20,20),
-                              5))
+                              1))
 
   save_code(None, 'output', frameCount)
 
