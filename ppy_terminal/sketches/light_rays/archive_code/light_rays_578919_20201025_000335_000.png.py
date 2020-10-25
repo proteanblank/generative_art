@@ -28,14 +28,14 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 500
-h = 500
+w = 1080
+h = 1080
 max_frames = 10000
 
 attractor = None
 particles = []
 
-use_seed = False
+use_seed = True
 rand_seed = 578919
 
 # Utility variables
@@ -121,7 +121,7 @@ class Particle:
     self.acc = PVector()
     self.vel_limit = 3000
     self.r = r
-    self.c = color(0, 0, 100, 10)
+    self.c = color(0, 0, random(0,25), 10)
 
   def move(self):
     self.pos.add(self.vel)
@@ -176,7 +176,7 @@ class Particle:
 def setup():
   size(w, h)
   colorMode(HSB, 360, 100, 100, 100)
-  background(0)
+  background(44, 6, 97)
   frameRate(10)
 
   global attractor
@@ -185,7 +185,9 @@ def setup():
   global particles
   for n in range(10):
     #particles.append(Particle(random(w), random(h)))
-    particles.append(Particle(w/2+random(20,-20), h/2+random(-20,20)))
+    particles.append(Particle(w/2+random(20,-20), 
+                              h/2+random(-20,20),
+                              1))
 
   save_code(None, 'output', frameCount)
 
@@ -201,8 +203,8 @@ def draw():
   pushStyle()
   stroke(231, 76, 60, 100)
   strokeWeight(10)
-  attractor = PVector(w/2 + w*0.2*cos(frameCount*TAU/360), 
-                      h/2 + h*0.2*sin(frameCount*TAU/360))
+  attractor = PVector(w/2 + w*0.2*cos(frameCount*TAU/w), 
+                      h/2 + h*0.2*sin(frameCount*TAU/h))
   #point(attractor.x, attractor.y)
   popStyle()
 
