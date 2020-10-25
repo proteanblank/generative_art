@@ -214,8 +214,8 @@ class Particle:
     force = PVector.sub(target, self.pos)
     dsquared = force.magSq()
     dsquared = constrain(dsquared, 25, 100)
-    G = 0.01
-    strength = 0.1 # G / dsquared
+    G = 1
+    strength = G / dsquared
     force.setMag(strength)
     self.acc = force
 
@@ -238,11 +238,11 @@ def setup():
   attractor = PVector(w/2 + w*0.2*cos(0), h/2 + h*0.2*sin(0))
 
   global particles
-  for n in range(100):
+  for n in range(10):
     #particles.append(Particle(random(w), random(h)))
     particles.append(Particle(w/2+random(-20,20), 
                               h/2+random(-20,20),
-                              5))
+                              1))
 
   save_code(None, 'output', frameCount)
 
@@ -264,7 +264,7 @@ def draw():
                       h/2 + h*0.2*sin(frameCount*TAU/h/2))
 
   # sin attractor
-  #attractor = PVector(frameCount, h/2 + h*0.1 * sin(frameCount*TAU/h*10))
+  attractor = PVector(frameCount, h/2 + h*0.1 * sin(frameCount*TAU/h*10))
 
   #point(attractor.x, attractor.y)
   popStyle()

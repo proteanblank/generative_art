@@ -242,7 +242,7 @@ def setup():
     #particles.append(Particle(random(w), random(h)))
     particles.append(Particle(w/2+random(-20,20), 
                               h/2+random(-20,20),
-                              5))
+                              1))
 
   save_code(None, 'output', frameCount)
 
