@@ -121,9 +121,9 @@ class Particle:
     self.acc = PVector()
     self.vel_limit = 3000
     self.r = r
-    self.c = color(0, 0, random(80,95), 10)
+    self.c = color(0, 0, random(0,25), 10)
     if random(100)>80:
-      self.c = color(0, 0, 0, 10)
+      self.c = color(0, 0, 100, 10)
 
   def move(self):
     self.pos.add(self.vel)
@@ -164,8 +164,8 @@ class Particle:
     force = PVector.sub(target, self.pos)
     dsquared = force.magSq()
     dsquared = constrain(dsquared, 25, 100)
-    G = 80
-    strength = G / dsquared
+    G = 50
+    strength = 0.2 # G / dsquared
     force.setMag(strength)
     self.acc = force
 
@@ -178,14 +178,14 @@ class Particle:
 def setup():
   size(w, h)
   colorMode(HSB, 360, 100, 100, 100)
-  background(0, 0, 15)
+  background(44, 6, 97)
   #frameRate(30)
 
   global attractor
   attractor = PVector(w/2 + w*0.2*cos(0), h/2 + h*0.2*sin(0))
 
   global particles
-  for n in range(20):
+  for n in range(100):
     #particles.append(Particle(random(w), random(h)))
     particles.append(Particle(w/2+random(-20,20), 
                               h/2+random(-20,20),
@@ -219,7 +219,6 @@ def draw():
   if frameCount % 20 == 0:
     print('{} - {} fps'.format(frameCount, frameRate))
   if frameCount % w == 0:
-    save_graphic(None, 'output', frameCount)
-    filter(BLUR, 2)    
+    filter(BLUR, 5)    
   if frameCount % max_frames == 0:
     exit()

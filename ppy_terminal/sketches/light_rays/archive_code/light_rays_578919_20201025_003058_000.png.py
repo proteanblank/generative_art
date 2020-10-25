@@ -121,9 +121,9 @@ class Particle:
     self.acc = PVector()
     self.vel_limit = 3000
     self.r = r
-    self.c = color(0, 0, random(80,95), 10)
+    self.c = color(0, 0, random(0,25), 10)
     if random(100)>80:
-      self.c = color(0, 0, 0, 10)
+      self.c = color(0, 0, 100, 10)
 
   def move(self):
     self.pos.add(self.vel)
@@ -178,7 +178,7 @@ class Particle:
 def setup():
   size(w, h)
   colorMode(HSB, 360, 100, 100, 100)
-  background(0, 0, 15)
+  background(44, 6, 97)
   #frameRate(30)
 
   global attractor
