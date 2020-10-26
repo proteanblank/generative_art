@@ -169,11 +169,11 @@ class Particle:
     self.vel_limit = 3000
     self.r = r
     self.c = some_color()
-    self.c = color(hue(self.c), saturation(self.c), brightness(self.c), 20)
+    self.c = color(hue(self.c), saturation(self.c), brightness(self.c), 10)
     if random(100)>90:
-      self.c = color(0, 0, 0, 20)
+      self.c = color(0, 0, 0, 10)
     if random(100)>95:
-      self.c = color(0, 0, 100, 20)
+      self.c = color(0, 0, 100, 10)
 
   def move(self):
     self.pos.add(self.vel)
@@ -238,11 +238,11 @@ def setup():
   attractor = PVector(w/2 + w*0.2*cos(0), h/2 + h*0.2*sin(0))
 
   global particles
-  for n in range(10):
+  for n in range(100):
     #particles.append(Particle(random(w), random(h)))
-    particles.append(Particle(w/2+random(-2,2), 
-                              h/2+random(-2,2),
-                              1))
+    particles.append(Particle(w/2+random(-20,20), 
+                              h/2+random(-20,20),
+                              5))
 
   save_code(None, 'output', frameCount)
 
@@ -273,9 +273,9 @@ def draw():
     p.attracted(attractor)
     p.move()
     #p.render_points()
-    if idx>0:
-      p.render_lines(particles[idx-1].pos)
-    #p.render_lines(attractor)
+    #if idx>0:
+      #p.render_lines(particles[idx-1].pos)
+    p.render_lines(attractor)
 
   if frameCount % 20 == 0:
     print('{} - {} fps'.format(frameCount, frameRate))

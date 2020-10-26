@@ -273,9 +273,9 @@ def draw():
     p.attracted(attractor)
     p.move()
     #p.render_points()
-    if idx>0:
-      p.render_lines(particles[idx-1].pos)
-    #p.render_lines(attractor)
+    #if idx>0:
+      #p.render_lines(particles[idx-1].pos)
+    p.render_lines(attractor)
 
   if frameCount % 20 == 0:
     print('{} - {} fps'.format(frameCount, frameRate))
