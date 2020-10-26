@@ -28,8 +28,8 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 1 * 1080
-h = 1 * 1080
+w = 2 * 1080
+h = 2 * 1080
 max_frames = 10000
 
 attractor = None
@@ -162,9 +162,9 @@ class Particle:
 
   def attracted(self, target):
     force = PVector.sub(target, self.pos)
-    dsquared = force.mag()
+    dsquared = force.magSq()
     dsquared = constrain(dsquared, 25, 100)
-    G = 10
+    G = 1
     strength = G / dsquared
     force.setMag(strength)
     self.acc = force
@@ -180,6 +180,9 @@ def setup():
   colorMode(HSB, 360, 100, 100, 100)
   background(44, 6, 97)
   #frameRate(30)
+
+  global attractor
+  attractor = PVector(w/2 + w*0.2*cos(0), h/2 + h*0.2*sin(0))
 
   global particles
   for n in range(100):
@@ -202,12 +205,10 @@ def draw():
   pushStyle()
   stroke(231, 76, 60, 100)
   strokeWeight(10)
-
-  global attractor
-
+  
   # circle attractor
-  attractor = PVector(w/2 + 100*cos(frameCount*TAU/360), 
-                      h/2 + 100*sin(frameCount*TAU/360))
+  attractor = PVector(w/2 + 100*cos(frameCount*TAU/w), 
+                      h/2 + 100*sin(frameCount*TAU/h))
 
   # sin attractor
   #attractor = PVector(frameCount, h/2 + h*0.1 * sin(frameCount*TAU/h*10))

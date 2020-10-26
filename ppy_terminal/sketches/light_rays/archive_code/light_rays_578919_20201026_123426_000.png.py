@@ -28,8 +28,8 @@ from random import seed, shuffle, sample
 ################################################################################
 
 # Knobs to turn
-w = 1 * 1080
-h = 1 * 1080
+w = 2 * 1080
+h = 2 * 1080
 max_frames = 10000
 
 attractor = None
@@ -162,9 +162,9 @@ class Particle:
 
   def attracted(self, target):
     force = PVector.sub(target, self.pos)
-    dsquared = force.mag()
+    dsquared = force.magSq()
     dsquared = constrain(dsquared, 25, 100)
-    G = 10
+    G = 1
     strength = G / dsquared
     force.setMag(strength)
     self.acc = force
