@@ -164,7 +164,7 @@ class Particle:
     force = PVector.sub(target, self.pos)
     dsquared = force.mag()
     dsquared = constrain(dsquared, 25, 100)
-    G = 100
+    G = 10
     strength = G / dsquared
     print(strength)
     force.setMag(strength)

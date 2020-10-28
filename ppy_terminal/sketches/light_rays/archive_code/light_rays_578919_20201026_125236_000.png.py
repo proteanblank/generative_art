@@ -164,7 +164,7 @@ class Particle:
     force = PVector.sub(target, self.pos)
     dsquared = force.mag()
     dsquared = constrain(dsquared, 25, 100)
-    G = 100
+    G = 10
     strength = G / dsquared
     print(strength)
     force.setMag(strength)
@@ -212,7 +212,7 @@ def draw():
   # sin attractor
   #attractor = PVector(frameCount, h/2 + h*0.1 * sin(frameCount*TAU/h*10))
 
-  #attractor = PVector(w/2, h/2)
+  attractor = PVector(w/2, h/2)
 
   #point(attractor.x, attractor.y)
   popStyle()
