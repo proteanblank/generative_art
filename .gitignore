@@ -1,6 +1,8 @@
+
 *.swp
 *.swo
 
+archive_code/
 input/
 archive/
 exec/
