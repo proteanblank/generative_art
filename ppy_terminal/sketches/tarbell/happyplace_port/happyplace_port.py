@@ -27,13 +27,15 @@ from datetime import datetime
 from collections import OrderedDict
 from random import seed, shuffle, sample
 
+add_library('themidibus')
+
 ################################################################################
 # Globals
 ################################################################################
 
 # Knobs to turn
-w = 1080
-h = 1080
+w = int(1080 * 0.5)
+h = int(1080 * 0.5)
 use_seed = False
 rand_seed = 578919
 img_filename = 'input/berries_crop.jpg'
