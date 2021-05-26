@@ -31,13 +31,6 @@
 <p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/parc_pie/images/parc_pie_wannabe.png" alt="parc_pie_wannabe" width="90%"></p>
 
 
-## Seuss Tubes
-
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/p5/images/seuss_tubes_6.png" alt="seuss_tube" width="90%"></p>
-
-
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/p5/images/stack_wave_test_04.png" alt="seuss_tube" width="90%"></p>
-
 
 ## Creatures
 
@@ -52,11 +45,6 @@ Butterfly code is in the ['butterflies' dir](https://github.com/aaronpenne/gener
 <p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/buggies/images/beetle_layout_4.png" alt="beetles" width="100%"></p>
 
 Beetles code is in the ['buggies' dir](https://github.com/aaronpenne/generative_art/tree/master/buggies).
-
-## Reach
-
-
-<p align="center"><img src="https://raw.githubusercontent.com/aaronpenne/generative_art/master/p5/images/stack_2.png" alt="stack" width="70%"></p>
 
 
 ## Good Fortune ([source](https://github.com/aaronpenne/generative_art/tree/master/yarn))
