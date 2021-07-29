@@ -1,4 +1,4 @@
-👋 Hello! Caveat emptor, I've left a lot of messy code behind and you may come across broken links, etc. Take what you can and have some fun! 
+👋 Hello! Caveat emptor, I've left a lot of messy code behind and you may come across broken links, etc. Learn what you can and have some fun! The [license is CC BY-NC 4.0](https://github.com/aaronpenne/generative_art/blob/master/LICENSE) meaning **none** of this code can be used for commercial purposes. 
 
 **The latest & greatest is in the [ppy_terminal directory](https://github.com/aaronpenne/generative_art/tree/master/ppy_terminal). Using Processing from the termainal with Python. It's fun, and has a thorough readme.**
 
